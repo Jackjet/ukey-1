@@ -1,0 +1,349 @@
+#parse("sysUser/include.vm")
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>用户信息</span>&nbsp;&gt;&nbsp;
+    <span>修改</span>
+</div>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style>
+
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form action="#springUrl('/')userinfo" method="post" onsubmit="return checkForm();">
+	<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${sysUser.id}"/>
+	<div class="tabConBox_L" style="width:100%;">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称：</span>
+		<label>${project.name}</label>
+	<p/>
+	<p>
+	<span>帐号类别：</span>
+		#if(${entityTrueInfo.entityType}==0)<label> 企业类型 </label> #else<label>个人</label>  #end
+	</p>
+	<p>
+	<span>认证实体：</span>
+		<label>$!{entityTrueInfo.name}</label>
+	</p>
+	<p>
+		<span>用户名：</span>
+		<input id="mail" name="email"  type="text" class="bor txtth" value="$!{sysUser.email}"/><label class="emailError"></label>
+	<p/>
+    <p>
+        <span>邮箱验证：</span>
+        <label>
+            #if(${sysUser.trustEmail})
+                已验证
+            #else
+                <input type="checkbox" name="validateEmail" class="radcom rad_wh" value="true" />验证通过
+            #end
+        </label>
+    </p>
+    <p>
+     <span>使用者姓名：</span>
+        <input type="text" name="realName" class="bor txtth" value="$!{sysUser.realName}"/>
+    </p>
+	
+	<p>
+		<span>手机号码：</span>
+		<input id="phone" name="mPhone" type="text" class="bor txtth" value="$!{sysUser.mPhone}"/>
+	<p/>
+    <p>
+        <span>手机验证：</span>
+        <label>
+            #if(${sysUser.trustMPhone})
+                已验证
+            #else
+                <input type="checkbox" name="validateMPhone" class="radcom rad_wh" value="true" />验证通过
+            #end
+        </label>
+    </p>
+	
+	<p>
+     <span>固定电话：</span>
+        <input type="text" name="telephone" class="bor txtth" value="$!{sysUser.telephone}"/>
+    </p>
+    <p>
+     <span>邮政编码：</span>
+        <input type="text" name="postalCode" class="bor txtth" value="$!{sysUser.postalCode}"/>
+    </p>
+    <p>
+     <span>所在地区：</span>
+        <select id="sheng" style="width:80px"><option value="0">请选择省</option></select>
+		<select id="shi" style="width:80px"><option value="0">请选择市</option></select>
+		<select id="qu" style="width:80px"><option value="0">请选择区/县</option></select>
+    </p>
+    <p>
+    <p>
+     <span>通讯地址：</span>
+        <input type="text" id="userAdds" name="userAdds" class="bor txtth" value="$!{sysUser.userAdds}"/><input type="hidden" id="regionCodes" name="regionCodes"/>
+    </p>
+    <p>
+     <span>所属行业：</span>
+        <select id="projectcur"	name="orgIndustry" class="bor selwidth1">
+        #foreach($orgObj in $industryMap.entrySet())
+            <option value="$orgObj.key" #if($sysUser.orgIndustry== $orgObj.key) selected="selected" #end>$orgObj.value</option>
+        #end
+    </select>&nbsp;&nbsp;
+    </p>
+	</div>
+	<div class="btn_bottom">
+		<input id="submit" type="submit" value="修改" class="btn_small m_r"></input>
+        <input id="btnCancel" type="button" value="返回" class="btn_small m_r" onclick="history.go(-1)"></input>
+	</div>
+	</form>
+        <font color="red">$!{errMsg}</font>
+	</div>
+	</div>
+</div>
+<script>
+var shengchildNum=0;
+var shichildNum=0;
+$(function(){
+
+	//省改变事件
+	$("#sheng").change(function(){
+		if($("#sheng").val()=="0"){
+			$("#shi").empty();
+			$("#shi").append("<option value=\"0\">请选择市</option>");
+			$("#qu").empty();
+			$("#qu").append("<option value=\"0\">请选择区/县</option>");
+			return;
+		}
+		var url ="#springUrl("/")sysregion/regions";
+		var postData = {
+			version:1,
+			code:$("#sheng").val(),
+			type:0
+		};
+		if(url != "")
+		{
+			$.ajax({
+				type:"post",
+				url : url,
+				data : postData,
+				success : function(data) {
+					var jsondata = eval("("+data+")");
+					if(jsondata.retCode){
+						$("#shi").empty();
+						$("#shi").append("<option value=\"0\">请选择市</option>");
+						$("#qu").empty();
+						$("#qu").append("<option value=\"0\">请选择区/县</option>");
+						if(jsondata.regions.length>0){
+							for(var i = 0;i<jsondata.regions.length;i++){
+								$("#shi").append("<option value='"+jsondata.regions[i].code+"'>"+jsondata.regions[i].name+"</option>");
+							}
+							shengchildNum=1;
+							shichildNum=0;
+						}else{
+							shengchildNum=0;
+							shichildNum=0;
+						}
+					
+					}
+					else{
+						alert("获取市信息失败");
+					}
+				},
+				error : function() {
+					alert("获取市信息失败");
+				}
+			});
+		}
+	});
+	//市改变事件
+	$("#shi").change(function(){
+		if($("#shi").val()=="0"){
+			$("#qu").empty();
+			$("#qu").append("<option value=\"0\">请选择区/县</option>");
+			return;
+		}
+		var url ="#springUrl("/")sysregion/regions";
+		var postData = {
+			version:1,
+			code:$("#shi").val(),
+			type:0
+		};
+		if(url != "")
+		{
+			$.ajax({
+				type:"post",
+				url : url,
+				data : postData,
+				success : function(data) {
+					var jsondata = eval("("+data+")");
+					if(jsondata.retCode){
+						$("#qu").empty();
+						$("#qu").append("<option value=\"0\">请选择区/县</option>");
+						if(jsondata.regions.length>0){
+							for(var i = 0;i<jsondata.regions.length;i++){
+								$("#qu").append("<option value='"+jsondata.regions[i].code+"'>"+jsondata.regions[i].name+"</option>");
+							}
+							shichildNum=1;
+						}else{
+							shichildNum=0;
+						}
+					 }
+					 else{
+						alert("获取区信息失败");
+					 }
+					},
+				error : function() {
+					alert("获取区信息失败");
+				}
+			});
+		}
+	});
+//获得地址中的省，市，区代码
+					var sheng = "0";
+					var shi="0";
+					var qu = "0";
+					var codes = "${sysUser.regionCodes}";
+					if(codes!=""){
+						if(codes.indexOf("@")>=0){
+							var codesarry=codes.split("@");
+							sheng=codesarry[1];
+							shi=codesarry[2];
+							qu=codesarry[3];
+						}
+					}
+					//省---------
+					var url ="#springUrl("/")sysregion/regions";
+					var postData = {
+						version:1,
+						code:86,
+						type:0
+					};
+					$.ajax({
+						type : "post",
+						url : url,
+						data : postData,
+						success : function(data) {
+						var jsondata = eval("("+data+")");
+						if(jsondata.retCode){
+							for(var i = 0;i<jsondata.regions.length;i++){
+								$("#sheng").append("<option value='"+jsondata.regions[i].code+"'>"+jsondata.regions[i].name+"</option>");
+							}
+							$("#sheng").val(sheng);
+							for(var i = 0;i<jsondata.regions.length;i++){
+								if($("#sheng option:selected").val()==jsondata.regions[i].code){
+									shengchildNum=jsondata.regions[i].childNum;
+								}
+							}
+							//市----------
+							if($("#sheng").val()=="0"){
+								$("#shi").empty();
+								$("#shi").append("<option value=\"0\">请选择市</option>");
+								$("#qu").empty();
+								$("#qu").append("<option value=\"0\">请选择区/县</option>");
+								return;
+							}
+							var url = "#springUrl("/")sysregion/regions";
+							var postData = {
+								version:1,
+								code:$("#sheng").val(),
+								type:0
+							}
+							$.ajax({
+								type : "post",
+								url : url,
+								data : postData,
+								success : function(data) {
+								var jsondata = eval("("+data+")");
+								if(jsondata.retCode){
+									for(var i = 0;i<jsondata.regions.length;i++){
+										$("#shi").append("<option value='"+jsondata.regions[i].code+"'>"+jsondata.regions[i].name+"</option>");
+									}
+									$("#shi").val(shi);
+									for(var i = 0;i<jsondata.regions.length;i++){
+										if($("#shi option:selected").val()==jsondata.regions[i].code){
+											shichildNum=jsondata.regions[i].childNum;
+										}
+									}
+									//区----------
+									if($("#shi").val()=="0"){
+										$("#qu").empty();
+										$("#qu").append("<option value=\"0\">请选择区/县</option>");
+										return;
+									}
+									var url = "#springUrl("/")sysregion/regions";
+									var postData = {
+										version:1,
+										code:$("#shi").val(),
+										type:0			
+									}
+									$.ajax({
+										type:"post",
+										url : url,
+										data : postData,
+										success : function(data) {
+											var jsondata = eval("("+data+")");
+											if(jsondata.retCode){
+												for(var i = 0;i<jsondata.regions.length;i++){
+													$("#qu").append("<option value='"+jsondata.regions[i].code+"'>"+jsondata.regions[i].name+"</option>");
+												}
+												$("#qu").val(qu);
+											}
+											else{
+												alert("获取区信息失败");
+											}
+												
+										},
+										error : function() {
+											alert("获取区信息失败");
+										}
+									});	
+								}
+								else{
+									alert("获取市信息失败");
+								}
+											
+								},
+								error : function() {
+									alert("获取市信息失败");
+								}
+							});
+							}
+							else{
+								alert("获取省份信息失败");
+							}
+										
+							},
+						error : function() {
+							alert("获取省份信息失败");
+						}
+					});	
+});
+function checkForm(){
+	if($("#sheng").val()=="0"){
+		alert("请选择省");
+		return false;
+	}
+	if($("#shi").val()=="0"&&shengchildNum==1){
+		alert("请选择市");
+		return false;
+	}
+	if($("#qu").val()=="0"&&shichildNum==1){
+		alert("请选择区");
+		return false;
+	}
+
+	$("#regionCodes").val("86"+"@"+$("#sheng").val()+"@"+$("#shi").val()+"@"+$("#qu").val());
+	return true;
+}						
+</script>

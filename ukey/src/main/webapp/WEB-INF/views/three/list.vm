@@ -1,0 +1,179 @@
+#parse("three/include.vm")
+<script type="text/javascript" src="#springUrl('/')resources/js/validate.js"></script>
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>三证合一</span>
+</div>
+<div class="mbox">
+<a href="#springUrl('/')three?form" title="上传三证合一">
+    		<img title="上传三证合一" src="#springUrl('/')resources/images/create.png" class="image" alt="上传三证合一"/>上传三证合一
+		</a>&nbsp;&nbsp;
+<a href="#" title="导出三证合一" onclick="excelExport()">
+    	<img title="导出三证合一" src="#springUrl('/')resources/images/create.png" class="image" alt="导出三证合一"/>导出三证合一
+	</a>&nbsp;&nbsp;
+<a href="#springUrl('/')three?mergerForm" title="上传合并文件">
+    		<img title="上传合并文件" src="#springUrl('/')resources/images/create.png" class="image" alt="上传合并文件"/>上传合并文件
+		</a>	
+		<br/><br/>
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label>
+          <select id="project" name="project" class="bor selwidth1">
+              #if($projectmap.size()>1)
+                   <option value="0">所有项目</option>
+              #end
+              #foreach($proObj in $projectmap.entrySet())
+                   <option value="$proObj.key" #if($project== $proObj.key)
+                       selected="selected" #end>$proObj.value.name</option>
+           	  #end
+          </select>&nbsp;
+     <label>状态：</label>
+	        <select id="status" name="status" class="bor selwidth2">
+	             #foreach($rep in $statusMap.entrySet())
+	               	 <option value="$rep.key" #if($status== $rep.key)
+	                 selected="selected" #end>$rep.value</option>
+                 #end
+	        </select>
+	  <label>数据来源：</label>
+	        <select id="sourceType" name="sourceType" class="bor selwidth2">
+	             #foreach($rep in $soruceMap.entrySet())
+	               	 <option value="$rep.key" #if($sourceType== $rep.key)
+	                 selected="selected" #end>$rep.value</option>
+                 #end
+	        </select>
+	  <label>是否回写：</label>
+	        <select id="syncType" name="syncType" class="bor selwidth2">
+	             #foreach($rep in $syncMap.entrySet())
+	               	 <option value="$rep.key" #if($syncType== $rep.key)
+	                 selected="selected" #end>$rep.value</option>
+                 #end
+	        </select>
+	  <br><br>
+     <label>纳税人名称：</label>
+	 <input id="taxName" type="text" name="taxName" value="$!{taxName}" class="bor txtwidth2"/>
+	 <label style="width:150px;">纳税人识别号：</label>
+	 <input id="idCode" type="text" name="idCode" value="$!{idCode}" class="bor txtwidth2"/>
+	 <label style="width:150px;">统一社会信用代码：</label>
+	 <input id="creditCode" type="text" name="creditCode" value="$!{creditCode}" class="bor txtwidth2"/><br><br>
+	 <label>创建时间段：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+	 <input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="14%">创建时间</th>
+    	 	<th class="alignTwo" width="10%" >项目名称</th>
+    	 	<th class="alignTwo" width="14%">纳税人名称</th>
+    	 	<th class="alignTwo" width="14%">纳税人识别号</th>
+            <th class="alignTwo" width="14%" >统一社会信用代码</th>
+            <th class="alignTwo" width="8%" >状态</th>
+            <th class="alignTwo" width="8%" >数据来源</th>
+            <th class="alignTwo" width="8%" >是否回写</th>
+            <th class="alignTwo" width="10%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $three in $threes )
+	     	<tr>
+                ##<!--创建时间 -->
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${three.createTime})</td>
+    			##<!-- 项目名称 -->
+    			<td class="alignTwo" title="$projectmap.get(${three.project}).name">$projectmap.get(${three.project}).name</td>
+                ##<!-- 纳税人姓名-->
+    			<td class="alignTwo" title="${three.taxName}">${three.taxName}</td>
+    			##<!-- 纳税人识别号-->
+    			<td class="alignTwo" title="${three.idCode}">${three.idCode}</td>
+    			##<!-- 统一社会信用代码-->
+    			<td class="alignTwo" title="${three.creditCode}" name="code">${three.creditCode}</td>
+    			##<!-- 状态-->
+    			<td class="alignTwo">#if(${statusMap.containsKey($three.status)})${statusMap.get($three.status)}#else$three.status#end</td>
+                ##<!-- 数据来源-->
+    			<td class="alignTwo">#if(${soruceMap.containsKey($three.sourceType)})${soruceMap.get($three.sourceType)}#else$three.sourceType#end</td>
+                ##<!-- 是否已经同步-->
+    			<td class="alignTwo">#if(${syncMap.containsKey($three.syncType)})${syncMap.get($three.syncType)}#else$three.syncType#end</td>
+                
+    			<td class="alignTwo">
+				<form id="command" action="#springUrl('/')three/${three.id}" method="post">
+				<div style="float: left">
+				<a href="#springUrl('/')three/${three.id}" title="查看">
+    			<img title="查看" src="#springUrl('/')resources/images/show.png" class="image" alt="查看"/></a>
+				</div>
+				<div style="float: left">
+				<a href="#springUrl('/')three/${three.id}?form" title="修改">
+    			<img title="修改" src="#springUrl('/')resources/images/update.png" class="image" alt="修改"/></a>
+				</div>
+				<div style="float: left">				
+				<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除" type="image" title="删除" src="#springUrl('/')resources/images/delete.png" class="image_del" alt="删除" style="margin-top:7px;" />
+				</div>
+				<input type="hidden" name="_method" value="DELETE" /> 
+				</form>
+				</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script type="text/javascript">
+
+var acUrlTaxName = "#springUrl('/three/acTaxName')";
+var acUrlCreditCode = "#springUrl('/three/acCreditCode')";
+var acUrlIdCode = "#springUrl('/three/acIdCode')";
+  $(function(){
+	  $("#taxName").autocomplete({
+		  	source:acUrlTaxName
+			,minLength: 0
+		});
+	  $("td[name='code']").each(function(){
+		  if(!checkCreditCode($(this).html())){
+			  $(this).css("color","blue");
+		  }
+	  });
+	});
+	$(function(){
+	  $("#creditCode").autocomplete({
+		  	source:acUrlCreditCode
+			,minLength: 0
+		});
+
+	});
+	$(function(){
+	  $("#idCode").autocomplete({
+		  	source:acUrlIdCode
+			,minLength: 0
+		});
+
+	});
+	function excelExport(){
+			var project=$("#project").val();
+			var status=$("#status").val();
+			var sourceType=$("#sourceType").val();
+			var syncType=$("#syncType").val();
+			var taxName=$("#taxName").val();
+			var idCode=$("#idCode").val();
+			var creditCode=$("#creditCode").val();
+			var queryDate1 = $("#queryDate1").val();
+			var queryDate2 = $("#queryDate2").val();
+			window.open ("#springUrl('/')three/excel?project="+project+"&status="+status+"&sourceType="+sourceType+"&syncType="+syncType+"&taxName="+taxName+"&idCode="+idCode+"&creditCode="+creditCode+"&queryDate1="+queryDate1+"&queryDate2="+queryDate2) 
+	}
+
+</script>

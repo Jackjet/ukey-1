@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+    xmlns:beans="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+    <!-- HTTP security configurations -->
+    <http pattern="/resources/**" security="none" />
+    <http pattern="/trustdevice/**" create-session="stateless" security="none"></http>
+    <http pattern="/tsysuser/**" create-session="stateless" security="none"></http>
+    <http pattern="/tsUserLogin/**" create-session="stateless" security="none"></http>
+    <http pattern="/authApp/**" create-session="stateless" security="none"></http>
+    <http pattern="/amaccept.html" create-session="stateless" security="none"></http>
+    <http pattern="/amaccept/v1" create-session="stateless" security="none"></http>
+    <http pattern="/entityInfo/**" create-session="stateless" security="none"></http>
+    <http pattern="/addInfo/**" create-session="stateless" security="none"></http>
+    <http pattern="/entityTrust/**" create-session="stateless" security="none"></http>
+    <http pattern="/setupservice.html" create-session="stateless" security="none"></http>
+    <http pattern="/winappinfos" create-session="stateless" security="none"></http>
+    <http pattern="/dmp.html" create-session="stateless" security="none"></http>
+    <http pattern="/verifycert" create-session="stateless" security="none"></http>
+    <http pattern="/regionts" create-session="stateless" security="none"></http>
+    <http pattern="/taxser/**" create-session="stateless" security="none"></http>
+    <http pattern="/uactionser/**" create-session="stateless" security="none"></http>
+    <http pattern="/algupgser/**" create-session="stateless" security="none"></http>
+    <http pattern="/enterpriseInfoser/**" create-session="stateless" security="none"></http>
+    <http pattern="/certser/**" create-session="stateless" security="none"></http>
+    <http pattern="/tempPic/**" create-session="stateless" security="none"></http>
+    <http pattern="/threeser/**" create-session="stateless" security="none"></http>
+    <http pattern="/messageSer/**" create-session="stateless" security="none"></http>
+    <http auto-config="true" use-expressions="true">
+    	<!-- 验证码过滤器 -->
+    	<custom-filter ref="requestCaptchaFilter" before="FORM_LOGIN_FILTER"/>
+    	
+        <form-login 
+        login-page="/login"
+        login-processing-url="/j_spring_security_check"
+        authentication-failure-url="/login?login_error=t" 
+        authentication-success-handler-ref="itrusUkeyUserLoginSucess"
+        authentication-failure-handler-ref="itrusUkeyUserFailureSucess"
+        />
+        <logout
+        logout-url="/j_spring_security_logout"
+        success-handler-ref="itrusUkeyUserLogoutSucess"
+        />
+        
+        <!-- Configure these elements to secure URIs in your application -->
+
+        <intercept-url pattern="/projects/**" access="hasAnyRole('ROLE_SUPPER','ROLE_PROJECTS')" />
+        <intercept-url pattern="/admins/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ADMINS')" />
+        <intercept-url pattern="/adminrole/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ADMIN_ROLE')" />
+        <intercept-url pattern="/choices/**" access="hasAnyRole('ROLE_SUPPER','ROLE_CHOICES')" />
+        <intercept-url pattern="/projectkeyinfos/**" access="hasAnyRole('ROLE_SUPPER','ROLE_PROJECT_KEY_INFOS')"/>
+        <intercept-url pattern="/raaccount/**" access="hasAnyRole('ROLE_SUPPER','ROLE_RAACCOUNT')"/>
+        <intercept-url pattern="/sysconfigs/**" access="hasAnyRole('ROLE_SUPPER','ROLE_SYSCONFIGS')"/>
+        <intercept-url pattern="/licenses/**" access="hasAnyRole('ROLE_SUPPER','ROLE_LICENSES')"/>
+        <intercept-url pattern="/products/**" access="hasAnyRole('ROLE_SUPPER','ROLE_PRODUCTS')"/>
+        <intercept-url pattern="/versions/**" access="hasAnyRole('ROLE_SUPPER','ROLE_VERSIONS')"/>
+        <intercept-url pattern="/projectversions/**" access="hasAnyRole('ROLE_SUPPER','ROLE_PROJECT_VERSIONS')"/> 
+        <intercept-url pattern="/crlcontext/**" access="hasAnyRole('ROLE_SUPPER','ROLE_CRL_CONTEXT')"/>          
+        <intercept-url pattern="/adminpin/**" access="isAuthenticated()" />
+        <intercept-url pattern="/keyunlocks/**" access="hasAnyRole('ROLE_SUPPER','ROLE_KEY_UNLOCKS')" />
+        <intercept-url pattern="/adminlogs/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ADMINLOGS')"/> 
+        <intercept-url pattern="/userlogs/**" access="hasAnyRole('ROLE_SUPPER','ROLE_USERLOGS')"/> 
+        <intercept-url pattern="/syslogs/**" access="hasAnyRole('ROLE_SUPPER','ROLE_SYSLOGS')"/> 
+        <intercept-url pattern="/apps/**" access="hasAnyRole('ROLE_SUPPER','ROLE_APPS')"/> 
+        <intercept-url pattern="/member/**" access="isAuthenticated()" />
+        <intercept-url pattern="/dynamicmsg/**" access="hasAnyRole('ROLE_SUPPER','ROLE_DYNAMICMSG')" />
+        <intercept-url pattern="/statis/online/**" access="hasAnyRole('ROLE_SUPPER','ROLE_STATIS_ONLINE')" />
+        <intercept-url pattern="/statis/terminal/**" access="hasAnyRole('ROLE_SUPPER','ROLE_STATIS_TERMINAL')" />
+        <intercept-url pattern="/verchange/**" access="hasAnyRole('ROLE_SUPPER','ROLE_VERCHANGE')" />
+        <intercept-url pattern="/mastermanage/**" access="hasAnyRole('ROLE_SUPPER','ROLE_MASTER_MANAGE')" />
+        <intercept-url pattern="/realinfomanage/**" access="hasAnyRole('ROLE_SUPPER','ROLE_REALINFO_MANAGE')" />
+        <intercept-url pattern="/devicemanage/**" access="hasAnyRole('ROLE_SUPPER','ROLE_DEVICE_MANAGE')" />
+        <intercept-url pattern="/trustverify/**" access="hasAnyRole('ROLE_SUPPER','ROLE_TRUST_VERIFY')" />
+        <intercept-url pattern="/mailconfig/**" access="hasAnyRole('ROLE_SUPPER','ROLE_MAIL_CONFIG')" />
+        <intercept-url pattern="/smsgate/**" access="hasAnyRole('ROLE_SUPPER','ROLE_SMS_GATE')" />
+        <intercept-url pattern="/userinfo/**" access="hasAnyRole('ROLE_SUPPER','ROLE_USER_INFO')" />
+        <intercept-url pattern="/trustinfo/**" access="hasAnyRole('ROLE_SUPPER','ROLE_TRUST_INFO')" />
+        <intercept-url pattern="/authmanager/**" access="hasAnyRole('ROLE_SUPPER','ROLE_AUTH_MANAGE')" />
+        <intercept-url pattern="/sysregion/regions" access="isAuthenticated()" />
+        <intercept-url pattern="/sysregion/**" access="hasAnyRole('ROLE_SUPPER','ROLE_SYS_REGION')" />
+        <intercept-url pattern="/msgtemplate/**" access="hasAnyRole('ROLE_SUPPER','ROLE_SYS_MSG_TEMPLATE')" />
+        <intercept-url pattern="/taxconfig/**" access="hasAnyRole('ROLE_SUPPER','ROLE_TAX_CONFIG')" />
+        <intercept-url pattern="/message/**" access="hasAnyRole('ROLE_SUPPER','ROLE_MESSAGE')" />
+        <intercept-url pattern="/taxendate/**" access="hasAnyRole('ROLE_SUPPER','ROLE_TAX_END')" />
+        <intercept-url pattern="/useraction/**" access="hasAnyRole('ROLE_SUPPER','ROLE_USER_ACTION')" />
+        <intercept-url pattern="/algstatis/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ALGORITHM_STATIS')" />
+        <intercept-url pattern="/algupgrade/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ALGORITHM_UPGRADE')" />
+        <intercept-url pattern="/passcode/**" access="hasAnyRole('ROLE_SUPPER','ROLE_PASSCODE_MANAGE')" />
+        <intercept-url pattern="/three/**" access="hasAnyRole('ROLE_SUPPER','ROLE_THREE')" />
+	    <intercept-url pattern="/workOrder/**" access="hasAnyRole('ROLE_SUPPER','ROLE_WOEK_ORDER')" />
+        <intercept-url pattern="/enterpriseInfo/**" access="hasAnyRole('ROLE_SUPPER','ROLE_ENTERPRISE_INFO')" />
+        <intercept-url pattern="/mobilecert" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/download/**" access="permitAll" requires-channel="any"/>
+        <!--<intercept-url pattern="/testview/**" access="permitAll" requires-channel="any"/>-->
+        <intercept-url pattern="/unlock" access="permitAll" requires-channel="any"/>
+        <intercept-url pattern="/m/**" access="permitAll" requires-channel="any" />
+        <intercept-url pattern="/**" access="permitAll"/>
+
+        <!-- yun ying
+        <intercept-url pattern="/**" requires-channel="https"/>
+-->
+        <session-management invalid-session-url="/login" session-fixation-protection="newSession"/>
+    </http>
+    <!-- Configure Authentication mechanism -->
+    <authentication-manager alias="authenticationManager">
+    	<!-- 默认验证器配置 -->
+        <authentication-provider user-service-ref="itrusUkeyUserDetailsService">
+        	<password-encoder ref="passwordEncoder">
+        		<salt-source user-property="username"/>
+        	</password-encoder>
+        </authentication-provider>
+         
+    </authentication-manager>
+</beans:beans>

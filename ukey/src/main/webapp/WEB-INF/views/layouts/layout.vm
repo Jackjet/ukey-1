@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Pragma" content="no-cache" />
+	
+	<title>$!page_title</title>
+	
+	<link href="#springUrl('/resources/styles/style.css')" type="text/css" rel="stylesheet" />
+	<link href="#springUrl('/')resources/js/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="#springUrl('/')resources/styles/zTreeStyle_v3.5.17/zTreeStyle.css" type="text/css" rel="stylesheet" />
+	
+	<script type="text/javascript" src="#springUrl('/')resources/js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/messages_zh.js"></script>
+	<script type="text/javascript" src="#springUrl('/')resources/js/myjs.js"></script>
+    <script type="text/javascript" src="#springUrl('/')resources/js/zTree_v3.5.17/jquery.ztree.core-3.5.min.js"></script>
+    <script type="text/javascript" src="#springUrl('/')resources/js/PTA.js"></script>
+</head>
+<body>
+<div id="box">
+
+	#parse("header.vm")
+	<!-------中间内容部分------------>
+    <div id="content">
+	#parse("menu.vm")
+
+	<div id="main">
+		<div>
+		$screen_content
+		</div>
+	</div>
+	</div>
+	<!-------中间内容部分结束------------>
+	#parse("footer.vm")
+</div>
+</body>
+
+<script type="text/javascript">
+	/*
+	*验证组件内容是否为空，为空时显示相应消息，默认采用alert方式
+	* checkObj：需要验证的jquery对象
+	* failMsg: 组件内容为空时，需要显示错误信息
+	* msgObj: 错误信息需要显示的jquery对象,以红色字体提示
+	* isAlert： 是否采用alert方式显示错误信息
+	* 为空时返回false，否则返回true。
+	*/
+	function checkNull(checkObj,failMsg,msgObj,isAlert){
+		var ret = true;
+		if(checkObj.val()==""){ 
+			showFailMsg(failMsg,msgObj,isAlert);   
+		    ret = false; 
+		}
+		return ret;
+	}
+	/*
+	* 显示错误信息，默认采用alert方式
+	* failMsg: 组件内容为空时，需要显示错误信息
+	* msgObj: 错误信息需要显示的jquery对象,以红色字体提示
+	* isAlert： 是否采用alert方式显示错误信息
+	*/
+	function showFailMsg(failMsg,msgObj,isAlert){
+		if(!isAlert&&msgObj!=null){
+			msgObj.html("<font color='red'>"+failMsg+"</font>");
+		}else{
+			alert(failMsg);
+		}
+	}
+	/*
+	* 手机号检查方法
+	* 手机号不为空，且符合规则时返回true，否则返回false;
+	*/
+	function checkMobilePhone(checkObj,failMsg,msgObj,isAlert){
+		var ret = true;
+		var mpFrom = "，由11位数字组成";
+		var ab=/^\d{11}$/;
+		ret = checkNull(checkObj,failMsg,msgObj,true);
+		if(ret&&ab.test(checkObj.val()) == false){
+			showFailMsg(failMsg+mpFrom,msgObj,isAlert);
+			ret = false;
+		}
+		return ret;
+	}
+	/*
+	* 邮件地址检查
+	*/
+	function checkEmail(checkObj,failMsg,msgObj,isAlert){
+		var emailFrom = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		var addMsg = "邮件格式不正确";
+		var ret = checkNull(checkObj,failMsg,msgObj,isAlert);
+		if(ret && emailFrom.test(checkObj.val()) == false){
+			showFailMsg(addMsg,msgObj,isAlert);
+			ret = false;
+		}
+		return ret;
+	}
+</script>
+
+</html>

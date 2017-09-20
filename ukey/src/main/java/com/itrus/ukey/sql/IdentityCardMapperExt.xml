@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.IdentityCardMapper">
+
+  <update id="updateBackByPrimaryKey" parameterType="com.itrus.ukey.db.IdentityCard">
+    update identity_card
+    SET
+      back_img = #{backImg,jdbcType=VARCHAR},
+      back_img_hash = #{backImgHash,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

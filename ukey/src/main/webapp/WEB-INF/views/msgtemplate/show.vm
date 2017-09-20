@@ -1,0 +1,67 @@
+#parse("admins/include.vm")
+#parse("msgtemplate/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>消息模板</span>&nbsp;&gt;&nbsp;
+    <span>查看消息模板</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+        <div class="tabConBox_L" style="width:100%;">
+            <input type="hidden" name="retpath" value="$retpath"/>
+
+            <p>
+                <span>项目名称：</span><label>${project.name}</label>
+
+            <p/>
+
+            <p>
+                <span>模板类型：</span>
+                <label>#if(${replaceMap.containsKey($msgTemplate.messageType)})${replaceMap.get($msgTemplate.messageType)}#else$msgTemplate.messageType#end</label>
+
+            <p/>
+
+            <p>
+                <span>模板内容：</span>
+                <label>${msgTemplate.messageContent}</label>
+
+            <p/>
+
+        </div>
+	<div class="btn_bottom">
+		<span style="float: left"> 
+			<a href="#springUrl('/')msgtemplate" title="查看所有消息"> 
+				<img title="查看所有消息" src="#springUrl('/')/resources/images/list.png"
+							class="image" alt="查看所有消息" />
+			</a>
+		</span> 
+		<span style="float: left"> 
+			<a href="#springUrl('/')msgtemplate?form" title="新建消息"> 
+				<img title="新建消息" src="#springUrl('/')/resources/images/create.png"
+							class="image" alt="新建消息" />
+			</a>
+		</span> 
+		<span style="float: left"> 
+			<a href="#springUrl('/')msgtemplate/${msgTemplate.id}?form" title="修改消息"> 
+				<img title="修改消息" src="#springUrl('/')/resources/images/update.png" class="image"
+							alt="修改消息" />
+			</a>
+		</span> 
+		<span style="float: left; margin-left:10px; margin-top:5px;">
+		<form id="command" action="#springUrl('/')msgtemplate/${msgTemplate.id}" method="post">
+			<input type="hidden" name="_method" value="DELETE" /> 
+			<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除消息"
+								type="image" title="删除消息"
+								src="#springUrl('/')/resources/images/delete.png" class="image"
+								alt="删除消息" />
+		</form>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

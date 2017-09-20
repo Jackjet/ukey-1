@@ -1,0 +1,74 @@
+#set($layout="layouts/layout-null.vm")
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>移动端软件下载</title>
+    <link href="#springUrl('/resources/styles/mobiledl.css')" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="#springUrl('/')resources/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+       /*
+        *指定号码发送短信
+        */
+        function sendSMS(obj){
+        	var phoneNum = document.getElementById("phoneNum").value;
+        	if(/^1\d{10}$/.test(phoneNum)){
+        		obj.disabled=true;
+        		$.get("#springUrl('/m/sendsms')?time="+new Date().getTime(),
+                		{phoneNum:phoneNum},
+                		function (data){
+                			if(data.status == 0){
+                				alert("发送成功");
+                			}else{
+                				alert(data.optMsg);
+                				obj.disabled=false;
+                			}
+                		},
+                		"json"
+                	);
+        	}else{
+        		obj.disabled=false;
+        		alert("手机号不能为空，且必须以1开头的11位数字");
+        	}
+        	
+        }
+    </script>
+</head>
+<body>
+	<div id="winMacDownDiv" class="download_m">
+		<div class="download_bd">
+			<div class="download_info">
+				<a href="http://www.itrus.com.cn/" target="_blank">天威诚信主站</a>|
+				<a href="http://www.itrus.com.cn/about/66.html" target="_blank">联系我们</a>
+			</div>
+			<div class="download_btn_1">
+				<a href="http://itunes.apple.com/cn/app/id869273585?mt=8" target="_blank" title="浏览App Store查看更多信息">立即下载</a>
+			</div>
+			<div class="download_btn_2">
+				<a href="http://$httpHost#springUrl('/')m/android" >立即下载</a>
+			</div>
+			<div class="download_btn_3"><img src="#springUrl('/')resources/images/downQRcode.png" width="80" height="80"></div>
+			<div class="download_btn_4">
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="22%" height="15"></td>
+						<td width="49%" height="15"></td>
+						<td width="29%" height="15"></td>
+					</tr>
+					<tr align="left">
+						<td>&nbsp;</td>
+						<td><input id="phoneNum" name="phoneNum" type="text" class="download_inputtxt" /></td>
+						<td><input id="sendBut" type="button" value="发送" class="download_btn_fs" onclick="sendSMS(this);"/></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+
+			</div>
+			<div class="download_copy">CopyRight &copy; 2001-2014 北京天威诚信电子商务服务有限公司 版权所有</div>
+		</div>
+	</div>
+</body>
+</html>

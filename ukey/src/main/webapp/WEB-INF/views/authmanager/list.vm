@@ -1,0 +1,87 @@
+#parse("dynamicmsg/include.vm")
+<div class="DPosition">
+    <span>应用中心</span>&nbsp;&gt;&nbsp;
+    <span>授权管理</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label> 
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	    #if($projectMap.size()>1)
+		    <option value="0">所有项目</option>
+	    #end
+        #foreach($projectobj in $projectMap.entrySet())
+            <option value="${projectobj.key}"
+                #if($project==${projectobj.key}) selected="selected" #end>
+                ${projectobj.value.name}</option>
+        #end
+	</select>&nbsp;&nbsp;
+	<label>创建时间：</label>
+	<input id="startDate" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+	<span>至 </span>
+	<input id="endDate" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /><br /><br />
+    <label>应用名称：</label>
+    <select id="app" name="app" class="bor selwidth1">
+        #if($appMap.size()>1)
+            <option value="0">所有应用</option>
+        #end
+        #foreach($statusObj in $appMap.entrySet())
+        <option value="$statusObj.key" #if($statusObj.key == $app)selected="selected"#end>$statusObj.value.name</option>
+        #end
+    </select>&nbsp;&nbsp;
+    <label>用户名：</label>
+    <input name="userName" type="text" value="$!userName" class="bor" style="width: 205px;"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="20%" >项目名称</th>
+            <th class="alignTwo" width="10%" >账号类别</th>
+            <th class="alignTwo" width="20%" >用户名称</th>
+            <th class="alignTwo" width="15%">应用名称</th>
+            <th class="alignTwo" width="15%">授权时间</th>
+            <th class="alignTwo" width="20%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $log in $logList )
+	     	<tr>
+    			##<!-- 项目名称 -->
+    			<td class="alignL" title="$projectMap.get($appMap.get(${log.appId}).project).name">
+                    $projectMap.get($appMap.get(${log.appId}).project).name</td>
+                <td class="alignL">
+                    #if(${log.entityType} ==0)企业#elseif(${log.entityType} ==1)个人#else$!{log.entityType}未知#end
+                </td>
+                ##<!-- 用户名称 -->
+                <td class="alignL" title="$sysUserMap.get(${log.sysUser}).email">$sysUserMap.get(${log.sysUser}).email</td>
+                ##<!-- 应用名称 -->
+    			<td class="alignL" title="$appMap.get(${log.appId}).name">$appMap.get(${log.appId}).name</td>
+    			##<!-- 创建时间 -->
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${log.authTime})</td>
+    			<td class="alignTwo">
+				<div style="float: middle;">
+				<a href="#springUrl('/')authmanager/${log.id}" title="查看详情">
+    			<img title="查看消息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看详情"/></a>
+				</div>
+				</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+</div>

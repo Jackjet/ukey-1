@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.KeyUnlockMapper" >
+  <select id="selectKeySnLikeTerm" resultType="String" parameterType="Map" >
+    select
+      distinct key_sn
+    from
+    	key_unlock
+    where
+    	key_sn like #{term}
+    order by 
+    	key_sn
+    limit #{limtNum}
+   </select>
+  <select id="selectCertCnLikeTerm" resultType="String" parameterType="Map" >
+    select
+      distinct cert_cn
+    from
+    	key_unlock
+    where
+    	cert_cn like #{term}
+    order by 
+    	cert_cn
+    limit #{limtNum}
+   </select>
+</mapper>

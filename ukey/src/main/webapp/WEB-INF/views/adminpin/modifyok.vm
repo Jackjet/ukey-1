@@ -1,0 +1,17 @@
+#set($page_title="修改口令")
+<div class="DPosition">
+	<span>修改口令</span>
+</div>
+
+<div class="mbox">
+	<div class="mboxR">
+		<!--基本信息-->
+		<div class="mboxR_top mboxR_top_first">
+			<img src="#springUrl('/')resources/images/icon_list.png" />
+			<h3 class="h_nav">口令修改成功</h3>
+		</div>
+		<div class="mboxRbox">
+			<p>口令修改成功，请牢记新口令。<p />
+		</div>
+	</div>
+</div>    

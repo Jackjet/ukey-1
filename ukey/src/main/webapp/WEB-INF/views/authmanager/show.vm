@@ -1,0 +1,78 @@
+#parse("apps/include.vm")
+<div class="DPosition">
+    <span>应用中心</span>&nbsp;&gt;&nbsp;
+    <span>授权管理</span>&nbsp;&gt;&nbsp;
+    <span>查看授权</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--授权信息信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">授权信息</h3>
+	</div>
+	<div class="mboxRbox">
+        #if(${log})
+
+        <div class="tabConBox_L tabConBox_L_b" style="width: 100%;">
+            <p>
+                <span>项目名称：</span><label>$!{project.name}</label>
+            <p/>
+
+            <p>
+                <span>认证实体：</span><label>$!{etInfo.name}</label>
+            <p/>
+
+            <p>
+                <span>账户类别：</span>
+                <label>
+                    #if(${log.entityType} ==0)
+                        企业
+                    #elseif(${log.entityType} ==1)
+                        个人
+                    #else
+                        ${log.entityType}未知
+                    #end</label>
+            <p/>
+
+            <p>
+                <span>用户名：</span><label>$!{sysUser.email}</label>
+            <p/>
+
+            <p>
+                <span>应用名称：</span><label>$!{app.name}</label>
+            <p/>
+            <p>
+                <span>授权时间：</span><label>$date.format("yyyy-MM-dd HH:mm:ss",${log.authTime})</label>
+            <p/>
+            <p>
+                <span>授权信息：</span>
+                <label>
+                    <input type="checkbox" name="hasUserInfo" value="1"
+                        #if($log.hasUserInfo) checked #end disabled="yes"/>&nbsp;基本信息&emsp;
+                    <input type="checkbox" name="hasBLicense" value="1"
+                        #if($log.hasBLicense) checked #end disabled="yes"/>&nbsp;营业执照&emsp;
+                    <input type="checkbox" name="hasOrgCode" value="1"
+                        #if($log.hasOrgCode) checked #end disabled="yes"/>&nbsp;组织机构代码&emsp;
+                    <input type="checkbox" name="hasTaxCert" value="1"
+                        #if($log.hasTaxCert) checked #end disabled="yes"/>&nbsp;税务登记证&emsp;
+                    <input type="checkbox" name="hasLegalR" value="1"
+                        #if($log.hasLegalR) checked #end disabled="yes"/>&nbsp;法定代表人&emsp;
+                </label>
+            <p/>
+        </div>
+        #else
+            未找到相关授权信息
+        #end
+	<div class="btn_bottom">
+		<span style="float: left"> 
+		<a href="#springUrl('/')authmanager" title="查看所有授权信息">
+			<img title="查看所有授权信息" src="#springUrl('/')resources/images/list.png" class="image"
+						alt="查看所有授权信息" />
+		</a>
+		<span style="float: left; margin-left: 10px; margin-top: 5px;">
+			<font color="red">$!message</font>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

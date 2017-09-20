@@ -1,0 +1,153 @@
+#parse("statis/include.vm")
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>终端统计</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+    <form id="queryform" method="POST" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+    <div class="serchFormBox">
+    <label>项目名称：</label>
+	<select id="projectcur" name="project" class="bor selwidth1">
+		#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+		#end
+		#foreach($projectobj in $projectmap.entrySet())
+			<option value="${projectobj.key}"
+			#if($project == "${projectobj.key}")
+				selected="selected"
+			#end>
+			${projectobj.value.name}</option>
+		#end
+	</select>
+	<label>操作系统：</label>
+	<select id="osType" name="osType" class="bor selwidth1">
+		#foreach($obj in $osTypes.entrySet())
+		<option  value="${obj.key}" 
+		#if($osType == ${obj.key})
+			selected="selected"
+		#end >${obj.value}</option>
+		#end
+	</select>
+	</div>
+	<div class="serchFormBox">
+	<label>统计周期：</label>
+	<select id="cycle_sel" name="cycle" class="bor selwidth1">
+		#foreach($obj in $cycles.entrySet())
+		<option  value="${obj.key}" 
+		#if($cycle == ${obj.key})
+			selected="selected"
+		#end >${obj.value}</option>
+		#end
+	</select>
+	<label>统计时间：</label>
+	<select id="year1_sel" name="year1" class="bor selwidth1">
+		#foreach($obj in $years)
+			<option value="$obj" #if($obj == $year1) selected="selected" #end>$obj</option>
+		#end
+	</select>&nbsp;年
+	<span id="div_year2">
+	&emsp;至&emsp;
+	<select name="year2" class="bor selwidth1">
+		#foreach($obj in $years)
+			<option value="$obj" #if($obj == $year2) selected="selected" #end>$obj</option>
+		#end
+	</select>&nbsp;年
+	</span>
+	<span id="div_month">
+		<select name="month" class="bor selwidth1">
+		#foreach($obj in $months)
+			#set($monthS = $obj + 1)
+			<option value="$obj" #if($obj == $month) selected="selected" #end>$monthS</option>
+		#end
+	</select>&nbsp;月
+	</span>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </div>
+    </form>
+    </div>
+</div>
+	#set($projectName = '所有项目')
+	#if($project!=0)
+    	#set($projectName = ${projectmap.get($project).name})
+    #end
+    #set($cycleName = '月份')
+    #foreach($cn in $cycleNames.entrySet())
+    	#if($cycle == ${cn.key})
+			#set($cycleName = ${cn.value})
+		#end
+    #end
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%">项目名称</th>
+    	 	<th class="alignTwo" width="10%">年份</th>
+    	 	<th class="alignTwo" width="10%">统计周期</th>
+            <th class="alignTwo" width="15%">终端总数</th>
+            <th class="alignTwo" width="15%">活跃终端数</th>
+            <th class="alignTwo" width="15%">在线次数</th>
+            <th class="alignTwo" width="20%">查看详情</th>
+            </thead>
+            <tbody>
+            #set($monthTab = $month+1)
+           	#foreach( $ts in $terminalStatis )
+	     	<tr>
+    			<td class="alignL" title="$projectName">$projectName</td> <!-- 项目名称 -->
+    			<td class="alignTwo">${ts.year}</td> <!-- 年份 -->
+    			<td class="alignTwo">#if($cycle == 30 )$monthTab月#end${ts.cycle}${cycleName}</td> <!-- 统计周期 -->
+    			<td class="alignL">${ts.terminalNum}</td><!-- 终端总数 -->
+    			<td class="alignL">${ts.activityNum}</td><!-- 活跃终端数 -->
+    			<td class="alignL">${ts.onLineNum}</td><!-- 在线次数 -->
+    			<td class="alignTwo">
+    			<form action="#springUrl('/')statis/online" method="get">
+	    			<input type="hidden" name="project" value="$project"/>
+	    			<input id="startDate" name="startDate" type="hidden" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!{ts.date1})"/>
+	    			<input id="endDate" name="endDate" type="hidden" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!{ts.date2})"/>
+	    			<input onclick="return true;" value="查看详情" type="image" title="查看详情" src="#springUrl('/')resources/images/show.png"
+					class="image" alt="查看详情"/>
+				</form>
+				</td>
+    		</tr>
+			#end
+            #if(!$terminalStatis)
+            <tr>
+                <td colspan="7" class="alignTwo"><h4>请选择统计条件，点击“快速搜索”</h4></td>
+            </tr>
+            #end
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    <br/>
+</div>
+<script type="text/javascript">
+    $(function () {
+    	changeForDay();
+    	$("#cycle_sel").change(function () {
+    		changeForDay();
+        });
+        $("#year2_sel").change(function () {
+        	var year1 = $("#year1_sel").val();
+        	if($("#year2_sel").val() < year1){
+        		alert("统计年份结束时间不能小于开始时间");
+        		$("#year2_sel").val(year1);
+        	}
+        });
+    });
+    function changeForDay(){
+    	//若统计周期为天，则变换统计时间的显示
+    	if($("#cycle_sel").val() == 30){
+    		$("#div_year2").hide();
+    		$("#div_month").show();
+    	}else{
+    		$("#div_year2").show();
+    		$("#div_month").hide();
+    	}
+    }
+</script>

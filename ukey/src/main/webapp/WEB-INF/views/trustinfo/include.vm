@@ -1,0 +1,4 @@
+#set( $typeMap = {-1:"所有认证项",2:"营业执照",4:"组织机构代码",8:"税务登记证",16:"法定代表人"})
+<link href="#springUrl('/resources/js/lightcase/css/lightcase.css')" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="#springUrl('/')resources/js/lightcase/jquery.events.touch.js"></script>
+<script type="text/javascript" src="#springUrl('/')resources/js/lightcase/lightcase.js"></script>

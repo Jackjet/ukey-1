@@ -1,0 +1,73 @@
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>系统日志</span>
+</div>
+<div class="mbox">
+    <div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>业务类型：</label>
+	<input id="querytype" type="text" name="type" value="$!type" class="bor txtwidth1">
+	<label>内容：</label>
+	<input id="queryinfo" type="text" name="infos" value="$!infos" class="bor txtwidth1">
+        <label>记录时间：</label>
+        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+        <span>至 </span>
+        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+    
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    <table border="1" class="table1">
+    	<thead>
+    		<tr>
+    			<th class="alignTwo" width="10%">序号</th>
+    			<th class="alignTwo" width="15%">日期</th>
+    			<th class="alignTwo" width="15%">时间</th>
+    			<th class="alignTwo" width="15%">业务类型</th>
+    			<th class="alignTwo" width="45%">内容</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+			#foreach( $syslog in $syslogs )
+	     	<tr>
+    			<td class="alignTwo">${foreach.count}</td>
+    			<td class="alignTwo">$date.format("yyyy-MM-dd",${syslog.createTime})</td>
+    			<td class="alignTwo">$date.format("HH:mm:ss",${syslog.createTime})</td>
+    			<td class="alignL">${syslog.type}</td>
+   				<td class="alignL" title="${syslog.info}">${syslog.info}</td>
+    		</tr>
+			#end
+    	</tbody>
+    	 #parse("pages1.vm")
+    </table>
+    </div>
+    </div>
+   
+</div>
+
+<script type="text/javascript">
+<!--
+var acUrlType = "#springUrl("/syslogs/actype")";
+#[[
+  $(function(){
+	  // alert(acUrl);
+	  $("#querytype").autocomplete({
+		  	source:acUrlType
+			,minLength: 0
+		});
+	});
+]]#
+//-->
+</script>
+

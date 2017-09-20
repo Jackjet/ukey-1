@@ -1,0 +1,80 @@
+#parse("dynamicmsg/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>消息发布</span>&nbsp;&gt;&nbsp;
+    <span>增加消息</span>
+</div>
+<script type="text/javascript">
+<!--
+
+$().ready(function(){
+	$("#dmsgForm").validate({
+		rules:{
+			msgTitle:"required",
+			msgLink:{
+				required:true,
+				url:true
+			}
+		},
+		messages:{
+			msgLink:{
+				url:"请输入正确URL的消息链接"
+			}
+		}
+	});
+});
+//-->
+</script>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="dmsgForm" action="#springUrl('/')dynamicmsg" method="post" >
+	<div class="tabConBox_L" style="width:100%;">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称：</span>
+	<select name="project" class="bor sel342">
+		#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" >${projectobj.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+		<span>消息标题：</span>
+		<input id="msgTitle" name="msgTitle" type="text" class="bor txtth" maxlength="100" size="50"></input>
+	<p/>
+	<p>
+		<span>消息链接：</span>
+		<input id="msgLink" name="msgLink" type="text" class="bor txtth" maxlength="500" size="50"></input>
+	<p/>
+    <p>
+        <span>发布类型：</span>
+        <select id="publishType" name="publishType" class="bor sel342">
+            #foreach($typeObj in $publishTypeMap.entrySet())
+                <option value="$typeObj.key">$typeObj.value</option>
+            #end
+        </select>
+    </p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="创建" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

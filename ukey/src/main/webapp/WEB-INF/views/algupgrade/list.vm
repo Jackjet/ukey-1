@@ -1,0 +1,100 @@
+#parse("algupgrade/include.vm")
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>升级记录</span>
+</div>
+
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+        <div class="serchFormBox">
+            <form id="queryform" method="GET" action="">
+                <input id="pagecur" type="hidden" name="page" value="1">
+                <input id="sizecur" type="hidden" name="size" value="$!size">
+                <label>升级时间段：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+                
+                <label>升级类型：</label>
+	                <select id="updateType" name="updateType" class="bor selwidth2">
+	                     #foreach($rep in $replaceMap.entrySet())
+	                        <option value="$rep.key" #if($updateType== $rep.key)
+	                                selected="selected" #end>$rep.value</option>
+                    	#end
+	                </select>
+	               <p><br>
+                <label>KEY序列号：</label>
+                	<input id="keySn" type="text" name="keySn" value="$!{keySn}" class="bor txtwidth2"/>
+                <label style="width:150px;">旧KEY序列号：</label>
+                	<input id="oldkeySn" type="text" name="oldKeySn" value="$!{oldKeySn}" class="bor txtwidth2"/>
+				
+                 &emsp;&emsp;&emsp;<input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+            </form>
+        </div>
+    
+    </div>
+</div><br>
+	<a href="#" title="导出Excel" onclick="excelExport()">
+    	<img title="导出Excel" src="#springUrl('/')resources/images/create.png" class="image" alt="导出Excel"/>导出Excel
+	</a>
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%">升级时间</th>
+            <th class="alignTwo" width="15%">key序列号</th>
+            <th class="alignTwo" width="20%">证书CN</th>
+            <th class="alignTwo" width="15%">升级类型</th>
+            <th class="alignTwo" width="15%">旧KEY序列号</th>
+            <th class="alignTwo" width="20%">旧证书CN</th>
+            </thead>
+            <tbody>
+            #foreach( $certUpgrade in $certUpgradeall )
+	     	<tr>
+	     		<td class="alignL" title="${certUpgrade.createTime}">$date.format("yyyy-MM-dd HH:mm:ss",${certUpgrade.createTime})</td>
+	     		<td class="alignL" title="${certUpgrade.keySn}">${certUpgrade.keySn}</td>
+	     		<td class="alignL" title="${certUpgrade.certCn}">${certUpgrade.certCn}</td>
+	     		<td class="alignL" title="#if($replaceMap.get(${certUpgrade.updateType}))$replaceMap.get(${certUpgrade.updateType})#else #end">#if($replaceMap.get(${certUpgrade.updateType}))$replaceMap.get(${certUpgrade.updateType})#else #end</td>
+	     		<td class="alignL" title="$!{certUpgrade.oldKeySn}">$!{certUpgrade.oldKeySn}</td>
+	     		<td class="alignL" title="$!{certUpgrade.oldCertCn}">$!{certUpgrade.oldCertCn}</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+            <font color="red">$!errMsg</font>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript">
+
+var acUrlKeySn = "#springUrl('/algupgrade/ackeysn')";
+var acUrloldKeySn = "#springUrl('/algupgrade/acoldkeysn')";
+  $(function(){
+	  $("#keySn").autocomplete({
+		  	source:acUrlKeySn
+			,minLength: 0
+		});
+
+	});
+	$(function(){
+	  $("#oldkeySn").autocomplete({
+		  	source:acUrloldKeySn
+			,minLength: 0
+		});
+
+	});
+	function excelExport(){
+			var queryDate1=$("#queryDate1").val();
+			var queryDate2=$("#queryDate2").val();
+			var updateType=$("#updateType").val();
+			var keySn=$("#keySn").val();
+			var oldKeySn=$("#oldkeySn").val();
+			window.open ("#springUrl('/')algupgrade/excel?queryDate1="+queryDate1+"&queryDate2="+queryDate2+"&updateType="+updateType+"&keySn="+keySn+"&oldKeySn="+oldKeySn) 
+	}
+
+</script>

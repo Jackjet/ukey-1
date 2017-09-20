@@ -1,0 +1,1 @@
+#set( $statusinfos = [{"type":"pending","name":"待启用"},{"type":"valid","name":"使用中"},{"type":"revoke","name":"已停用"}])

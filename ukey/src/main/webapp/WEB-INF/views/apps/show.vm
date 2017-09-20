@@ -1,0 +1,190 @@
+#parse("apps/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>应用管理</span>&nbsp;&gt;&nbsp;
+    <span>查看应用</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--应用信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">应用信息</h3>
+	</div>
+	<div class="mboxRbox">
+        <div class="tabConBox_L tabConBox_L_b">
+            <p>
+                <span>项目名称：</span><label>${project.name}</label>
+            <p/>
+
+            <p>
+                <span>应用编号：</span><label>$!{app.uniqueId}</label>
+            <p/>
+
+            <p>
+                <span>应用名称：</span><label>${app.name}</label>
+            <p/>
+
+            <p>
+                <span>应用简称：</span><label>${app.shortName}</label>
+            <p/>
+
+            <p>
+                <span>应用类别：</span><label>$!{category.name}</label>
+            <p/>
+
+            <p>
+                <span>应用秘钥：</span><label>$!{app.authPass}</label>
+            <p/>
+        </div>
+        <div class="tabConBox_R">
+            <p>
+            <span style="width: 80px;">发布平台：</span>
+            <table style="width: 35%;" border="0">
+                <tr style="line-height: 39px;margin: 0 0 0 0;">
+                    <td><input type="checkbox" name="windows" value="1"
+                        #if($app.windows) checked #end disabled="yes"/></td>
+                    <td>Windows</td>
+                    <td>顺序权重</td>
+                    <td>#if($app.winOrder) $app.winOrder#else 0 #end</td>
+                </tr>
+                <tr style="line-height: 38px;margin: 0 0 0 0;">
+                    <td><input type="checkbox" name="windows" value="1"
+                        #if($app.android) checked #end disabled="yes"/></td>
+                    <td>Android</td>
+                    <td>顺序权重</td>
+                    <td>#if($app.androidOrder) $app.androidOrder#else 0 #end</td>
+                </tr>
+                <tr style="line-height: 37px;margin: 0 0 0 0;">
+                    <td><input type="checkbox" name="windows" value="1"
+                        #if($app.ios) checked #end disabled="yes"/></td>
+                    <td>IOS</td>
+                    <td>顺序权重</td>
+                    <td>#if($app.iosOrder) $app.iosOrder#else 0 #end</td>
+                </tr>
+            </table>
+            <p/>
+            <p>
+                <span style="width: 80px;">授权信息：</span>
+            <table style="width: 80%;">
+                <thead>
+                <th class="alignTwo" width="4%"></th>
+                <th class="alignTwo" width="18%"></th>
+                <th class="alignTwo" width="4%"></th>
+                <th class="alignTwo" width="18%"></th>
+                <th class="alignTwo" width="4%"></th>
+                <th class="alignTwo" width="52%"></th>
+                </thead>
+                <tbody>
+                <tr style="line-height: 39px;margin: 0 0 0 0;">
+                    <td><input type="checkbox" name="hasUserInfo" value="1"
+                        #if($app.hasUserInfo) checked #end disabled="yes"/></td>
+                    <td>基本信息</td>
+                    <td><input type="checkbox" name="hasBLicense" value="1"
+                        #if($app.hasBLicense) checked #end disabled="yes"/></td>
+                    <td>营业执照</td>
+                    <td><input type="checkbox" name="hasOrgCode" value="1"
+                        #if($app.hasOrgCode) checked #end disabled="yes"/></td>
+                    <td>组织机构代码</td>
+                </tr>
+                <tr style="line-height: 38px;margin: 0 0 0 0;">
+                    <td><input type="checkbox" name="hasTaxCert" value="1"
+                        #if($app.hasTaxCert) checked #end disabled="yes"/></td>
+                    <td>税务登记证</td>
+                    <td><input type="checkbox" name="hasLegalR" value="1"
+                        #if($app.hasLegalR) checked #end disabled="yes"/></td>
+                    <td>法定代表人</td>
+                </tr>
+                </tbody>
+            </table>
+            <p/>
+        </div>
+	<div class="btn_bottom">
+		<span style="float: left"> 
+		<a href="#springUrl('/')apps" title="查看所有应用信息"> 
+			<img title="查看所有应用信息" src="#springUrl('/')resources/images/list.png" class="image"
+						alt="查看所有应用信息" />
+		</a>
+		</span> 
+		<span style="float: left"> 
+		<a href="#springUrl('/')apps?form" title="新建应用信息"> 
+			<img title="新建应用信息" src="#springUrl('/')resources/images/create.png"
+						class="image" alt="新建应用信息" />
+		</a>
+		</span> 
+		<span style="float: left"> 
+		<a href="#springUrl('/')apps/${app.id}?form" title="修改应用信息"> 
+			<img title="修改应用信息" src="#springUrl('/')resources/images/update.png"
+						class="image" alt="修改应用信息" />
+		</a>
+		</span> 
+		<span style="float: left; margin-left: 10px; margin-top: 5px;">
+		<form id="command" action="#springUrl('/')apps/${app.id}" method="post">
+			<input type="hidden" name="_method" value="DELETE" /> 
+			<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除应用"
+							type="image" title="删除应用"
+							src="#springUrl('/')resources/images/delete.png" class="image"
+							alt="删除应用" />
+		</form>
+		</span> 
+		<span style="float: left; margin-left: 10px; margin-top: 5px;">
+			<font color="red">$!message</font>
+		</span>
+	</div>
+	</div>
+	</div>
+
+	<div class="mboxR">
+	</div>
+		
+	<div class="mboxR">
+		<!--集成设置-->
+		<div class="mboxR_top mboxR_top_first">
+			<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">集成设置</h3>
+		</div>
+		<div class="mboxRbox">
+			<div class="tabConBox_L">
+				<p>
+					<span>Windows：</span>
+					<div class="bor txtth" style="border: 0px; width: 360px">
+			  			<a href="#springUrl('/')apps/${app.id}?os=windows" title="修改Windows集成设置">
+	   					<img title="修改Windows集成设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改应用信息"/>
+						</a>　　
+					#if($windows)
+						已配置
+					#else
+						未配置
+					#end
+					</div>
+				<p/>
+				<p>
+					<span>Android：</span>
+					<div class="bor txtth" style="border: 0px; width: 360px">
+			  			<a href="#springUrl('/')apps/${app.id}?os=android" title="修改Android集成设置">
+	   					<img title="修改Android集成设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改应用信息"/>
+						</a>　　
+					#if($android)
+						已配置
+					#else
+						未配置
+					#end
+					</div>
+				<p/>
+				<p>
+					<span>iOS：</span>
+					<div class="bor txtth" style="border: 0px; width: 360px">
+			  			<a href="#springUrl('/')apps/${app.id}?os=ios" title="修改iOS集成设置">
+	   					<img title="修改IOS集成设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改应用信息"/>
+						</a>　　
+					#if($ios)
+						已配置
+					#else
+						未配置
+					#end
+					</div>
+				<p/>
+			</div>
+			<div class="btn_bottom">
+			</div>
+		</div>
+	</div>
+</div>

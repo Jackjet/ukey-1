@@ -1,0 +1,6 @@
+#set( $idxs = [{"type":"3","name":"高"},{"type":"2","name":"中"},{"type":"1","name":"低"}])
+
+#set($idxmap={})
+#foreach( $idx in $idxs)
+	#set( $idxmap[$idx.type] = $idx)
+#end

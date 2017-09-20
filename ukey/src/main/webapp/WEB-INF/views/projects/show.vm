@@ -1,0 +1,75 @@
+#parse("projects/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>项目管理</span>&nbsp;&gt;&nbsp;
+    <span>查看项目</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<p>
+	<span>序号：</span><label>${project.id}</label>
+	<p/>
+	<p>
+	<span>项目名称：</span><label>${project.name}</label>
+	<p/>
+	<p>
+	<span>联系人：</span>	<label>${project.contact}</label>
+	<p/>
+	<p>
+	<span>联系电话：</span>	<label>${project.phone}</label>
+	<p/>
+	<p>
+	<span>电子邮件：</span>	<label>${project.mail}</label>
+	<p/>
+	<span>RA配置：</span><label>
+		#if(!$raaccount)
+			$nora 
+		#else
+			${raaccount.raName}
+		#end</label>	
+	<p>
+	<span>运营平台地址：</span>	<label>$!{project.operationSysUrl}</label>
+	</p>
+#if($orgCode == "000000")
+	<p>
+	<span>企业代码：</span>	<label>$!{project.orgCode}</label>
+	</p>
+	<p>
+	<span>企业平台地址：</span>	<label>$!{project.orgUrl}</label>
+	</p>
+#end
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+		   				<a href="#springUrl('/')projects" title="查看所有项目信息">
+    					<img title="查看所有项目信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有项目信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+		   				<a href="#springUrl('/')projects?form" title="新建项目信息">
+    					<img title="新建项目信息" src="#springUrl('/')resources/images/create.png" class="image" alt="新建项目信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+ 		  				<a href="#springUrl('/')projects/${project.id}?form" title="修改项目信息">
+    					<img title="修改项目信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改项目信息"/>
+						</a>
+					</span>
+    				<span style="float:left;margin-left:10px; margin-top:5px;">
+	     				<form id="command" action="#springUrl('/')projects/${project.id}" method="post">
+		    				<input type="hidden" name="_method" value="DELETE"/>
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除项目" type="image" title="删除项目" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除项目"/>
+						</form>
+					</span>
+	</div>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+#parse("msgtemplate/include.vm")
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>认证信息</span>&nbsp;&gt;&nbsp;
+    <span>修改认证实体</span>
+</div>
+<div class="mboxR">
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">修改认证实体</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width: 100%;">
+
+	<form action="#springUrl('/')trustinfo" method="post">	
+		<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${entityTrueInfo.id}"/>
+	<p>
+		<span>认证实体：</span>
+		<input id="name" name="name"  type="text" class="bor txtth" value="$!{entityTrueInfo.name}"/>
+	<p/>
+	<p>
+		<span>实体标识：</span>
+		<input id="idCode" name="idCode"  type="text" class="bor txtth" value="$!{entityTrueInfo.idCode}"/>
+	<p/>
+	
+	<span class="message"  style="color:Red;float:left;margin-top:10px;">$!{message}</span>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>	
+</div>

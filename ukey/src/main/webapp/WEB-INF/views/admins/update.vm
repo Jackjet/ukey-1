@@ -1,0 +1,132 @@
+#parse("admins/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>管理员管理</span>&nbsp;&gt;&nbsp;
+    <span>编辑管理员</span>
+</div>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<script type="text/javascript">
+<!--
+$().ready(function(){
+	$("#adminForm").validate({
+		rules:{
+			name:"required",
+			confirmPasswd:{
+			    equalTo: "#password"
+			},
+			phone:{
+				number:true,
+				minlength:11,
+				maxlength:11
+			},
+			mail:{
+				required:true,
+				email:true
+			}
+		},
+		messages:{
+            confirmPasswd:{
+                equalTo: "口令和确认口令不一致"
+            },
+			phone:{
+				number:"请输入11位数字的电话号码",
+				minlength:$.validator.format("请您输入{0}位电话号码"),
+				maxlength:$.validator.format("请您输入{0}位电话号码")
+			},
+			mail:{
+				email:"请您输入正确格式的电子邮件"
+			}
+		}
+	});
+});
+//-->
+</script>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="adminForm" action="#springUrl('/')admins" method="post">
+	<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${admin.id}"/>
+	<input type="hidden" name="account" value="${admin.account}"/>
+	<div class="tabConBox_L" style="width:100%;">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称</span>
+	<select name="project" class="bor sel342">
+		#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" 
+		#if( $projectobj.id == $admin.project )selected="selected" #end>${projectobj.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+	<span>角色</span>
+	<select name="adminRole" class="bor sel342">
+		#foreach($adminrole in $adminroles)
+		<option value="${adminrole.id}" 
+		#if(${adminrole.id} == ${admin.adminRole}) selected="selected" #end>${adminrole.roleName}</option>
+		#end
+	</select>
+
+	</p>
+	<p>
+	<span>状态</span>
+	#foreach($status in $statuss)
+			<input type="radio" name="status" class="radcom rad_wh" value="${status.status}"
+			#if($status.status == $admin.status )checked #end/><label class="labelcom">${status.name}</label>
+		#end
+	</p>
+    <p>
+        <span>管理范围</span>
+        #foreach($accessType in $accessTypes)
+            <input type="radio" name="type" class="radcom rad_wh" value="${accessType.type}"
+                   #if($accessType.type == $admin.type )checked #end/><label class="labelcom">${accessType.name}</label>
+        #end
+    </p>
+	<p>
+		<span>账号</span>
+		<label>${admin.account}</label>
+	<p/>
+	<p>
+		<span>口令</span>
+		<input id="password" name="password" type="password" class="bor txtth" value=""/>
+        <label><font color="#A8A8A8" id="mess" style="margin-top:9px;">&nbsp;若不修改，请勿填写</font></label>
+	<p/>
+    <p>
+        <span>确认口令</span>
+        <input id="confirmPasswd" name="confirmPasswd" type="password" class="bor txtth" />
+    <p/>
+	<p>
+		<span>名称</span>
+		<input id="adminName" name="name" type="text" class="bor txtth" value="${admin.name}"></input>
+	<p/>
+	<p>
+		<span>电话号码</span>
+		<input id="phone" name="phone" type="text" class="bor txtth" value="${admin.phone}"></input>
+	<p/>
+	<p>
+		<span>电子邮件</span>
+		<input id="mail" name="mail"  type="text" class="bor txtth" value="${admin.mail}"></input>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

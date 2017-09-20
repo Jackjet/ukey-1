@@ -1,0 +1,2 @@
+#set( $isnewpair = {false:"使用原密钥对",true:"使用新密钥对"})
+#set( $nora = "不配置RA")

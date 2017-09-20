@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.UserActionMapper">
+
+    <sql id="selectPageByExampleSql">
+        SELECT
+          ua.*
+        FROM
+          user_action ua,client_dict cd
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </sql>
+    <select id="selectByExampleExt" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List" />
+        from user_action ua
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        <choose>
+            <when test="offset != null and offset &gt;= 0 and limit != null">
+                limit #{offset},#{limit}
+            </when>
+            <when test="offset == null and limit != null">
+                limit #{limit}
+            </when>
+        </choose>
+    </select>
+    <select id="selectPageByExample" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultMap="BaseResultMap">
+        <include refid="selectPageByExampleSql"/>
+        <choose>
+            <when test="offset != null and offset &gt;= 0 and limit != null">
+                limit #{offset},#{limit}
+            </when>
+            <when test="offset == null and limit != null">
+                limit #{limit}
+            </when>
+        </choose>
+    </select>
+    <select id="selectPagesByExample" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultMap="BaseResultMap">
+        SELECT
+          now_ua.*
+        FROM
+          (<include refid="selectPageByExampleSql"/>) now_ua ,client_dict cd
+        WHERE
+          cd.label LIKE '${searchFromPage}'
+        and
+          now_ua.version_num BETWEEN cd.start_ver_num AND cd.end_ver_num
+        and
+          now_ua.from_page = cd.dict_value
+        <choose>
+            <when test="offset != null and offset &gt;= 0 and limit != null">
+                limit #{offset},#{limit}
+            </when>
+            <when test="offset == null and limit != null">
+                limit #{limit}
+            </when>
+        </choose>
+    </select>
+    <select id="countByExampleExt" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultType="java.lang.Integer">
+        select count(*) from user_action ua
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+    </select>
+    <select id="countPagesByExample" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultType="java.lang.Integer">
+        SELECT
+          count(*)
+        FROM
+        (<include refid="selectPageByExampleSql"/>) now_ua ,client_dict cd
+        WHERE
+          cd.label LIKE '${searchFromPage}'
+        and
+          now_ua.version_num BETWEEN cd.start_ver_num AND cd.end_ver_num
+        and
+          now_ua.from_page = cd.dict_value
+    </select>
+    <select id="countPageByExample" parameterType="com.itrus.ukey.sql.UserActionExampleExt" resultType="java.lang.Integer">
+        SELECT count(*) FROM user_action ua,client_dict cd
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+</mapper>

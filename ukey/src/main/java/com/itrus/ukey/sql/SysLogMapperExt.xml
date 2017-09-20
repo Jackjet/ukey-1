@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.SysLogMapper" >
+  <select id="selectByExampleLimit" resultMap="BaseResultMap" parameterType="com.itrus.ukey.sql.SysLogExampleExt" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    limit ${offset},${limit}
+  </select>
+  <select id="selectTypeLikeTerm" resultType="String" parameterType="String" >
+    select
+      distinct type
+    from
+    	sys_log
+    where
+    	type like #{term}
+    order by 
+    	type
+   </select>
+</mapper>

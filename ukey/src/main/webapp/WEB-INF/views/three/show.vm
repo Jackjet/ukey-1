@@ -1,0 +1,82 @@
+#parse("three/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>三证合一</span>&nbsp;&gt;&nbsp;
+    <span>查看三证合一</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+        <div class="tabConBox_L" style="width:100%;">
+            <input type="hidden" name="retpath" value="$retpath"/>
+
+            <p>
+                <span>项目名称：</span><label>${project.name}</label>
+
+            <p/>
+            <p>
+                <span>纳税人名称：</span><label>${three.taxName}</label>
+
+            <p/>
+            <p>
+                <span>统一社会信用代码：</span><label>${three.creditCode}</label>
+
+            <p/>
+            <p>
+                <span>变更时间：</span><label>#if(${three.changeTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.changeTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>状态：</span><label>#if(${statusMap.containsKey($three.status)})${statusMap.get($three.status)}#else$three.status#end</label>
+
+            <p/>
+            <p>
+                <span>数据来源：</span><label>#if(${soruceMap.containsKey($three.sourceType)})${soruceMap.get($three.sourceType)}#else$three.sourceType#end</label>
+
+            <p/>
+            <p>
+                <span>是否已经回写：</span><label>#if(${syncMap.containsKey($three.syncType)})${syncMap.get($three.syncType)}#else$three.syncType#end</label>
+
+            <p/>
+            <p>
+                <span>创建时间：</span><label>#if(${three.createTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.createTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>提交时间：</span><label>#if(${three.submitTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.submitTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>回写时间：</span><label>#if(${three.syncTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.syncTime}) #end</label>
+
+            <p/>
+        </div>
+	<div class="btn_bottom">
+		<span style="float: left"> 
+			<a href="#springUrl('/')three" title="查看所有"> 
+				<img title="查看所有" src="#springUrl('/')/resources/images/list.png"
+							class="image" alt="查看所有" />
+			</a>
+		</span> 
+		<span style="float: left"> 
+			<a href="#springUrl('/')three/${three.id}?form" title="修改"> 
+				<img title="修改" src="#springUrl('/')/resources/images/update.png" class="image"
+							alt="修改" />
+			</a>
+		</span> 
+		<span style="float: left; margin-left:10px; margin-top:5px;">
+		<form id="command" action="#springUrl('/')three/${three.id}" method="post">
+			<input type="hidden" name="_method" value="DELETE" /> 
+			<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除"
+								type="image" title="删除"
+								src="#springUrl('/')/resources/images/delete.png" class="image"
+								alt="删除" />
+		</form>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

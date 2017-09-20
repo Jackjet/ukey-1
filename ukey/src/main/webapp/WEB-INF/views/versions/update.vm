@@ -1,0 +1,53 @@
+#parse("versions/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>软件管理</span>&nbsp;&gt;&nbsp;
+    <span>修改版本</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">修改版本</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="version" action="#springUrl('/')versions" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="update" value="1"/>
+	<input type="hidden" name="id" value="${version.id}"/>
+	<div class="tabConBox_L">
+
+	<p>
+	<span>软件名称：</span>
+	<select name="product" >
+		#foreach($productobj in $products)
+		<option value="${productobj.id}"
+		#if(${version.product} == ${productobj.id})selected#end>${productobj.name}</option>
+		#end
+	</select>
+	</p>
+	<p>
+		<span>软件版本：</span>
+		<input name="productVersion" type="text" class="bor txtth" value="$!{version.productVersion}"/>
+	</p>
+	<p>
+	<span>软件状态：</span>
+	#foreach($status in $statuss0)
+		<input type="radio" name="status" class="radcom rad_wh" value="${status.status}"
+		#if($status.status == ${version.status})checked #end /><label class="labelcom">${status.name}</label>
+	#end
+	<p/>
+	<p>
+		<span>描述信息：</span>
+		<textarea name="info" class="bot txta600" cols="" rows="">$!{version.info}</textarea>
+	</p>
+	<p>
+	<span>安装文件：</span><input type="file" name="file1" class="mt9"/>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

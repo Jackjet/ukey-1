@@ -1,0 +1,143 @@
+#parse("projectkeyinfos/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>序列号设置</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label> 
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+	#end 
+	#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" 
+		#if($project== ${projectobj.id}) selected="selected" #end>
+					${projectobj.name}</option>
+	#end
+	</select>&nbsp;&nbsp;
+	<label>序列号1：</label>
+	<input id="querysn1" type="text" name="sn1" value="$!sn1" class="bor txtwidth1"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    <a id="addkeyinfos" href="#springUrl('/')/projectkeyinfos?form" title="新建序列号设置">
+    	<img title="新建序列号设置" src="#springUrl('/')/resources/images/create.png" class="image" alt="新建序列号设置"/>新建序列号设置
+	</a>
+	<a id="updateSnProject" onclick="updateSnProject();" href="#" title="修正序列号项目归属">
+    	<img title="修正序列号项目归属" src="#springUrl('/')/resources/images/update.png" class="image" alt="修正序列号项目归属"/>修正序列号项目归属
+	</a>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="10%">序号</th>
+    	 	<th class="alignTwo" width="20%">项目名称</th>
+    	 	<th class="alignTwo" width="20%">序列号1</th>
+    	 	<th class="alignTwo" width="20%">序列号2</th>
+    	 	<th class="alignTwo" width="15%">管理员PIN码类型</th>
+            <th class="alignTwo" width="15%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $projectkeyinfo in $projectkeyinfos )
+	     	<tr>
+	     		<td class="alignTwo">${foreach.count}</td>
+    			<td class="alignL" title="${projectmap.get($projectkeyinfo.project).name}">${projectmap.get($projectkeyinfo.project).name}</td>
+				<td class="alignL">${projectkeyinfo.sn1}</td>
+ 				<td class="alignL">${projectkeyinfo.sn2}</td>
+    			<!-- 
+    			<td>${projectkeyinfo.mail}<br>$date.format("yyyy/MM/dd HH:mm:ss",${projectkeyinfo.createTime})</td>
+    			 -->
+ 				<td class="alignL">
+ 					#foreach($adminpintype in $adminpintypes)
+ 						#if( $adminpintype.type == ${projectkeyinfo.adminPinType})
+ 							#if(${projectkeyinfo.adminPinType} != "null")
+ 								${adminpintype.name}
+ 							#end
+ 						#end
+ 					#end
+ 				</td>
+				<td class="alignL">
+				
+    				<a href="#springUrl('/')/projectkeyinfos/${projectkeyinfo.id}?form" title="修改序列号设置信息">
+    				<img title="修改序列号设置信息" src="#springUrl('/')/resources/images/update.png" class="image" alt="修改序列号设置信息"/>
+					</a>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')/projectkeyinfos/${projectkeyinfo.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除序列号设置" type="image" title="删除序列号设置" src="#springUrl('/')/resources/images/delete.png"
+						class="image" alt="删除序列号设置"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script type="text/javascript">
+function updateSnProject(){
+	var projectId = $("#projectcur").val();
+	if(typeof(projectId)=="undefined"||projectId==0){
+		alert("请您先选择一个项目进行修改");
+		return;
+	}
+	var url = "#springUrl('/')/projectkeyinfos/updateSnProject";
+	$.ajax({
+		type : "post",
+		dataType:"JSON",
+		url : url,
+		data : {projectId:projectId},
+		success: function(data){
+			if(data.retCode=="10000"){
+				//处理成功
+				alert("本次修改了"+data.updateNum+"条，该项目软件更新记录总共"+data.projectAllNum+"条");
+			}else{
+				alert("错误代码："+data.retCode+",错误信息："+data.retMsg);
+			}
+		}
+	});
+}
+<!--
+var urlbase = "#springUrl('/')projectkeyinfos";
+var acUrlAccout = "#springUrl("/projectkeyinfos/acsn1")";
+#[[
+	$("#addkeyinfos").click(function(event){
+		event.preventDefault();
+		
+		var url = urlbase + "?form=1";
+		
+		url += "&project=" + $("#projectcur").val();	
+		
+		document.location = url;
+		
+		//alert("hello");
+	});
+
+	$(function(){
+	  // alert(acUrl);
+	  $("#querysn1").autocomplete({
+		  	source:acUrlAccout
+			,minLength: 0
+		});
+
+	});
+]]#
+//-->
+</script>

@@ -1,0 +1,88 @@
+#set($layout="layouts/layout-no-frame.vm")
+#parse("sysRegion/include.vm")
+#set($typeName = $regionTypeMap.get(${sysRegion.type}))
+#set($fTypeName = $regionTypeMap.get(${pSysRegion.type}))
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>行政区管理</span>&nbsp;&gt;&nbsp;
+    <span>$typeName信息</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+        <div class="mboxRbox">
+            <div class="tabConBox_L">
+                #if(${sysRegion.type} > 1)
+                    <p>
+                        <span>所属$fTypeName：</span><label>${pSysRegion.nameCn}</label>
+                    <p/>
+                    <p>
+                        <span>$typeName名称：</span><label>${sysRegion.nameCn}</label>
+                    <p/>
+                #else
+                    <p>
+                        <span>$typeName名称：</span><label>${sysRegion.nameCn}</label>
+                    <p/>
+                    <p>
+                        <span>$typeName行政区代码：</span><label>${sysRegion.code}</label>
+                    <p/>
+                #end
+                <p>
+                    <span>状态：</span><label>$statusMap.get(${sysRegion.status})</label>
+                <p/>
+            </div>
+            #if(${sysRegion.type} > 1)
+                <div class="tabConBox_R">
+                    <p>
+                        <span>$fTypeName行政区代码：</span><label>${pSysRegion.code}</label>
+                    <p/>
+                    <p>
+                        <span>$typeName行政区代码：</span><label>${sysRegion.code}</label>
+                    <p/>
+                </div>
+            #end
+        <div class="btn_bottom">
+		<span style="float:left">
+		   				<a href="#springUrl('/')sysregion/list?parentId=${pSysRegion.id}&type=${sysRegion.type}" title="查看所有信息">
+                            <img title="查看所有信息" src="#springUrl('/')resources/images/list.png" class="image"
+                                 alt="查看所有信息"/>
+                        </a>
+					</span>
+    				<span style="float:left">
+ 		  				<a href="#springUrl('/')sysregion/${sysRegion.id}?form" title="修改信息">
+                            <img title="修改信息" src="#springUrl('/')resources/images/update.png" class="image"
+                                 alt="修改信息"/>
+                        </a>
+					</span>
+    				<span style="float:left;margin-left:10px; margin-top:5px;">
+	     				<form id="command" action="#springUrl('/')sysregion/${pSysRegion.id}/${sysRegion.type}/${sysRegion.id}" method="post">
+                            <input type="hidden" name="_method" value="DELETE"/>
+                            <input type="hidden" name="fromId" value="1" />
+                            <input onclick="return confirm('删除后将不能恢复，是否删除?');"
+                                   value="删除行政区" type="image" title="删除行政区"
+                                   src="#springUrl('/')resources/images/delete.png"
+                                   class="image" alt="删除行政区"/>
+                        </form>
+					</span>
+        </div>
+	</div>
+        <font color="red">$!errMsg</font><!-- 错误信息提示 -->
+	</div>
+</div>
+<script type="text/javascript">
+    var hasRefresh = 0;
+        #if(1 == $reNode)
+        hasRefresh = 1;
+        #end
+    $(document).ready(function(){
+        //刷新指定节点
+        if (hasRefresh == 1){
+            var nodeId = ${pSysRegion.id};
+            //调用frame上级js,刷新根节点
+            window.parent.reAsyncNode(nodeId);
+        }
+    });
+</script>

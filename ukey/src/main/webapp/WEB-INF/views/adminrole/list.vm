@@ -1,0 +1,57 @@
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>角色管理</span>
+</div>
+<div class="mbox">
+    <form id="queryform" method="GET" action="">
+        <input id="pagecur" type="hidden" name="page" value="$!page">
+        <input id="sizecur" type="hidden" name="size" value="$!size">
+    </form>
+    #parse("pages0.vm")
+    <a href="#springUrl('/')adminrole?form" title="新建管理员角色">
+    	<img title="新建管理员角色" src="#springUrl('/')resources/images/create.png" class="image" alt="新建软件信息"/>新建角色
+	</a><br/><br/>
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="5%">序号</th>
+    			<th class="alignTwo" width="20%">角色名称</th>
+    			<th class="alignTwo" width="55%">角色描述</th>
+    			<th class="alignTwo" width="20%">操作</th>
+            </thead>
+            <tbody>
+            	#foreach( $adminrole in $adminroles )
+	     	<tr>
+    			<td  class="alignTwo">${foreach.count}</td>
+    			<td  class="alignTwo" title="${adminrole.roleName}">${adminrole.roleName}</td>
+    			<td  class="alignL" title="${adminrole.roleDescribe}">${adminrole.roleDescribe}</td>
+				<td  class="alignThree">
+				<div class="l">
+				<a href="#springUrl('/')adminrole/${adminrole.id}" title="查看角色信息">
+    				<img title="查看角色信息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看角色信息"/>
+				</a>
+				</div>
+				<div class="l">
+				<a href="#springUrl('/')adminrole/${adminrole.id}?form" title="修改角色信息">
+    				<img title="修改角色信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改角色信息"/>
+				</a>
+				</div>
+				<div class="l"  style="margin-top:7px;">
+				<form id="command" action="#springUrl('/')adminrole/${adminrole.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除角色" type="image" title="删除角色" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除角色"/>
+				</form>
+				</div>
+				</td>
+    		</tr>
+			#end 
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+	<font color="red">$!message</font>
+</div>

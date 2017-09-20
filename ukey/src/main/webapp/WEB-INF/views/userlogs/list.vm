@@ -1,0 +1,105 @@
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>用户日志</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+    <label>项目名称：</label>
+    <select id="projectcur"	name="project" class="bor selwidth1">
+        #if($projectmap.size()>1)
+            <option value="0">所有项目</option>
+        #end
+        #foreach($proObj in $projectmap.entrySet())
+            <option value="$proObj.key" #if($project== $proObj.key) selected="selected" #end>$proObj.value.name</option>
+        #end
+    </select>&nbsp;&nbsp;
+	<label>记录时间：</label>
+	<input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+	<span>至 </span>
+	<input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+    <label>ip：</label>
+    <input id="queryip" type="text" name="ip" value="$!ip" class="bor txtwidth1" /><br/><br/>
+    <label>业务类型：</label>
+	<input id="querytype" type="text" name="type" value="$!type" size="12" class="bor txtwidth1" style="width: 103px;"/>&nbsp;&nbsp;
+    <label>序列号：</label>
+    <input id="querykeysn" type="text" name="keySn" value="$!keySn" class="bor txtwidth1" />
+    <label>内容：</label>
+    <input id="querytype" type="text" name="info" value="$!info" class="bor" style="width:206px;">
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%">项目名称</th>
+    	 	<th class="alignTwo" width="15%">记录时间</th>
+            <th class="alignTwo" width="15%">序列号</th>
+            <th class="alignTwo" width="10%">业务类型</th>
+            <th class="alignTwo" width="45%">内容</th>
+            </thead>
+            <tbody>
+            #foreach( $userlog in $userlogs )
+	     	<tr>
+    			<td class="alignL" title="${projectmap.get($userlog.project).name}">${projectmap.get($userlog.project).name}</td>
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${userlog.createTime})</td>
+    			<td class="alignL" title="${userlog.keySn}">${userlog.keySn}</td>
+    			<td class="alignTwo">${userlog.type}</td>
+   				<td class="alignL" title="${userlog.info}">ip:$!{userlog.ip}<br>$!{userlog.info}</td>
+    		</tr>
+			#end   
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    <br/>
+</div>
+<script type="text/javascript">
+<!--
+var acUrlType = "#springUrl('/userlogs/actype')";
+var acUrlKeySn = "#springUrl('/userlogs/ackeysn')";
+var acUrlIp = "#springUrl('/userlogs/acip')";
+#[[
+  $(function(){
+	  // alert(acUrl);
+	  $("#querytype").autocomplete({
+		  	source:acUrlType
+			,minLength: 0
+		});
+
+	  $("#querykeysn").autocomplete({
+		  	source:acUrlKeySn
+			,minLength: 0
+		});
+		
+		$("#queryip").autocomplete({
+		  	source:acUrlIp
+			,minLength: 0
+		});
+
+	});
+//起始日期不能大于结束日期        
+  function ValidtorTime(PstartId, PendId) {
+      var d1 = new Date($("#" + PstartId).val().replace(/\-/g, "\/"));
+      var d2 = new Date($("#" + PendId).val().replace(/\-/g, "\/"));
+      if (d1 > d2) {
+          alert("起始时间必须小等于终止时间!");
+          return false;
+      } return true;
+  }
+]]#
+//-->
+</script>
+

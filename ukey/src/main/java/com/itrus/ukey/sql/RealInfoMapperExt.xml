@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.RealInfoMapper">
+	<select id="selectKeySnLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct enterprise_name
+		from
+		real_info
+		where
+		enterprise_name like #{term}
+		order by
+		enterprise_name
+		limit #{limtNum}
+	</select>
+</mapper>

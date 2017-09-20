@@ -1,0 +1,46 @@
+#parse("sysconfigs/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>系统配置</span>&nbsp;&gt;&nbsp;
+    <span>编辑配置</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">添加配置</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="sysconfig" action="#springUrl('/')sysconfigs" method="post">
+	<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${sysconfig.id}"/>
+	<div class="tabConBox_L">
+	<p>
+	<span>配置名称：</span>
+	<label>$sysconfs.get($sysconfig.type)</label>
+	<input name="type" type="hidden" value="${sysconfig.type}"></input>
+	</p>
+	<p>
+	<span>配置内容：</span>
+	#if(${sysconfig.type}=='isUpdate'||${sysconfig.type}=='isLogNoSn'||${sysconfig.type}=='openTaxSync'||${sysconfig.type}=='openWriteBackTax')
+	<select name="config" class = "bor selwidth1">
+		#foreach( $sysconf in $confMap.entrySet())
+			<option value="${sysconf.key}" 
+			#if(${sysconf.key.equals(${sysconfig.config})})
+				selected="selected"
+			#end
+			>${sysconf.value}</option>
+		#end
+	</select>
+	#else
+	<input name="config" type="text" class="bor txtth" value="${sysconfig.config}"></input>
+	#end
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

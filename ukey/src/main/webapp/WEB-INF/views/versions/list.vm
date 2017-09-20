@@ -1,0 +1,104 @@
+#parse("versions/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>版本管理</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>软件名称：</label> 
+	<select id="productcur" name="product" class="bor selwidth1">
+		#if($products.size()>1)
+		<option value="0">所有产品</option>
+		#end
+		#foreach($productobj in $products)
+			<option value="${productobj.id}"
+			#if($product == "${productobj.id}")
+				selected="selected"
+			#end>
+			${productobj.name}</option>
+		#end
+	</select>&nbsp;&nbsp;
+    <label>版本号：</label>
+    <input id="queryVerNum" type="text" name="versionNum" value="$!versionNum" class="bor txtwidth1"/>
+    <label>文件名：</label>
+    <input id="queryVerName" type="text" name="verName" value="$!verName" class="bor txtwidth1"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    
+    </div>
+    <a href="#springUrl('/')/versions?form=1&product=$!product" title="新建软件版本">
+    	<img title="新建软件版本" src="#springUrl('/')/resources/images/create.png" class="image" alt="新建软件版本"/>新建软件版本
+	</a>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%">软件名称</th>
+    	 	<th class="alignTwo" width="10%" >版本</th>
+    	 	<th class="alignTwo" width="30%">文件</th>
+            <th class="alignTwo" width="10%" >状态</th>
+            <th class="alignTwo" width="15%" >查看设置</th>
+            <th class="alignTwo" width="20%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $version in $versions )
+	     	<tr>
+    			<td class="alignL" title="$productmap.get(${version.product}).name">
+                    $productmap.get(${version.product}).name</td>
+    			<td class="alignL">${version.productVersion}</td>
+    			<td class="alignL">文件：
+    			#if($version.status != "notfound")
+    			<a href="#springUrl('/')download/${version.id}" style="float: none;">${version.name}</a>
+    			#else
+    			${version.name}
+    			#end	
+    			<br>大小：${version.length}
+    			</td>
+    			<td class="alignTwo">${statusmap.get($version.status).name}</td>
+    			<td class="alignTwo"><a href="#springUrl('/')projectversions?product=${version.product}&version=${version.id}">软件关联</a></td>
+    			<td class="alignTwo">
+    				<div class="l">
+    				<a href="#springUrl('/')versions/${version.id}" title="查看项目信息">
+    				<img title="查看软件版本信息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看软件版本信息"/>
+					</a>
+    				<a href="#springUrl('/')versions/${version.id}?form" title="修改软件版本信息">
+    				<img title="修改软件版本信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改软件版本信息"/>
+					</a>
+					</div>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')versions/${version.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除软件版本" type="image" title="删除软件版本" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除软件版本"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script type="text/javascript">
+    $(function(){
+        // alert(acUrl);
+        $("#queryVerNum").autocomplete({
+            source:"#springUrl('/versions/number')",
+            minLength: 0
+        });
+    });
+</script>

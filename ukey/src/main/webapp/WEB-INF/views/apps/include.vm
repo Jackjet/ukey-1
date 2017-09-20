@@ -1,0 +1,24 @@
+#set( $ostypeinfos = [{"type":"windows","name":"Windows"},{"type":"android","name":"Android"},{"type":"ios","name":"iOS"}])
+
+#set( $apptypeinfos = [{"type":"web","name":"Web"},{"type":"app","name":"App"},{"type":"inSoft","name":"内嵌式"}])
+
+#set( $urltypeinfos = [{"type":"block","name":"URL拦截"},{"type":"replace","name":"URL替换"},{"type":"inject","name":"URL注入"}])
+
+## 支持的可编辑文件编码类型
+#set( $encodings = ["UTF-8","GBK"])
+
+## 可编辑的文件扩展名
+#set( $editexts = ["html","htm","txt","js","ini"])
+
+
+## 映射 os 名称为 显示名称
+#if($os == "windows")
+#set( $osname ="Windows" )
+#end
+#if($os == "android")
+#set( $osname ="Android" )
+#end
+#if($os == "ios")
+#set( $osname ="iOS" )
+#end
+

@@ -1,0 +1,100 @@
+#parse("devicemanage/include.vm")
+<div class="DPosition">
+	<span>业务管理</span>&nbsp;&gt;&nbsp; 
+	<span>设备管理</span>
+</div>
+<div class="mbox">
+	<div class="searBox">
+		<div class="serchForm">
+			<div class="serchFormBox">
+				<form id="queryform" method="GET"
+					action="#springUrl('/')devicemanage">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size"> 
+					<label>项目名称：</label>
+					<select id="projectcur" name="project" class="bor selwidth1">
+					#if($projectmap.size()>1)
+						<option value="" >所有项目</option> 
+					#end 
+					#foreach($projectobj in $projectmap.entrySet())
+						<option value="${projectobj.key}" 
+							#if($project=="${projectobj.key}") selected="selected" #end>
+							${projectobj.value.name}</option> 
+					#end
+					</select> 
+					<label>所有者：</label> 
+						<input name="userCn" type="text" value="$!userCn" size="12" class="bor txtwidth1" /> 
+					<label>设备类型：</label>
+						<input id="modelNum" type="text" name="modelNum" value="$!modelNum"	class="bor txtwidth1"> <br /><br /> 
+					<label>设备序号：</label> 
+						<input name="deviceSn" type="text" value="$!deviceSn" size="12" class="bor txtwidth1" /> 
+					<label>时间范围：</label>
+					<input id="startDate" name="startDate" type="text"
+						value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)"
+						class="bor txtwidth2"
+						onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+					<span>至 </span> 
+					<input id="endDate" name="endDate" type="text"
+						value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)"
+						class="bor txtwidth2"
+						onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+					<input type="submit" value="快速搜索" class="btn_sear" />
+				</form>
+			</div>
+		</div>
+	</div>
+
+	#parse("pages0.vm")
+	<div class="conBox">
+		<div class="tabCon">
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="15%">项目名称</th>
+					<th class="alignTwo" width="15%">所有者</th>
+					<th class="alignTwo" width="10%">设备类型</th>
+					<th class="alignTwo" width="25%">设备序号</th>
+					<th class="alignTwo" width="15%">授信截止时间</th>
+					<th class="alignTwo" width="10%">状态</th>
+					<th class="alignTwo" width="10%">操作</th>
+				</thead>
+				<tbody>
+					#foreach( $udcdomain in $udclist )
+					<tr>
+						<td class="alignL" title="$projectmap.get(${udcdomain.project}).name">$projectmap.get(${udcdomain.project}).name</td><!-- 项目名称 -->
+						<td class="alignL" title="$!{udcdomain.userCn}">$!{udcdomain.userCn}</td><!-- 所有者  -->
+						<td class="alignL" title="$!{udcdomain.modelNum}">$!{udcdomain.modelNum}</td><!-- 设备类型 -->
+						<td class="alignTwo" title="${udcdomain.deviceSn}">${udcdomain.deviceSn}</td><!-- 设备序号 -->
+						<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${udcdomain.certEndTime})</td><!-- 授信截至时间 -->
+						<!-- 状态 -->
+						<td class="alignTwo">
+						#if($date.getDate().after(${udcdomain.certEndTime}))
+							${certStatus.get("EXPIRED")}
+						#else
+							${certStatus.get(${udcdomain.certStatus})}
+						#end</td>
+						<td class="alignTwo">
+							<a href="#springUrl('/')devicemanage/${udcdomain.deviceId}?form" title="查看详情">
+							<img title="查看详情" src="#springUrl('/')resources/images/show.png" class="image"
+								alt="查看详情" />
+						</a>
+							<div class="l" style="margin-top: 7px;">
+								<form id="command"
+									action="#springUrl('/')devicemanage/${udcdomain.udcId}"
+									method="post">
+									<input type="hidden" name="_method" value="DELETE" />
+									<input onclick="return confirm('解除后将不能恢复，是否解除?');" value="解除授信"
+										type="image" title="解除授信"
+										src="#springUrl('/')/resources/images/delete.png"
+										class="image" alt="解除授信" />
+								</form>
+							</div></td>
+					</tr>
+					#end
+				</tbody>
+				#parse("pages1.vm")
+			</table>
+		</div>
+	</div>
+	<font color="red">$!message</font>
+	<br />
+</div>

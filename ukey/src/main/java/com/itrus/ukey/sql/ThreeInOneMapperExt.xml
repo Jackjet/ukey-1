@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.ThreeInOneMapper">
+	<select id="selectTaxNameLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct tax_name
+		from
+		three_in_one
+		where
+		tax_name
+		like #{term}
+		order by
+		tax_name
+		limit #{limtNum}
+	</select>
+	<select id="selectCreditCodeLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct credit_code
+		from
+		three_in_one
+		where
+		credit_code
+		like #{term}
+		order by
+		credit_code
+		limit #{limtNum}
+	</select>
+	<select id="selectIdCodeLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct id_code
+		from
+		three_in_one
+		where
+		id_code
+		like
+		#{term}
+		order by
+		id_code
+		limit #{limtNum}
+	</select>
+	<insert id="insertList" parameterType="list">
+		insert into three_in_one (change_time, create_time, credit_code,
+		id_code, source_type, status,
+		submit_time, sync_time, sync_type,
+		tax_name, project)
+		values
+		<foreach collection="array" item="item" separator=",">
+			(#{item.changeTime,jdbcType=TIMESTAMP},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.creditCode,jdbcType=VARCHAR},
+			#{item.idCode,jdbcType=VARCHAR},
+			#{item.sourceType,jdbcType=INTEGER},
+			#{item.status,jdbcType=INTEGER},
+			#{item.submitTime,jdbcType=TIMESTAMP},
+			#{item.syncTime,jdbcType=TIMESTAMP},
+			#{item.syncType,jdbcType=INTEGER},
+			#{item.taxName,jdbcType=VARCHAR},
+			#{item.project,jdbcType=BIGINT})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		create_time=VALUES(create_time),
+		change_time=VALUES(change_time)
+	</insert>
+	<insert id="updateList" parameterType="list">
+		insert into three_in_one (id,change_time, create_time, credit_code,
+		id_code, source_type, status,
+		submit_time, sync_time, sync_type,
+		tax_name, project)
+		values
+		<foreach collection="array" item="item" separator=",">
+			(#{item.id,jdbcType=BIGINT},
+			#{item.changeTime,jdbcType=TIMESTAMP},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.creditCode,jdbcType=VARCHAR},
+			#{item.idCode,jdbcType=VARCHAR},
+			#{item.sourceType,jdbcType=INTEGER},
+			#{item.status,jdbcType=INTEGER},
+			#{item.submitTime,jdbcType=TIMESTAMP},
+			#{item.syncTime,jdbcType=TIMESTAMP},
+			#{item.syncType,jdbcType=INTEGER},
+			#{item.taxName,jdbcType=VARCHAR},
+			#{item.project,jdbcType=BIGINT})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		sync_type=VALUES(sync_type),
+		sync_time=VALUES(sync_time)
+	</insert>
+
+</mapper>

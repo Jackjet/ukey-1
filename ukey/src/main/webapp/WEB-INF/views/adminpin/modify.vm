@@ -1,0 +1,74 @@
+#set($page_title="修改口令")
+<div class="DPosition">
+    <span>修改口令</span> 
+</div>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<script type="text/javascript">
+<!--
+$().ready(function(){
+	$("#adminpin").validate({
+		rules:{
+			oldpass:"required",
+			newpass:"required",
+			newpass1:{
+				required: true,
+			    equalTo: "#newpass"
+			}
+		},
+		messages:{
+			newpass1:{
+				 equalTo: "新口令和口令确认不一致"
+			}
+		}
+	});
+});
+//-->
+</script>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="adminpin" action="#springUrl('/')adminpin" method="post">
+	<input type="hidden" name="id" value="${admin.id}"/>
+	<input type="hidden" name="account" value="$SPRING_SECURITY_CONTEXT.authentication.principal.username"/>
+	<div class="tabConBox_L" style="width:100%;">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+		<span>账号</span>
+		<label>$SPRING_SECURITY_CONTEXT.authentication.principal.username</label>
+		
+	<p/>
+	<p>
+		<span>原口令</span>
+		<input id="oldpass" name="oldpass" type="password" class="bor txtth"></input>
+	<p/>
+	<p>
+		<span>新口令</span>
+		<input id="newpass" name="newpass" type="password" class="bor txtth"></input>
+	<p/>
+	<p>
+		<span>口令确认</span>
+		<input id="newpass1" name="newpass1" type="password" class="bor txtth"></input>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

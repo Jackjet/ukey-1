@@ -1,0 +1,53 @@
+#parse("msgtemplate/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>消息模版</span>&nbsp;&gt;&nbsp;
+    <span>修改消息模版</span>
+</div>
+<div class="mboxR">
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">添加消息模版</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width: 100%;">
+
+	<form action="#springUrl('/')msgtemplate" method="post">	
+		<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${msgTemplate.id}"/>
+	<p>
+		<span>项目名称：</span>
+		<select name="project" class="bor sel342">
+			#foreach($projectobj in $projectMap)
+			<option value="${projectobj.id}" #if($projectobj.id == ${msgTemplate.project}) 
+				selected="selected" 
+			#end>${projectobj.name}</option>
+			#end
+		</select>
+	<p/>
+	<p>
+		<span>模版类型：</span>
+		<select id="messageType" name="messageType" class="bor selwidth2">
+	                     #foreach($rep in $replaceMap.entrySet())
+	                        <option value="$rep.key" #if($msgTemplate.messageType== $rep.key)
+	                                selected="selected" #end>$rep.value</option>
+                    	#end
+	                </select>
+	<p/>
+	
+	<p>
+		<span>模版内容：</span>
+		<textarea id="messageContent" style="margin:10px 0 0 0" placeholder1="短信模版内容请以“【天威诚信】”开头,有验证码则以code代替" rows="5" cols="32" name="messageContent" value="">${msgTemplate.messageContent}</textarea>
+	<p/>
+	
+        <p><label>&nbsp;&nbsp;&nbsp;&nbsp;解锁消息：短信网关为亿美的，内容请以“【天威诚信】”开头。</label></p>
+		<p><label>&nbsp;&nbsp;&nbsp;&nbsp;换证申请：短信网关为亿美的，内容请以“【天威诚信】”开头，内容中的验证码则以code代替。</label></p>
+        <p><label>&nbsp;&nbsp;&nbsp;&nbsp;鉴证审核：短信网关为亿美的，内容请以“【天威诚信】”开头。内容中用msg替代‘【营业执照信息】已审核，’等信息。</label></p>
+	
+	<span class="message"  style="color:Red;float:left;margin-top:10px;">$!{message}</span>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>	
+</div>

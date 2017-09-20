@@ -1,0 +1,52 @@
+#parse("mailconfig/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>邮箱服务设置</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--邮箱配置信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">邮箱配置信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">	
+	<p>
+		<span>邮件服务器地址：</span>
+		<label>$!{emailServer.serverHost}</label>
+	<p/>
+	<p>
+		<span>端口号：</span>
+		<label>$!{emailServer.serverPort}</label>
+	<p/>
+	
+	<p>
+	<span>是否认证：</span>
+		#if($emailServer.isAuth==true)
+			<label>是</label>
+		#else
+			<label>否</label>
+		#end
+	</p>
+	
+	<p>
+		<span>邮箱帐号：</span>
+		<label>$!{emailServer.accountName}<label>
+	<p/>
+	
+	<p>
+		<span>邮箱密码：</span>
+		<label>***********</label>
+	<p/>
+	
+	
+	<div class="btn_bottom">
+    	<span style="float:left">
+ 			<a href="#springUrl("/")mailconfig?form&id=$!{emailServer.id}" title="修改邮件配置信息">
+    		<img title="修改配置信息" src="#springUrl("/")/resources/images/update.png" class="image" alt="修改邮件配置信息"/>
+			</a>
+		</span>
+	</div>
+	</div>
+	</div>	
+</div>

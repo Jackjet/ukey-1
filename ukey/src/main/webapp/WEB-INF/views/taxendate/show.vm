@@ -1,0 +1,45 @@
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>报税期管理</span>&nbsp;&gt;&nbsp;
+    <span>查看报税期</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+
+    
+	<div class="tabConBox_R ">
+	<p>
+		<span>报税年份:</span>
+		<div style="margin-top:10px;">${taxEndDate.year}&nbsp;年</div>
+	<p/>
+	<p>
+		<span>报税月份:</span>
+		<div style="margin-top:10px;">${taxEndDate.month}&nbsp;月</div>
+	<p/>
+	<p>
+		<span>报税截止日:</span>
+		<div style="margin-top:10px;">${taxEndDate.endDay}&nbsp;日</div>
+	<p/>
+	</div>
+
+    <div class="tabConBox_L">
+        <p><label><PRE>&#9;&#9;&#9;报税行政区：&#9;宁波市</PRE></label></p><br>
+        <p><label><PRE>&#9;&#9;&#9;行政区类型：&#9;市</PRE></label></p><br>
+        <p><label><PRE>&#9;&#9;&#9;行政区编码：&#9;330200</PRE></label></p>
+    </div>
+
+	</div>
+	</div>
+        <div class="btn_bottom">
+            <span style="float:left">
+	    		<a href="#springUrl('/')taxendate" title="返回">
+	    		<img title="返回" src="#springUrl('/')resources/images/list.png" class="image" alt="返回"/>
+	    		</a>
+    		</span>
+        </div>
+</div>

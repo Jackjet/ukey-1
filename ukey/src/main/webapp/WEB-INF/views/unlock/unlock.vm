@@ -1,0 +1,8 @@
+#set($layout="layouts/layout-null.vm")
+
+[enroll]
+
+status=$status
+
+unlockstatus=$!unlockstatus
+

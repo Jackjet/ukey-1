@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.ActivityMsgNyMapper">
+	<resultMap id="TerminalStatisMap" type="com.itrus.ukey.sql.TerminalStatis">
+		<result column="activity_num" property="activityNum" jdbcType="BIGINT" />
+		<result column="onLine_num" property="onLineNum" jdbcType="BIGINT" />
+	</resultMap>
+	<!-- 获取表中最大id值 -->
+	<select id="maxId" parameterType="com.itrus.ukey.db.ActivityMsgNyExample"
+		resultType="java.lang.Long">
+		select max(id) from activity_msg_ny
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<select id="selectLastByExample" resultType="java.lang.String"
+		parameterType="com.itrus.ukey.db.ActivityMsgNyExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		min(active_time)
+		from activity_msg_ny
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<choose>
+			<when test="offset != null and offset >= 0 and limit != null">
+				limit #{offset},#{limit}
+			</when>
+			<when test="offset == null and limit != null">
+				limit #{limit}
+			</when>
+		</choose>
+	</select>
+	<!-- 统计时间段内的终端总数和在线次数 -->
+	<select id="countStatisByExample" parameterType="com.itrus.ukey.db.ActivityMsgExample"
+		resultMap="TerminalStatisMap">
+		select sum(online_num) as onLine_num, count(*)
+		as activity_num
+		from
+		activity_msg_ny
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<select id="countTerminalNumByExample" parameterType="com.itrus.ukey.db.ActivityMsgExample"
+		resultType="java.lang.Long">
+		select
+		count(*)
+		from activity_msg_ny
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+</mapper>

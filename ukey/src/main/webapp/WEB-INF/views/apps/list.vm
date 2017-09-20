@@ -1,0 +1,141 @@
+#parse("apps/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>应用管理</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label> 
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+	#end 
+	#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" 
+		#if($project== ${projectobj.id}) selected="selected" #end>
+					${projectobj.name}</option>
+	#end
+	</select>&nbsp;&nbsp;
+	<label>平台类型：</label> 
+	<select id="ostype"	name="ostype" class="bor selwidth1">
+		<option value="all">所有平台</option>
+	#foreach($ostypeinfo in $ostypeinfos)
+		<option value="${ostypeinfo.type}" 
+		#if($ostype== ${ostypeinfo.type}) selected="selected" #end>
+					${ostypeinfo.name}</option>
+	#end
+	</select>&nbsp;&nbsp;
+    <label>应用类别：</label>
+        <select id="appCategory" name="appCategory" class="bor selwidth1">
+            <option value="0">所有类别</option>
+            #foreach($category in $categories.entrySet())
+                <option value="${category.key}"
+                    #if($appCategory== ${category.key}) selected="selected" #end>
+                    ${category.value.name}</option>
+            #end
+        </select>&nbsp;&nbsp;
+	<label>应用名称：</label>
+	<input id="queryname" type="text" name="name" value="$!name" class="bor txtwidth1"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    <a id="addapp" href="#springUrl('/')/apps?form" title="新建应用">
+    	<img title="新建应用" src="#springUrl('/')/resources/images/create.png" class="image" alt="新建应用"/>新建应用
+	</a>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="5%">序号</th>
+    	 	<th class="alignTwo" width="20%">项目名称</th>
+    	 	<th class="alignTwo" width="20%">应用名称</th>
+            <th class="alignTwo" width="10%">应用类别</th>
+    	 	<th class="alignTwo" width="10%">Windows</th>
+    	 	<th class="alignTwo" width="10%">Android</th>
+    	 	<th class="alignTwo" width="10%">iOS</th>
+            <th class="alignTwo" width="15%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $app in $apps )
+	     	<tr>
+	     		<td class="alignTwo">${foreach.count}</td>
+    			<td class="alignL" title="${projectmap.get($app.project).name}">${projectmap.get($app.project).name}</td>
+				<td class="alignL" title="${app.name}">${app.name}</td>
+                <td class="alignL">#if(${categories.containsKey($app.appCategory)})${categories.get($app.appCategory).name}#end</td>
+ 				<td class="alignL">
+                    #if($app.windows)<input type="checkbox" checked disabled="yes"/>&nbsp;权重
+                    #if($app.winOrder)$app.winOrder#else 0#end#end
+                </td>
+ 				<td class="alignL">
+                    #if($app.android)<input type="checkbox" checked disabled="yes"/>&nbsp;权重
+                    #if($app.androidOrder)$app.androidOrder#else 0#end#end
+                </td>
+ 				<td class="alignL">
+                    #if($app.ios)<input type="checkbox" checked disabled="yes"/>&nbsp;权重
+                    #if($app.iosOrder)$app.iosOrder#else 0#end#end
+                </td>
+				<td class="alignL">
+				
+    				<a href="#springUrl('/')apps/${app.id}" title="查看应用信息">
+    				<img title="查看应用信息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看应用信息"/>
+					</a>
+    				<a href="#springUrl('/')apps/${app.id}?form" title="修改应用信息">
+    				<img title="修改应用信息" src="#springUrl('/')/resources/images/update.png" class="image" alt="修改应用信息"/>
+					</a>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')apps/${app.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除应用" type="image" title="删除应用" src="#springUrl('/')/resources/images/delete.png"
+						class="image" alt="删除应用"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!message</font>
+</div>
+<script type="text/javascript">
+<!--
+var urlbase = "#springUrl('/')apps";
+var acUrlAccout = "#springUrl("/apps/acname")";
+#[[
+	$("#addapp").click(function(event){
+		event.preventDefault();
+		
+		var url = urlbase + "?form=1";
+		
+		url += "&project=" + $("#projectcur").val();	
+		
+		document.location = url;
+		
+		//alert("hello");
+	});
+
+	$(function(){
+	  // alert(acUrl);
+	  $("#queryname").autocomplete({
+		  	source:acUrlAccout
+			,minLength: 0
+		});
+
+	});
+]]#
+//-->
+</script>

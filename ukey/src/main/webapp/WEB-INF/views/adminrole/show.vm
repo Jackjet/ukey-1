@@ -1,0 +1,67 @@
+#parse("products/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>角色管理</span>&nbsp;&gt;&nbsp;
+    <span>查看角色</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<p>
+	<span>角色名称：</span><label>$!{adminRole.roleName}</label>
+	<p/>
+	<p>
+	<span>描述信息：</span>	<label>${adminRole.roleDescribe}</label>
+	</p>
+	<p>
+	<span>模块权限：</span>
+		<table style="margin-left: 80px;margin-right: 0px;">
+		<tr style="line-height: 40px;">
+		#foreach($sysres in $sysResList)
+		<td>
+		<label>$sysres.resTitle&nbsp;&nbsp;</label>
+		</td>
+		#if($foreach.count>0 && $foreach.count%4==0)
+		</tr><tr style="line-height: 40px;">
+		#end
+		#end
+		</tr>
+		</table>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+		   	<a href="#springUrl('/')adminrole" title="查看所有角色信息">
+    		<img title="查看所有角色信息" src="#springUrl('/')/resources/images/list.png" class="image" alt="查看所有角色信息"/>
+			</a>
+		</span>
+    	<span style="float:left">
+			<a href="#springUrl('/')adminrole?form" title="新建角色信息">
+    		<img title="新建角色信息" src="#springUrl('/')/resources/images/create.png" class="image" alt="新建角色信息"/>
+			</a>
+		</span>
+    	<span style="float:left">
+ 			<a href="#springUrl('/')adminrole/${adminRole.id}?form" title="修改角色信息">
+    		<img title="修改角色信息" src="#springUrl('/')/resources/images/update.png" class="image" alt="修改角色信息"/>
+			</a>
+		</span>
+    	<span style="float:left;margin-left:10px; margin-top:5px;">
+	    <form id="command" action="#springUrl('/')adminrole/${adminRole.id}" method="post">
+			<input type="hidden" name="_method" value="DELETE"/>
+			<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+				value="删除角色" type="image" title="删除角色" src="#springUrl('/')/resources/images/delete.png"
+				class="image" alt="删除角色"/>
+		</form>
+		</span>
+		<span style="float:left; margin-top:5px;">
+			<font color="red">$!message</font>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,77 @@
+#parse("smsgate/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>短信网关设置</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">短信网关信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width:100%;">
+	#if($smsgate.gateType && $smsgate.gateType==0)
+		<p>
+		<span>(亿美)&nbsp;服务地址：</span><label>$!{smsgate.emayAddress}</label>
+		<p/>
+		<p>
+		<span>序列号：</span><label>$!{smsgate.emaySerialnum}</label>
+		<p/>
+		<p>
+		<span>密码：</span>	<label>********</label>
+		<p/>
+		<p>
+            <span>有效性测试：</span>
+            <input type="button" onclick="testsms()" value="测试短信网关" class="btn_small m_r" style="width:120px;margin-top:10px;float:left;" />
+			<div id="message" style="color:Red;float:left;margin-top:10px;"></div>
+        </p>
+	#else
+	<p>
+	<span>(无锡学诚)&nbsp;服务地址：</span><label>$!{smsgate.gateAddress}</label>
+	<p/>
+	<p>
+	<span>用户名：</span><label>$!{smsgate.accountName}</label>
+	<p/>
+	<p>
+	<span>密码：</span>	<label>********</label>
+	<p/>
+    <p>
+       <span>MD5密码：</span>	<label>********</label>
+    <p/>
+    <p>
+            <span>有效性测试：</span>
+            <input type="button" onclick="testsms()" value="测试短信网关" class="btn_small m_r" style="width:120px;margin-top:10px;float:left;" />
+			<div id="message" style="color:Red;float:left;margin-top:10px;"></div>
+        </p>
+    #end
+	</div>
+	<div class="btn_bottom">
+    	<span style="float:left">
+ 			<a href="#springUrl("/")smsgate?form&id=$!{smsgate.id}" title="修改短信网关信息">
+    		<img title="修改软件信息" src="#springUrl("/")/resources/images/update.png" class="image" alt="修改短信网关信息"/>
+			</a>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>
+<script>
+	function testsms(){
+		var postdata = {
+						gateAddress:"$!{smsgate.gateAddress}",
+						accountName:"$!{smsgate.accountName}",
+						accountPass:"$!{smsgate.accountPass}",
+						md5Key:"$!{smsgate.md5Key}",
+						gateType:"$!{smsgate.gateType}",
+						emayAddress:"$!{smsgate.emayAddress}",
+						emaySerialnum:"$!{smsgate.emaySerialnum}",
+						emayPass:"$!{smsgate.emayPass}",
+						
+			};
+		$("#message").html("测试中");
+		jQuery.post("#springUrl('/')smsgate/testsms",postdata,function(data){
+			$("#message").html(data.retMsg);
+		},"json");
+	}
+</script>

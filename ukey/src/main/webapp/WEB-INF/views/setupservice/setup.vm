@@ -1,0 +1,29 @@
+#set($layout="layouts/layout-null.vm")
+
+[main]
+
+components=#foreach($version in $updateVersions)#if($foreach.count > 1 ),#end${version.id}#end
+
+#foreach($version in $updateVersions)
+
+[${version.id}]
+ProductId=${productmapbyid.get($version.product).type}
+ProductName=${productmapbyid.get($version.product).name}
+ProductVersion=${version.productVersion}
+ProductInfo=${version.info}
+
+#if( ${version.status} == "valid" )
+LocalFile=${version.file}
+#else
+LocalFile=${version.status}
+#end
+
+AddSize=${version.length}
+#if($!downloadUrl)
+DownloadURL=$downloadUrl${version.file}
+#else
+DownloadURL=http://$httpHost#springUrl("/")download/${version.id}
+#end
+FileHashSha1=${version.hash}
+
+#end

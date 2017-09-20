@@ -1,0 +1,141 @@
+<body>
+<div id="entLinkList"><!-- entLinkListStart-->
+<!-- <a class="entLink" href="http://gsxt.zjaic.gov.cn/search/doEnGeneralQueryPage.do#企业名称" target="new">企业名称</a> <br> -->
+<!-- entLinkListEnd--></div>
+<br>
+<br>
+
+<button id="start" href="#">开始处理</button> 
+</body>
+<script>
+var queryWin;
+var names=[];
+var cityMsg =[
+"宁波","http://www.nbcredit.net/zx/index.html",
+"安徽","http://www.ahcredit.gov.cn/search.jspx",
+"上海","http://www.sgs.gov.cn/notice/home",
+"江苏","http://www.jsgsj.gov.cn:58888/province/",
+"河北","http://www.hebscztxyxx.gov.cn/notice/",
+"内蒙古","http://www.nmgs.gov.cn:7001/aiccips/",
+"福建","http://wsgs.fjaic.gov.cn/creditpub/home",
+"江西","http://gsxt.jxaic.gov.cn/ECPS/index.jsp",
+"广西","http://gxqyxygs.gov.cn/search.jspx",
+"海南","http://aic.hainan.gov.cn:1888/aiccips",
+"广东","http://gsxt.gdgs.gov.cn/aiccips/",
+"浙江","http://gsxt.zjaic.gov.cn/search/doEnGeneralQueryPage.do",
+"湖北","http://xyjg.egs.gov.cn/ECPS_HB/search.jspx",
+"山东","http://218.57.139.24/",
+"河南","http://222.143.24.157/search.jspx#",
+"陕西","http://117.22.252.219:8002/",
+"吉林","http://211.141.74.198:8081/aiccips/",
+"山西","http://218.26.1.108/search.jspx",
+"湖南","http://gsxt.hnaic.gov.cn/notice/",
+"重庆","http://gsxt.cqgs.gov.cn/",
+"四川","http://gsxt.scaic.gov.cn/",
+"贵州","http://gsxt.gzgs.gov.cn/",
+"云南","http://gsxt.ynaic.gov.cn/notice/",
+"西藏","http://gsxt.xzaic.gov.cn/search.jspx",
+"甘肃","http://xygs.gsaic.gov.cn/gsxygs/main.jsp",
+"青海","http://218.95.241.36/search.jspx",
+"宁夏","http://gsxt.ngsh.gov.cn/ECPS/index.jsp",
+"新疆","http://gsxt.xjaic.gov.cn:7001",
+"辽宁","http://gsxt.lngs.gov.cn/saicpub/entPublicitySC/entPublicityDC/entPublicity/search/searchmain.jsp",
+"黑龙江","http://gsxt.hljaic.gov.cn/search.jspx",
+"北京","http://qyxy.baic.gov.cn/beijing",
+"天津","http://tjcredit.gov.cn/platform/saic/index.ftl"
+];
+
+function loadinfo()
+{
+	var url ="#springUrl("/")workOrder/getInfos";
+	$.ajax({
+		type:"post",
+		url : url,
+		data : {registerProvince:"$!{registerProvince}"},
+		success : function(data) {
+				var jsondata = $.parseJSON(data);
+				$("#entLinkList").empty();
+				for(var i =0;i<jsondata.length;i++){
+					for(var j=0;j<=cityMsg.length-2;j+=2){
+						if(cityMsg[j] == "${registerProvince}"||"" == "${registerProvince}")
+						$("#entLinkList").append("<a class=\"entLink\" id=\"elink"+i+"\" href=\""+cityMsg[j+1]+jsondata[i].orderName+"\" target=\"new\">"+jsondata[i].orderName+"</a> <br>");
+					}
+					if(jsondata[i].status==3){
+						$("#elink"+i).css({color:"red"});
+					}
+				}
+				$(".entLink").each(function(){
+					names.push($(this).text());
+				});
+				
+				if(queryWin&&names.length>0){
+					queryWin.postMessage({
+						type:"getEntInfoOK",
+						url: window.location.href,
+                    	admin:"$!{adminName}",
+						name:names.shift()
+					},
+					"*");
+					queryWin = null;
+				}
+				
+				if(names.length==0){
+					setTimeout("loadinfo();",3000);
+					return;
+				}
+				
+		},
+		error : function() {
+			alert("获取失败");
+		}
+	});
+}
+
+$(function(){
+	loadinfo();
+	function receiveMessageGetEntInfo(event)
+	{
+		// 子窗口消息处理
+		if(event.data.type == "getEntInfo"){
+			if(names.length>0){
+				// 如果有name则分配一个
+				event.source.postMessage({
+					type:"getEntInfoOK",
+                    url: window.location.href,
+                    admin:"$!{adminName}",
+					name:names.shift()
+				},
+				"*");
+			}
+			else{
+				queryWin = event.source;
+				loadinfo();
+			}
+		}
+	}
+	window.addEventListener("message", receiveMessageGetEntInfo, false);
+	
+	$("#start").click(function(){
+		for(var i=0;i<=cityMsg.length-2;i+=2){
+			if(cityMsg[i] == "${registerProvince}"||"" == "${registerProvince}")
+			window.open(cityMsg[i+1],"_blank");
+		}						
+	});
+	$("#restart").click(function(){
+		names=[];
+		$(".entLink").each(function(){
+			names.push($(this).text());
+		});
+		if(queryWin){
+				queryWin.postMessage({
+					type:"getEntInfoOK",
+					url: window.location.href,
+					admin:"$!{adminName}",
+					name:names.shift()
+				},
+				"*");
+			queryWin = null;
+		}
+	});
+});
+</script>

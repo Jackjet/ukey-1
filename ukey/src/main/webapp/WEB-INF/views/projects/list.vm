@@ -1,0 +1,89 @@
+<div class="DPosition">
+	<span>系统管理</span>&nbsp;&gt;&nbsp; <span>项目管理</span>
+</div>
+<div class="mbox">
+	<div class="searBox">
+		<div class="serchForm">
+			<div class="serchFormBox">
+				<form id="queryform" method="GET" action="">
+					<input id="pagecur" type="hidden" name="page" value="1"> <input
+						id="sizecur" type="hidden" name="size" value="$!size"> <label>项目名称：</label>
+					<input id="queryproject" type="text" name="name"
+						value="$!project" class="bor txtwidth1" />
+					<input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+				</form>
+			</div>
+			<a href="#springUrl('/')projects?form" title="新建项目"> <img
+				title="新建项目" src="#springUrl('/')resources/images/create.png"
+				class="image" alt="新建项目" />新建项目
+			</a></br>
+		</div>
+	</div>
+	#parse("pages0.vm")
+	<div class="conBox">
+		<div class="tabCon">
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="5%">序号</th>
+					<th class="alignTwo" width="20%">项目名称</th>
+					<th class="alignTwo" width="15%">联系人</th>
+					<th class="alignTwo" width="30%">联系方式</th>
+					<th class="alignTwo" width="15%">查看设置</th>
+					<th class="alignTwo" width="15%">操作</th>
+				</thead>
+				<tbody>
+					#foreach( $project in $projects )
+					<tr>
+						<td class="alignTwo">${foreach.count}</td>
+						<td class="alignL" title="${project.name}">${project.name}</td>
+						<td class="alignL">${project.contact}</td>
+						<td class="alignL">电话：${project.phone}<br />
+							邮件：${project.mail}
+						</td>
+						<td class="alignL"><a
+							href="#springUrl('/')admins?project=${project.id}">管理员信息</a><br />
+							<a href="#springUrl('/')projectkeyinfos?project=${project.id}">序列号设置</a><br />
+							<a href="#springUrl('/')projectversions?project=${project.id}">软件关联</a>
+						</td>
+						<td class="alignL">
+							<div class="l">
+								<a href="#springUrl('/')projects/${project.id}" title="查看项目信息">
+									<img title="查看项目信息"
+									src="#springUrl('/')resources/images/show.png" class="image"
+									alt="查看项目信息" />
+								</a> <a href="#springUrl('/')projects/${project.id}?form"
+									title="修改项目信息"> <img title="修改项目信息"
+									src="#springUrl('/')resources/images/update.png" class="image"
+									alt="修改项目信息" />
+								</a>
+							</div>
+							<div class="l" style="margin-top: 7px;">
+								<form id="command"
+									action="#springUrl('/')projects/${project.id}" method="post">
+									<input type="hidden" name="_method" value="DELETE" /> <input
+										onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除项目"
+										type="image" title="删除项目"
+										src="#springUrl('/')resources/images/delete.png" class="image"
+										alt="删除项目" />
+								</form>
+							</div>
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#parse("pages1.vm")
+			</table>
+		</div>
+	</div>
+
+	<font color="red">$!message</font> <br />
+</div>
+<script>
+var acUrlProjectName = "#springUrl('/projects/acUrlProjectName')";
+$(function(){
+	$("#queryproject").autocomplete({
+	  	source:acUrlProjectName
+		,minLength: 0
+	});
+})
+</script>

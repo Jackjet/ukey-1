@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.AppAuthLogMapper" >
+  <sql id="Base_Column_Sys_User_List" >
+    aal.id, aal.auth_time, aal.has_b_license, aal.has_legal_r, aal.has_org_code, aal.has_tax_cert, aal.has_user_info,
+    aal.app_id, aal.sys_user, aal.e_sign_id, aal.entity_type
+  </sql>
+  <select id="selectByExampleExt" resultMap="BaseResultMap" parameterType="com.itrus.ukey.sql.AppAuthLogExampleExt" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_Sys_User_List" />
+    from app_auth_log aal,sys_user su
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <choose >
+      <when test="offset != null and offset >= 0 and limit != null" >
+        limit #{offset},#{limit}
+      </when>
+      <when test="offset == null and limit != null" >
+        limit #{limit}
+      </when>
+    </choose>
+  </select>
+  <select id="countByExampleExt" parameterType="com.itrus.ukey.sql.AppAuthLogExampleExt" resultType="java.lang.Integer" >
+    select count(*) from app_auth_log aal,sys_user su
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

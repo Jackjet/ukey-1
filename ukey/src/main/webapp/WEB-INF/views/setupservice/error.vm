@@ -1,0 +1,2 @@
+#set($layout="layouts/layout-null.vm")
+Bad request！

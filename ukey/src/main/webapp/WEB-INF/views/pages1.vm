@@ -1,0 +1,114 @@
+<!-- 
+    page:$page,
+    size:$size,<br>
+    count:$count,
+    pages:$pages
+-->
+<div class="pagenav">
+<tfoot>
+
+<td colspan="10">
+<div style="text-align:left;width=100px; float:left;">
+	总计<span>
+	#if(!$count)0#else${count}#end</span>条记录,当前第<span>
+	#if(!$page)1#else${page}#end</span>页
+</div>
+<div style="text-align:right;width=50%;float:right; " class="alignR">
+#if($pages && $pages>1)
+	#set($pagestart = 1)
+	#if($pages - $page < 3)
+		#set($pagestart = $pages - 4)
+	#elseif($page > 5)
+		#set($pagestart = $page - 2)
+	#end
+	
+	#if($page < 3 && $pages > 7)
+		#set($pagestop = 5)
+	#elseif($pages > 7 && $page < $pages - 3)
+		#set($pagestop = $page + 2)
+	#else
+		#set($pagestop = $pages)
+	#end
+	
+	#if($page>1)
+		#set($page0 = $page - 1)
+		<a name="$page0"  class="pagenavlnk" href="#">上一页</a>
+	#end
+		
+	#if($!pagestart>3)
+	<a name="1" class="moren com pagenavlnk" href="#">1</a>
+	<a name="2" class="moren com pagenavlnk" href="#">2</a>
+	...
+	#else
+		#set($pagestart = 1)
+	#end	
+	
+	#foreach($pageidx in [$pagestart..$pagestop])
+		#if($pageidx == $page)
+			<a class="clickcolor_a com" href="#" style="cursor:default">$pageidx</a>
+		#else
+			<a name="$pageidx" class="moren com pagenavlnk" href="#">$pageidx</a>
+		#end
+	#end
+	
+
+	#if($pagestop<$pages)
+	...
+	#end
+	#set($page1 = $pages)
+	#if($page<$pages)
+		#set($page1 = $page + 1 )
+		<a name="$page1"  class="pagenavlnk" href="#">下一页</a>
+	#end
+	
+	共 $pages 页
+
+	到第&nbsp;<input id="pagenavto" type="text" size="1" value="${page1}" title="指定页码" style="width: 35px;">&nbsp;页
+	
+	<button id="pagenavbtn" title="指定页码" style="border:#555 1px solid;background:#417eb7; color:#fff;padding:0px 5px;height:22px;line-height: 15px;">确定</button>
+	, 
+#end
+	
+	#set($sizeoption=[5,10,12,15,25,31,50])每页
+	<select id="pagenavopt" name="${status.expression}">
+		#foreach($option in $sizeoption)
+			<option value="${option}"
+			#if($size == "$option")
+				selected="selected"
+			#end>
+			${option}</option>
+		#end
+	</select>&nbsp;条记录。
+	</div>
+</td>
+</tfoot>
+</div>
+	
+	<script type="text/javascript">
+	#[[
+		$(function(){
+			//alert("hello");
+			$(".pagenavlnk").click(function(){
+				//alert(this.name);
+				$("#pagecur").val(this.name);
+				$("#queryform").submit();
+			});
+			
+			$("#pagenavbtn").click(function(){
+				//alert($("#pagenavto").val());
+				$("#pagecur").val($("#pagenavto").val());
+				$("#queryform").submit();
+			});
+			
+			$("#pagenavopt").change(function(){
+				//alert(this.value);
+				$("#sizecur").val(this.value);
+				$("#queryform").submit();
+			});
+		});
+	]]#
+	</script>
+
+
+
+

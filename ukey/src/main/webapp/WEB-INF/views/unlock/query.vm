@@ -1,0 +1,13 @@
+#set($layout="layouts/layout-null.vm")
+
+[enroll]
+
+status=$status
+
+unlockstatus=$!unlockstatus
+
+#if($rejectReason)
+rejectReason=$rejectReason
+
+#end
+repCode=$!repCode

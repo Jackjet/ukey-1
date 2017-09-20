@@ -1,0 +1,45 @@
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>信任源管理</span>&nbsp;&gt;&nbsp;
+    <span>更新信任源</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">更新信任源</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="crlcontext" action="#springUrl('/')crlcontext" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="update" value="1" />
+	<input type="hidden" name="id" value="${crlContext.id}"/>
+	<div class="tabConBox_L">
+
+	<p>
+		<span>CA证书(DER编码)：</span>
+		<input type="file" name="caCertBuf" class="mt9"/>
+	</p>
+	<p>
+		<span>CRL颁发点：</span>
+		<input id="crlUrl" name="crlUrl" type="text" class="bor txtth" size="100" value="$!{crlContext.crlUrl}"></input>
+	</p>
+	<p>
+		<span>CRL下载重试策略：</span>
+		<input id="retryPolicy" name="retryPolicy" class="bor txtth" value="$!{crlContext.retryPolicy}"/> 
+		<label><font color="#A8A8A8" id="mess" style="margin-top:9px;">&nbsp;例如(单位:秒)：60,600,6000</font></label>
+	</p>
+		<p>
+		<span>CRL检查：</span>
+		<select name="checkCrl" class="bor selwidth1">
+			<option value="true" #if(${crlContext.checkCrl} == true) selected="selected" #end>是</option>
+			<option value="false" #if(${crlContext.checkCrl} == false) selected="selected" #end>否</option>
+		</select>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

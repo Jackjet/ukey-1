@@ -1,0 +1,61 @@
+#parse("raaccount/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>RA管理</span>&nbsp;&gt;&nbsp;
+    <span>查看RA</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<p>
+	<span>RA协议：</span><label>${raProtocols.get(${raAccount.raProtocol})}</label>
+	<p/>
+	<p>
+	<span>RA名称：</span><label>${raAccount.raName}</label>
+	<p/>
+	<p>
+	<span>单位：</span>	<label>${raAccount.accountOrganization}</label>
+	<p/>
+	<p>
+	<span>部门：</span>	<label>${raAccount.accountOrgUnit}</label>
+	<p/>
+	<p>
+	<span>帐号HASH：</span>	<label>$!{raAccount.accountHash}</label>
+	</p>
+	<p>
+	<span>服务地址：</span>	<label>${raAccount.serviceUrl}</label>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+		   				<a href="#springUrl('/')raaccount" title="查看所有RA信息">
+    					<img title="查看所有RA信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有RA信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+		   				<a href="#springUrl('/')raaccount?form" title="新建RA信息">
+    					<img title="新建RA信息" src="#springUrl('/')resources/images/create.png" class="image" alt="新建RA信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+ 		  				<a href="#springUrl('/')raaccount/${raAccount.id}?form" title="修改RA信息">
+    					<img title="修改RA信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改RA信息"/>
+						</a>
+					</span>
+    				<span style="float:left;margin-left:10px; margin-top:5px;">
+	     				<form id="command" action="#springUrl('/')raaccount/${raAccount.id}" method="post">
+		    				<input type="hidden" name="_method" value="DELETE"/>
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除RA" type="image" title="删除RA" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除RA"/>
+						</form>
+					</span>
+	</div>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,93 @@
+#set($layout="layouts/layout-no-frame.vm")
+#parse("sysRegion/include.vm")
+#set($typeName = $regionTypeMap.get($!type))
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>行政区管理</span>&nbsp;&gt;&nbsp;
+    <span>$typeName列表</span>
+</div>
+<div class="mbox">
+    <div class="searBox">
+        <div class="serchForm">
+            <div class="serchFormBox">
+                <form id="queryform" method="GET" action="#springUrl('/')sysregion/list">
+                    <input id="parentId" type="hidden" name="parentId" value="$!parentId">
+                    <input id="type" type="hidden" name="type" value="$!type">
+                    <input id="pagecur" type="hidden" name="page" value="1">
+                    <input id="sizecur" type="hidden" name="size" value="$!size">
+                    <label>$typeName名称：</label>
+                    <input id="srName" type="text" name="srName" value="$!srName" class="bor txtwidth1">
+                    <label>行政区代码：</label>
+                    <input id="srCode" type="text" name="srCode" value="$!srCode" class="bor txtwidth1">
+                    <label>状态：</label>
+                    <select id="projectcur"	name="status" class="bor selwidth1">
+                        #foreach($statusObj in $statusMap.entrySet())
+                            <option value="$statusObj.key" #if($statusObj.key == $status)selected="selected"#end>$statusObj.value</option>
+                        #end
+                    </select>&nbsp;&nbsp;
+                    <input type="submit" value="快速搜索" class="btn_sear"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="tableTop">
+        <a class="a_create" style="width: 90px;" href="#springUrl('/')sysregion/addView?pid=$!parentId">新增</a>
+    </div>
+    <div class="conBox">
+    	<div class="tabCon">
+    <table border="1" class="table1">
+    	<thead>
+    		<tr>
+    			<th class="alignTwo" width="10%">序号</th>
+    			<th class="alignTwo" width="20%">$typeName名称</th>
+    			<th class="alignTwo" width="15%">行政区代码</th>
+    			<th class="alignTwo" width="15%">状态</th>
+    			<th class="alignTwo" width="40%">操作</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+			#foreach( $sysRegion in $sysRegionList )
+	     	<tr>
+    			<td class="alignTwo">${foreach.count}</td>
+                <td class="alignL">${sysRegion.nameCn}</td>
+                <td class="alignTwo">${sysRegion.code}</td>
+    			<td class="alignTwo">$statusMap.get(${sysRegion.status})</td>
+   				<td class="alignL" >
+                    <a href="#springUrl('/')sysregion/${sysRegion.id}" title="查看详情">
+                        <img title="查看详情" src="#springUrl('/')resources/images/show.png" class="image" alt="查看详情"/>
+                    </a>
+                    <a href="#springUrl('/')sysregion/${sysRegion.id}?form" title="修改">
+                        <img title="修改" src="#springUrl('/')resources/images/update.png" class="image" alt="修改"/>
+                    </a>
+                    <div class="l"  style="margin-top:7px;">
+                        <form id="command" action="#springUrl('/')sysregion/${parentId}/${type}/${sysRegion.id}" method="post">
+                            <input type="hidden" name="_method" value="DELETE"/>
+                            <input onclick="return confirm('删除后将不能恢复，是否删除?');"
+                                   value="删除" type="image" title="删除" src="#springUrl('/')resources/images/delete.png"
+                                   class="image" alt="删除"/>
+                        </form>
+                    </div>
+                </td>
+    		</tr>
+			#end
+    	</tbody>
+    	 #parse("pages1.vm")
+    </table>
+            <font color="red">$!errMsg</font><!-- 错误信息提示 -->
+    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var hasRefresh = 0;
+    #if(1 == $reNode)
+        hasRefresh = 1;
+    #end
+    $(document).ready(function(){
+        //刷新指定节点
+        if (hasRefresh == 1){
+            var nodeId = $!parentId;
+            //调用frame上级js,刷新根节点
+            window.parent.reAsyncNode(nodeId);
+        }
+    });
+</script>

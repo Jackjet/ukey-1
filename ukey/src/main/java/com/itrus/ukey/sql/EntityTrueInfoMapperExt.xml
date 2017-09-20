@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.EntityTrueInfoMapper">
+	<select id="selectIdCodeLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct id_code
+		from
+		entity_true_info
+		where
+		id_code like #{term}
+		order by
+		id_code
+		limit #{limtNum}
+	</select>
+</mapper>

@@ -1,0 +1,95 @@
+#parse("dynamicmsg/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>消息发布</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label> 
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+	#end 
+	#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" #if($project== ${projectobj.id}) selected="selected" #end>${projectobj.name}</option>
+	#end
+	</select>&nbsp;&nbsp;
+	<label>创建时间：</label>
+	<input id="startDate" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+	<span>至 </span>
+	<input id="endDate" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /><br /><br />
+    <label>发布状态：</label>
+    <select id="publishType" name="publishType" class="bor selwidth1">
+    #foreach($statusObj in $publishStatusMap.entrySet())
+        <option value="$statusObj.key" #if($statusObj.key == $publishType)selected="selected"#end>$statusObj.value</option>
+    #end
+    </select>&nbsp;&nbsp;
+    <label>消息标题：</label>
+    <input name="msgTitle" type="text" value="$!msgTitle" class="bor" style="width: 205px;"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    <a href="#springUrl('/')dynamicmsg?form" title="新建消息">
+    	<img title="新建消息" src="#springUrl('/')resources/images/create.png" class="image" alt="新建消息"/>新建消息
+	</a>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="5%">序号</th>
+    	 	<th class="alignTwo" width="15%" >项目名称</th>
+    	 	<th class="alignTwo" width="42%">消息标题</th>
+            <th class="alignTwo" width="15%" >创建时间</th>
+            <th class="alignTwo" width="10%">发布状态</th>
+            <th class="alignTwo" width="13%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $dynamicMsg in $dynamicMsgs )
+	     	<tr>
+                ##<!-- 序号 -->
+    			<td class="alignTwo">${foreach.count}</td>
+    			##<!-- 项目名称 -->
+    			<td class="alignL" title="$projectmap.get(${dynamicMsg.project}).name">$projectmap.get(${dynamicMsg.project}).name</td>
+                ##<!-- 标题 -->
+    			<td class="alignL" title="${dynamicMsg.msgTitle}">${dynamicMsg.msgTitle}</td>
+    			##<!-- 创建时间 -->
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${dynamicMsg.createTime})</td>
+                <td class="alignTwo">$publishStatusMap.get(${dynamicMsg.publishType})</td>
+    			<td class="alignTwo">
+				<form id="command" action="#springUrl('/')dynamicmsg/${dynamicMsg.id}" method="post">
+				<div style="float: left">
+				<a href="#springUrl('/')dynamicmsg/${dynamicMsg.id}" title="查看消息">
+    			<img title="查看消息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看消息"/></a>
+				</div>
+				<div style="float: left">
+				<a href="#springUrl('/')dynamicmsg/${dynamicMsg.id}?form" title="修改消息">
+    			<img title="修改消息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改消息"/></a>
+				</div>
+				<div style="float: left">				
+				<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除消息" type="image" title="删除消息" src="#springUrl('/')resources/images/delete.png" class="image_del" alt="删除消息" style="margin-top:7px;" />
+				</div>
+				<input type="hidden" name="_method" value="DELETE" /> 
+				</form>
+				</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>

@@ -1,0 +1,86 @@
+<div class="DPosition">
+	<span>业务管理</span>&nbsp;&gt;&nbsp; 
+	<span>报税期管理</span>
+</div>
+<div class="mbox">
+	<div class="searBox">
+		<div class="serchForm">
+			<div class="serchFormBox">
+				<form id="queryform" method="GET"
+					action="#springUrl('/')taxendate">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size"> 
+					<label>报税周期：</label>
+					<select id="year" name="year" class="bor selwidth1">
+						<option value="">所有</option>
+					#foreach($foo in [2015..2030] ) 
+						<option value="$foo" 
+							#if($year=="$foo") selected="selected" #end>
+							$foo</option> 
+					#end
+					</select> 年
+					<select id="month" name="month" class="bor selwidth1">
+						<option value="">所有</option>
+					#foreach($foo in [1..12] )
+						<option value="$foo" 
+							#if($month=="$foo") selected="selected" #end>
+							$foo</option> 
+					#end
+					</select> 月
+					<input type="submit" value="查询" class="btn_sear" />
+				</form>
+			</div>
+			<a id="addadmin" href="#springUrl('/')taxendate?form" title="新增报税区">
+    	<img title="新增报税区" src="#springUrl('/')resources/images/create.png" class="image" alt="新增报税区"/>新增报税区
+	</a><br/>
+		</div>
+	</div>
+
+	#parse("pages0.vm")
+	<div class="conBox">
+		<div class="tabCon">
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="20%">报税行政区</th>
+					<th class="alignTwo" width="15%">年份</th>
+					<th class="alignTwo" width="10%">月份</th>
+					<th class="alignTwo" width="25%">报税截止日</th>
+					<th class="alignTwo" width="20%">修改时间</th>
+					<th class="alignTwo" width="10%">操作</th>
+				</thead>
+				<tbody>
+					#foreach( $taxEndDate in $taxEndDates )
+					<tr>
+						<td class="alignL" title="宁波市">宁波市</td><!-- 报税行政区 -->
+						<td class="alignL" title="$!{taxEndDate.year}">$!{taxEndDate.year}</td><!-- 年份  -->
+						<td class="alignL" title="$!{taxEndDate.month}">$!{taxEndDate.month}</td><!-- 月份 -->
+						<td class="alignTwo" title="${taxEndDate.endDay}">${taxEndDate.endDay}</td><!-- 报税截止日期 -->
+						<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${taxEndDate.lastModify})</td><!-- 修改时间 -->
+						<td class="alignL">
+    				<div class="l">
+    				<a href="#springUrl('/')taxendate/${taxEndDate.id}" title="查看">
+    				<img title="查看" src="#springUrl('/')resources/images/show.png" class="image" alt="查看"/>
+					</a>
+    				<a href="#springUrl('/')taxendate/${taxEndDate.id}?form" title="修改">
+    				<img title="修改" src="#springUrl('/')resources/images/update.png" class="image" alt="修改"/>
+					</a>
+					</div>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')taxendate/${taxEndDate.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除" type="image" title="删除" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除"/>
+					</form>
+					</div>
+    			</td>
+					</tr>
+					#end
+				</tbody>
+				#parse("pages1.vm")
+			</table>
+		</div>
+	</div>
+	<font color="red">$!message</font>
+	<br />
+</div>

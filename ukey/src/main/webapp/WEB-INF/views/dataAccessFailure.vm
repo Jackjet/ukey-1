@@ -1,0 +1,13 @@
+#set($page_title="数据访问失败")
+
+<div>
+    <h2>$page_title</h2>
+        <hr>
+        ${exception}
+        <hr>
+        #foreach($trace in $exception.stackTrace)
+        $trace
+        <br>
+        #end
+</div>
+

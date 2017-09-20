@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.EnterpriseInfoMapper">
+	<select id="selectKeySnLikeTerm" resultType="String"
+		parameterType="Map">
+	select
+	distinct enterprise_name
+	from
+	enterprise_info
+	where
+	enterprise_name like #{term}
+	order by
+	enterprise_name
+	limit #{limtNum}
+	</select>
+	<select id="selectRegisterNoLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct register_no
+		from
+		enterprise_info
+		where
+		register_no like #{term}
+		order by
+		register_no
+		limit #{limtNum}
+	</select>
+	<select id="selectEnterpriseTypeLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct enterprise_type
+		from
+		enterprise_info
+		where
+		enterprise_type like #{term}
+		order by
+		enterprise_type
+		limit #{limtNum}
+	</select>
+	<select id="selectRegisterAuthorityLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct register_authority
+		from
+		enterprise_info
+		where
+		register_authority like #{term}
+		order by
+		register_authority
+		limit
+		#{limtNum}
+	</select>
+	<select id="selectDealPersonLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct deal_person
+		from
+		enterprise_info
+		where
+		deal_person like #{term}
+		order by
+		deal_person
+		limit
+		#{limtNum}
+	</select>
+</mapper>

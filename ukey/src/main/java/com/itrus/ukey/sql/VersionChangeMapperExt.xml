@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.VersionChangeMapper">
+<!-- 查找ip -->
+    <select id="selectIpLikeTerm" resultType="String" parameterType="Map">
+    select
+      distinct ip
+    from
+    	version_change
+    where
+    	ip like #{term}
+    order by 
+    	ip
+    limit #{limitNum}
+   </select>
+    <select id="selectKeySnLikeTerm" resultType="String" parameterType="Map">
+    select
+      distinct key_sn
+    from
+    	version_change
+    where
+    	key_sn like #{term}
+    order by 
+    	key_sn
+    limit #{limitNum}
+   </select>
+    <insert id="insertOrUpdate" parameterType="list">
+        insert into version_change (change_time, create_time, host_id,
+        key_sn, query_info, change_info, update_time, project,ip)
+        values
+        <foreach collection="array" item="item" separator=",">
+            (#{item.changeTime,jdbcType=TIMESTAMP}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.hostId,jdbcType=VARCHAR},
+            #{item.keySn,jdbcType=VARCHAR}, #{item.queryInfo,jdbcType=VARCHAR}, #{item.changeInfo,jdbcType=VARCHAR},
+            #{item.updateTime,jdbcType=TIMESTAMP}, #{item.project,jdbcType=BIGINT},#{item.ip,jdbcType=VARCHAR})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        change_time=VALUES(change_time), query_info=VALUES(query_info),
+        change_info=VALUES(change_info), update_time=VALUES(update_time),
+        host_id=VALUES(host_id),ip=VALUES(ip)
+    </insert>
+</mapper>

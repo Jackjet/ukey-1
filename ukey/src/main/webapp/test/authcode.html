@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+</head>
+<body><div align="center">
+注意：
+<p>1、如果”请求错误“请用ie打开试试</p>
+<p>2、姓名+身份证号=用户的唯一标识</p>
+<table>
+<tr style="display: none;"><td align="right">流水号：</td><td><input type="text" id="servialNum" value="1"></td><td>必填-长度50</td></tr>
+<tr style="display: none;"><td align="right">备注：</td><td><input type="text" id="comments" value="xxxx"></td><td>可选-长度50</td></tr>
+<tr><td align="right">姓名：</td><td><input type="text" id="userName" value="NoEmailTest"></td><td>必填-长度200</td></tr>
+<tr><td align="right">手机号：</td><td><input type="text" id="userTelPhone" value="15212345678"></td><td>必填-长度200</td></tr>
+<tr><td align="right">身份证号：</td><td><input type="text" id="identNumber" value="1"></td><td>必填-长度30</td></tr>
+<tr style="display: none;"><td align="right">证件类型：</td><td><input type="text" id="snType" value="yyy"></td><td>可选-长度20</td></tr>
+<tr style="display: none;"><td align="right">多重id标识：</td><td><input type="text" id="mid" value="1"></td><td>可选-长度2</td></tr>
+<tr style="display: none;"><td align="right">业务系统：</td><td><input type="text" id="custom" value="xxx"></td><td>可选-长度20</td></tr>
+<tr style="display: none;"><td align="right">用户实体类型：</td><td><input type="text" id="entity" value="个体"></td><td>可选-长度15</td></tr>
+<tr><td align="right">项目名称：</td><td><input type="text" id="projectName" value="宁波CA"></td><td>可选-长度20</td></tr>
+</table><br><br>
+<a id="getcode" href="#">获取授权码</a></div>
+</body>
+<script>
+	$(function(){
+	$("#getcode").click(function(){
+	var url1 = "http://localhost:8080/getCodeByMobile";
+	var url2 = "http://124.205.224.179:9018/itrusca/getCodeByMobile";
+	var jsontext="{\"servialNum\":\""+$('#servialNum').val()+"\",\"comments\":\""+$('#comments').val()+"\",\"userTelPhone\":\""+$('#userTelPhone').val()+"\","
+				+ "\"mAuthTransacInfo4api\":"
+				+ "{\"userName\":\""+$('#userName').val()+"\",\"identNumber\":\""+$('#identNumber').val()+"\","
+				+ "\"snType\":\""+$('#snType').val()+"\",\"mid\":\""+$('#mid').val()+"\","
+				+ "\"custom\":\""+$('#custom').val()+"\",\"entity\":\""+$('#entity').val()+"\","
+				+ "\"projectName\":\""+$('#projectName').val()+"\"}}";
+		$.ajax({
+			type : 'post',
+			contentType: "application/json; charset=utf-8",
+			dataType : 'json',
+			cache:false,
+			crossDomain:false,
+			url:url2,
+			data:jsontext,
+			success:function(data){
+						if(data.retCode==0){
+							alert(data.code);
+						}else{
+							alert(data.retMsg);
+						}
+						},
+			error:function(xhr,textStatus,error){
+							alert(error);
+						}
+			});
+	})
+	});
+</script>
+</html>
+</html>

@@ -1,0 +1,6 @@
+#set( $statuss = [{"status":"true","name":"是"},{"status":"false","name":"否"}])
+
+#set($statusmap={})
+#foreach( $status in $statuss)
+	#set( $statusmap[$status.status] = $status)
+#end

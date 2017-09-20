@@ -1,0 +1,148 @@
+#parse("workorder/include.vm")
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>工单信息</span>
+
+</div>
+<div class="searBox">
+		<div class="serchForm">
+		<div>
+			 <form id="getinfo" method="GET" action="#springUrl('/')workOrder/getInfo?form">
+	    		<label>省份：</label>
+	    		<select id="status" name="registerProvince" class="bor selwidth2">
+	                   	#foreach($rp in $registerProvinces)
+                        	#if(${rp})
+                        		<option value="${rp}">${rp}</option>
+                        	#end
+                    	#end
+	               </select>
+	    		<input type="submit" align="right" value="提取工单" class="btn_sear"/>
+	    	</form>
+	    	<br><hr><br>
+		</div>
+		<a href="#springUrl('/')workOrder?form" title="上传实名信息文件">
+    		<img title="上传工单信息文件" src="#springUrl('/')resources/images/create.png" class="image" alt="上传工单信息文件"/>上传工单信息文件
+		</a><br/><br/>
+    		<div class="serchFormBox">
+				<form id="queryform" method="GET"
+					action="#springUrl('/')workOrder">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size">
+					<label>企业名称：</label>
+					<input id="orderName" type="text" name="orderName" value="$!{orderName}" class="bor txtwidth2"/>
+					<label>省份：</label>
+					<select id="status" name="registerProvince" class="bor selwidth2">
+	               		<option value="">全部</option>
+	                   	#foreach($rp in $registerProvinces)
+                        	#if(${rp})
+                        		<option value="${rp}" #if($rp == $registerProvince)
+                                selected="selected" #end>${rp}</option>
+                        	#end
+                    	#end
+	               </select>
+					<label>状态：</label>
+	                <select id="status" name="status" class="bor selwidth2">
+	               		<option value="0">全部</option>
+	                   	#foreach($rep in $replaceMap.entrySet())
+                        	<option value="${rep.key}" #if($status == $rep.key)
+                                selected="selected" #end>${rep.value}</option>
+                    	#end
+	                </select>
+	                <br><br>
+					<label>分配人员：</label>
+					<input id="allotPerson" type="text" name="allotPerson" value="$!{allotPerson}" class="bor txtwidth2"/>
+					
+					<label>分配时间段：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+					<br><br>
+					<label>处理人员：</label>
+					<input id="dealPerson" type="text" name="dealPerson" value="$!{dealPerson}" class="bor txtwidth2"/>
+					<label>处理时间段：</label>
+			        <input id="queryDate3" name="queryDate3" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate3)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate4" name="queryDate4" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate4)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+					<input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+				</form>
+			</div>
+    </div>
+</div><br><br>
+<!-- <a href="#springUrl('/')workOrder/delete" title="清空未分配工单">
+    				<img title="清空未分配工单" src="#springUrl('/')resources/images/delete.png" class="image" alt="清空未分配工单"/>清空未分配工单
+</a> -->
+	#parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="5%">序号</th>
+    			<th class="alignTwo" width="25%">企业名称</th>
+    			<th class="alignTwo" width="8%">省份</th>
+    			<th class="alignTwo" width="10%">分配人员</th>
+    			<th class="alignTwo" width="15%">分配时间</th>
+    			<th class="alignTwo" width="12%">处理人员</th>
+    			<th class="alignTwo" width="10%">处理时间</th>
+    			<th class="alignTwo" width="10%">状态</th>
+    			<th class="alignTwo" width="5%">操作</th>
+            </thead>
+            <tbody>
+            	#foreach( $workOrder in $workOrders )
+			     	<tr>
+		    			<td  class="alignL" title='${foreach.count}'>${foreach.count}</td>
+		    			<td  class="alignThree" title="$!{workOrder.orderName}">$!{workOrder.orderName}</td>
+		    			<td  class="alignThree" title="$!{workOrder.registerProvince}">$!{workOrder.registerProvince}</td>
+		    			<td  class="alignThree" title="$!{workOrder.allotPerson}">$!{workOrder.allotPerson}</td>
+		    			<td  class="alignThree" title="${workOrder.allotTime}">#if(${workOrder.allotTime}) $date.format("yyyy-MM-dd HH:mm:ss",${workOrder.allotTime}) #end</td>
+		    			<td  class="alignThree" title="$!{workOrder.dealPerson}">$!{workOrder.dealPerson}</td>
+		    			<td  class="alignThree" title="$!{workOrder.dealTime}">#if(${workOrder.dealTime}) $date.format("yyyy-MM-dd HH:mm:ss",${workOrder.dealTime}) #end</td>
+		    			<td  class="alignThree" title="${workOrder.status}">
+		    																#foreach($rep in $replaceMap.entrySet()) 
+		    																	#if(${workOrder.status}== $rep.key)
+		    																		$rep.value 
+		    																	#end
+		    																#end
+		    			</td>
+		    			<td class="alignL">
+							<div class="l"  style="margin-top:7px;">
+			     				<form id="command" action="#springUrl('/')workOrder/${workOrder.id}" method="post">
+					    				<input type="hidden" name="_method" value="DELETE"/>
+					    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+										value="删除" type="image" title="删除" src="#springUrl('/')resources/images/delete.png"
+										class="image" alt="删除"/>
+									</form>
+							</div>
+    					</td>
+		    		</tr>
+				#end 
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+	<font color="red">$!{request.getParameter("message")}</font>
+	<br/>
+</div>
+<script>
+	var acUrlEnterpriseName = "#springUrl('/workOrder/acEnterpriseName')";
+	var acUrlAcAllotPerson = "#springUrl('/workOrder/acAllotPerson')";
+	var acUrlAcDealPerson = "#springUrl('/workOrder/acDealPerson')";
+	$(function(){	
+		$("#orderName").autocomplete({
+			  	source:acUrlEnterpriseName
+				,minLength: 0
+		});
+		$("#allotPerson").autocomplete({
+			  	source:acUrlAcAllotPerson
+				,minLength: 0
+		});
+		$("#dealPerson").autocomplete({
+			  	source:acUrlAcDealPerson
+				,minLength: 0
+		});
+	});
+</script>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.SysUserMapper">
+	<update id="updateSysUserCertId" parameterType="Map">
+		UPDATE sys_user AS tb1,sys_user AS tb2 SET
+		tb1.cert_id=tb2.cert_id,tb2.cert_id=tb1.cert_id WHERE tb1.id=#{oldId} AND
+		tb2.id=#{newId}
+	</update>
+</mapper>

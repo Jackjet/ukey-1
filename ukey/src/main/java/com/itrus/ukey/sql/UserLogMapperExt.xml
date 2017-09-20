@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.UserLogMapper">
+	<select id="selectByExampleLimit" resultMap="BaseResultMap"
+		parameterType="com.itrus.ukey.sql.UserLogExampleExt">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from user_log
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		limit ${offset},${limit}
+	</select>
+	<select id="selectTypeLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct type
+		from
+		user_log
+		where
+		type like #{term}
+		order by
+		type
+		limit #{limtNum}
+	</select>
+	<select id="selectKeySnLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct key_sn
+		from
+		user_log
+		where
+		key_sn like
+		#{term}
+		order by
+		key_sn
+		limit #{limtNum}
+	</select>
+	<select id="selectIpLikeTerm" resultType="String" parameterType="Map">
+		select
+		distinct ip
+		from
+		user_log
+		where
+		ip like #{term}
+		order by
+		ip
+		limit
+		#{limtNum}
+	</select>
+</mapper>

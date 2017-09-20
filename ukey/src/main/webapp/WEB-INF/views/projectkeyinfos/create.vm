@@ -1,0 +1,88 @@
+#parse("projectkeyinfos/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>序列号设置</span>&nbsp;&gt;&nbsp;
+    <span>添加序列号</span>
+</div>
+<div class="mbox">
+    <form id="projectkeyinfos" action="#springUrl('/')projectkeyinfos" method="post" onsubmit="return checkKeyInfoForm()">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+
+	<div class="tabConBox_L tabConBox_L_b">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称</span>
+	<select name="project" class="bor sel342">
+		#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" >${projectobj.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+		<span>序列号1</span>
+		<input id="sn1" name="sn1" type="text" class="bor txtth"></input>
+	<p/>
+	<p>
+		<span>序列号2</span>
+		<input id="sn2" name="sn2" type="text" class="bor txtth"></input>
+	<p/>
+	<p>
+		<span>管理员PIN码类型</span>
+		<select id="adminPinType" name="adminPinType" class="bor sel342">
+			#foreach($adminpintype in $adminpintypes)
+			<option value="${adminpintype.type}">${adminpintype.name}</option>
+			#end
+		</select>
+	<p/>
+	<p class="adminPinValueP" style="display:none">
+		<span>管理员PIN码</span>
+		<input id="adminPinValue" name="adminPinValue" type="password" class="bor txtth" value="$!{projectkeyinfo.adminPinValue}"></input>
+	<p/>
+	<p class="adminPinValueP" style="display:none">
+		<span>确认管理员PIN码</span>
+		<input id="adminPinValue1" name="adminPinValue1" type="password" class="bor txtth" value="$!{projectkeyinfo.adminPinValue}"></input>
+	<p/>
+	</div>
+    <div class="tabConBox_R">
+        <p><label>&nbsp;&nbsp;&nbsp;&nbsp;前缀匹配：只填写序列号1，无特殊要求。</label></p>
+        <p><label>&nbsp;&nbsp;&nbsp;&nbsp;后缀匹配：只填写序列号1，并以$结尾。</label></p>
+        <p><label>&nbsp;&nbsp;&nbsp;&nbsp;范围匹配：序列号1和序列号2必须全部填写，且保证长度一致。</label></p>
+    </div>
+
+
+	</div>
+	</div>
+        <div class="btn_bottom">
+            <input type="submit" value="创建" onclick="return checkAdminPinInfo()" class="btn_small m_r"></input>
+            <input type="reset" value="重置" class="btn_small m_r"></input>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		
+		// 首次加载时，判断是否需要显示 管理员PIN码输入框
+		if($("#adminPinType").val()=="fix"){
+			$(".adminPinValueP").show();
+		}
+		else{
+			$(".adminPinValueP").hide();
+		}
+		
+		// 管理员PIN码类型处理
+		$("#adminPinType").change(function(){
+			if($("#adminPinType").val()=="fix"){
+				$(".adminPinValueP").show();
+			}
+			else{
+				$(".adminPinValueP").hide();
+			}
+		});
+	});
+</script>

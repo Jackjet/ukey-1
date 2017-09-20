@@ -1,0 +1,66 @@
+#parse("raaccount/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>RA管理</span>
+</div>
+<div class="mbox">
+    <form id="queryform" method="GET" action="">
+        <input id="pagecur" type="hidden" name="page" value="$!page">
+        <input id="sizecur" type="hidden" name="size" value="$!size">
+    </form>
+    #parse("pages0.vm")
+    <a href="#springUrl('/')raaccount?form" title="新建RA配置">
+    	<img title="新建项目" src="#springUrl('/')resources/images/create.png" class="image" alt="新建RA配置"/>新建RA
+	</a></br></br>
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="5%">序号</th>
+    			<th class="alignTwo" width="15%">RA名称</th>
+    			<th class="alignTwo" width="15%">RA单位</th>
+    			<th class="alignTwo" width="15%">RA部门</th>
+    			<th class="alignTwo" width="30%">地址</th>
+    			<th class="alignTwo" width="10%">协议</th>
+    			<th class="alignTwo" width="10%">操作</th>
+            </thead>
+            <tbody>
+            	#foreach( $raaccount in $raaccounts )
+	     	<tr>
+    			<td class="alignTwo">${foreach.count}</td>
+    			<td class="alignL" title="${raaccount.raName}">${raaccount.raName}</td>
+    			<td class="alignL" title="${raaccount.accountOrganization}">${raaccount.accountOrganization}</td>
+    			<td class="alignL" title="${raaccount.accountOrgUnit}">${raaccount.accountOrgUnit}</td>
+    			<td class="alignL" title="${raaccount.serviceUrl}">${raaccount.serviceUrl}</td>
+    			<td class="alignL">
+  		  			${raProtocols.get(${raaccount.raProtocol})}
+    			</td>
+    			<td class="alignL">
+    				<div class="l">
+    				<a href="#springUrl('/')raaccount/${raaccount.id}" title="查看RA信息">
+    				<img title="查看RA信息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看RA信息"/>
+					</a>
+    				<a href="#springUrl('/')raaccount/${raaccount.id}?form" title="修改RA信息">
+    				<img title="修改RA信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改RA信息"/>
+					</a>
+					</div>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')raaccount/${raaccount.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除RA" type="image" title="删除RA" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除RA"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+			#end 
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+	<font color="red">$!message</font>
+	<br/>
+</div>

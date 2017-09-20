@@ -1,0 +1,346 @@
+#parse("message/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>弹窗推送</span>&nbsp;&gt;&nbsp;
+    <span>增加消息</span>
+</div>
+<script type="text/javascript">
+<!--
+
+##$().ready(function(){
+##    $("#dmsgForm").validate({
+##        rules:{
+##            project:"required",
+##            title:"required",
+##            link:{
+##                required:true,
+##                url:true
+##            }
+##        },
+##        messages:{
+##            project:"请选择项目名称",
+##			title:"请输入标题",
+##            link:{
+##				required:"请输入链接",
+##                url:"请输入正确URL的链接"
+##            }
+##        }
+
+##    });
+##});
+function getapps(projectid){
+    if(!projectid){
+        $("#authapp").html("");
+        $("#unAuthapp").html("");
+        return;
+    }
+	$("#authapp").html('<label class="labelcom" style="margin-top: 7px;">加载中...</label>');
+    $("#unAuthapp").html('<label class="labelcom" style="margin-top: 7px;">加载中...</label>');
+    var postData={
+        projectid:projectid
+    };
+    var url="#springUrl('/')message/getApps";
+    $.ajax({
+        type:"post",
+        crossDomain : true,
+        url:url,
+        data:postData,
+        //async: false, //false表示同步，true表示异步,默认为true
+        success:function(data){
+            var jsondata = $.parseJSON(data);
+//			$("#authapp").append("<tr>");
+            $("#authapp").html("");
+            $("#unAuthapp").html("");
+            $.each(jsondata, function(index, obj){
+//                $("#authapp").append("<td>");
+                $("#authapp").append('<input type="checkbox" name="authapp" class="radcom rad_wh" value="'+obj.uniqueId+'" /><label class="labelcom" style="margin-top: 7px;">'+obj.name+'</label>');
+                $("#unAuthapp").append('<input type="checkbox" name="unAuthapp" class="radcom rad_wh" value="'+obj.uniqueId+'" /><label class="labelcom" style="margin-top: 7px;">'+obj.name+'</label>');
+//                $("#authapp").append("</td>");
+//				if(index>0&&(index+1)%3==0){
+//                    $("#authapp").append("</tr><tr>");
+//				}
+			});
+//            $("#authapp").append("</tr>");
+        }
+    });
+}
+//-->
+</script>
+<style type="text/css"> 
+
+label.error 
+{
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="dmsgForm" action="#springUrl('/')message" method="post" enctype="multipart/form-data">
+	<div class="tabConBox_L">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称：</span>
+	<select id="project" name="project" class="bor sel342" onchange="getapps(this.value)">
+        <option value="">请选择</option>
+		#foreach($projectobj in $projects)
+		<option value="${projectobj.id}">${projectobj.name}</option>
+		#end
+	</select>
+        <label id="projectError" style="line-height:25px; color:red;display:none;">
+        请选择项目名称（选中后会出现对应授权应用）</label>
+    </p>
+	<p>
+		<span>标题：</span>
+		<input id="title" name="title" type="text"  class="bor txtth" maxlength="15" size="50"></input>
+        <label id="titleError" style="line-height:25px;">
+        带图为10字，不带图15字以内</label>
+	</p>
+	<p>
+		<span>链接：</span>
+		<input id="link" name="link" type="text" class="bor txtth" maxlength="500" size="50"></input>
+    </p>
+    <p>
+        <label id="linkError" style="line-height:25px; color:red; display:none;">
+            <span>&nbsp;</span>请输入正确的URL链接</label>
+    </p>
+	<p>
+		<span>描述：</span>
+        <textarea id="detail" style="margin:10px 0 0 0"  rows="5" cols="34" name="detail" maxlength="60" ></textarea>
+</p>
+        <p>
+        <span>&nbsp;</span><label id="detailError" style="line-height:25px;">
+        带图为35字，不带图60字以内
+        </label>
+	</p>
+	<p>
+        <span>请选择图片文件：</span>
+        <input type="file" name="photofile" id="photo" accept="image/png,image/jpg" class="mt9" />
+	</p>
+	<p>
+        <span>&nbsp;</span><label style="line-height:25px;#if($photoError)color:#FF0000; #end">
+        应用图片为大小在20K以内的JPG/PNG格式图片<br/>图片像素为110*80</label>
+	</p>
+	<p>
+		<span>配置项：</span>
+		<input id="configItem" name="configItem" type="text" class="bor txtth" size="50"></input>
+	</p>
+    <p>
+        <span>参数：</span>
+        <input id="paremeter" name="params" type="text" class="bor txtth" size="50"></input>
+    </p>
+
+	<p><br></p>
+	</div>
+##		<div class="tabConBox_R">
+##            <table>
+##                <tr>
+##                    <td>
+##                        <img src="#springUrl('/')message/getPhoto/${curplatform.id}&logoid=1"  title="应用图片1" />
+##                    </td>
+##                </tr>
+##            </table>
+##		</div>
+
+        <div class="mboxR_top mboxR_top_first">
+            <img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">前提条件</h3>
+        </div>
+        <div class="tabConBox_L" style="width:100%;">
+		<p><br></p>
+	<p>
+		<span>是否插key：</span>
+        <label class="labelcom">
+            <input type="checkbox" id="isKey" name="isKey" checked value="1" class="radcom rad_wh"/>
+			是
+        </label>
+		<label class="labelcom">
+			<input type="checkbox" id="isKey" name="isKey" value="0" class="radcom rad_wh"/>
+			否
+		</label>
+	</p>
+	<p>
+        <span>是否登录：</span>
+        <label class="labelcom">
+        	<input type="checkbox" class="radcom rad_wh" checked id="isLogin" name="isLogin" value="1" />
+        	是
+    	</label>
+        <label class="labelcom">
+            <input type="checkbox" class="radcom rad_wh" id="isLogin" name="isLogin" value="0" />
+            否
+        </label>
+	</p>
+	<p>
+        <span>不存在配置项：</span>
+        <input id="nonexistConfig" name="noConfig" type="text" class="bor txtth" size="50"></input>
+    </p>
+	<p>
+        <span>存在配置项：</span>
+        <input id="existConfig" name="hasConfig" type="text" class="bor txtth" size="50"></input>
+	</p>
+	<p>
+		<span>未授权应用：</span>
+##        <input name="unAuthapp" id="unAuthapp" type="text" class="bor txtth" size="50" />
+##		#foreach($app in $apps)
+##            <input type="checkbox" name="unAuthapp" value="${app.id}" class="radcom rad_wh"/>
+##            <label class="labelcom">${app.name}</label>
+##		#end
+        <div style="margin-left: 80px;" id="unAuthapp">
+##        <tr>
+##			#foreach($app in $apps)
+##                <td>
+##                    <input type="checkbox" name="unAuthapp" class="radcom rad_wh" value="${app.id}" />
+##                    <label class="labelcom" style="margin-top: 7px;">${app.name}</label>
+##                </td>
+##				#if($foreach.count>0 && $foreach.count%3==0)
+##                </tr><tr>
+##				#end
+##			#end
+##        </tr>
+        </div>
+	</p>
+	<p>
+        <span>已授权应用：</span>
+##        <input name="authapp" id="authapp" type="text" class="bor txtth" size="50" />
+##		#foreach($app in $apps)
+##            <input type="checkbox" name="authapp" value="${app.uniqueId}" class="radcom rad_wh"/>
+##            <label class="labelcom"> ${app.name}</label>
+##		#end
+        <div style="margin-left: 80px;" id="authapp">
+##        <tr>
+##			#foreach($app in $apps)
+##                <td>
+##                    <input type="checkbox" name="authapp" class="radcom rad_wh" value="${app.uniqueId}" />
+##                    <label class="labelcom" style="margin-top: 7px;">${app.name}</label>
+##                </td>
+##				#if($foreach.count>0 && $foreach.count%3==0)
+##                </tr><tr>
+##				#end
+##			#end
+##        </tr>
+        </div>
+	</p>
+
+		<p><br></p>
+            <div class="mboxR_top mboxR_top_first">
+                <img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">提示策略</h3>
+            </div>
+		<p><br></p>
+	<p>
+        <span>提示有效期：</span>
+        <input id="showStartTime" name="showStartTime" type="text" class="bor txtwidth2" style="margin-top:7px;" value="$!date.format('yyyy-MM-dd HH:mm:ss',$startDate)"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+        至
+        <input id="showEndTime" name="showEndTime" type="text" class="bor txtwidth2" style="margin-top:7px;" value="$!date.format('yyyy-MM-dd HH:mm:ss',$endDate)"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /><br /><br />
+	</p>
+            <p><label id="timeError" style="line-height:25px;color:red; display:none;">
+                <span>&nbsp;</span>请选择提示有效期</label>
+            </p>
+	<p>
+        <span>每次启动提示：</span>
+		<input type="radio" name="isShowOnStart" class="radcom rad_wh" value="1"/><label class="labelcom">是</label>
+        <input type="radio" name="isShowOnStart" checked class="radcom rad_wh" value="0"/><label class="labelcom">否</label>
+	</p>
+
+	<p>
+        <span>每次插key提示：</span>
+        <input type="radio" name="isShowOnKey" class="radcom rad_wh" value="1"/><label class="labelcom">是</label>
+        <label class="labelcom">否<input id="isShowOnKey" name="isShowOnKey" value="0" type="radio" checked class="radcom rad_wh" /></label>
+	</p>
+	<p>
+		<span>每次登录提示：</span>
+        <label class="labelcom">是<input id="isShowOnLogin" name="isShowOnLogin" value="1" type="radio" class="radcom rad_wh" /></label>
+        <label class="labelcom">否<input id="isShowOnLogin" checked name="isShowOnLogin" value="0" type="radio" class="radcom rad_wh" /></label>
+	</p>
+	<p>
+		<span>每日固定时间提示：</span>
+		<input id="showTimes" name="showTimes" type="text" class="bor txtth" />
+	</p>
+            <p>
+                <span>&nbsp;</span><label style="line-height:25px;#if($logoError)color:#FF0000; #end">
+                例：00:00,1:00</label>
+            </p>
+
+    <p>
+        <span>发布类型：</span>
+        <select id="status" name="status" class="bor sel342">
+            #foreach($typeObj in $publishTypeMap.entrySet())
+                <option value="$typeObj.key">$typeObj.value</option>
+            #end
+        </select>
+    </p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="创建" class="btn_small m_r" onclick="return check();"></input>
+        <input type="button" name="return" value="返回" class="btn_small m_r" onclick="javascript:history.back(-1);" />
+	</div>
+	</form>
+	</div>
+	</div>
+</div>
+<script type="text/javascript">
+    function check(){
+
+        if($("#project").val()=="") {
+            $("#projectError").show();
+            $("#project").focus();
+            $("#linkError").hide();
+            return false;
+        }
+        if($("#title").val()=="") {
+            $("#titleError").css("color","red");
+            $("#title").focus();
+            $("#projectError").hide();
+            $("#linkError").hide();
+            return false;
+        }
+        if($("#photo").val()!="" && $("#title").val().length>10) {
+            $("#titleError").css("color","red");
+            $("#title").focus();
+            $("#projectError").hide();
+            $("#linkError").hide();
+            return false;
+        }
+
+        if($("#link").val()=="")  {
+            $("#linkError").show();
+            $("#link").focus();
+            $("#projectError").hide();
+            return false;
+        }
+
+        if($("#detail").val()=="") {
+            $("#detailError").css("color","red");
+            $("#detail").focus();
+            $("#projectError").hide();
+            $("#linkError").hide();
+            return false;
+        }
+        if($("#photo").val() !="" && ($("#detail")).val().length>35) {
+            $("#detailError").css("color","red");
+            $("#detail").focus();
+            $("#projectError").hide();
+            $("#linkError").hide();
+            return false;
+        }
+        if($("#showStartTime").val()=="" || $("#showEndTime").val()==""){
+            $("#timeError").show();
+            $("#showStartTime").focus();
+            $("#projectError").hide();
+            $("#linkError").hide();
+            return false;
+        }
+        else{
+            return true;
+        }
+
+    }
+</script>

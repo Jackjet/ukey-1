@@ -1,0 +1,61 @@
+#parse("sysconfigs/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>系统配置</span>
+</div>
+<div class="mbox">	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignL" width="15%">序号</th>
+    			<th class="alignL" width="20%">名称</th>
+    			<th class="alignL" width="40%">配置内容</th>
+    			<th class="alignL" width="15%">操作</th>
+            </thead>
+            <tbody>
+            #set($index = 0)
+            #foreach( $sysconfig in $sysconfigs )
+            	#if(${sysconfs.containsKey(${sysconfig.type})})
+            		#set($index = $index +1)
+	     	<tr>
+    			<td class="alignL">$index</td>
+    			<td class="alignL">$sysconfs.get($sysconfig.type)</td>
+                #set($confVal = ${sysconfig.config})
+   				#if(${confKey.contains($confVal)})
+                    #set ($confVal = $confMap.get($confVal))
+   				#end
+                <td class="alignL" title="$confVal">$confVal</td>
+				<td class="alignL">
+    				<a href="#springUrl('/')sysconfigs/${sysconfig.id}?form" title="修改系统配置">
+    				<img title="修改系统配置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改系统配置"/>
+					</a>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')sysconfigs/${sysconfig.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除系统配置" type="image" title="删除系统配置" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除系统配置"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+    			#end
+			#end 
+            </tbody>
+         </table>
+    	</div>
+    </div><br/>
+    #set($keys = $sysconfs.keySet())
+    #set($keyNum = $keys.size())
+    #if($keys.removeAll($sflit))
+    	#set($keyNum=$keys.size())
+    #end
+    #if($keyNum !=0 )
+    <a href="#springUrl('/')sysconfigs?form" title="新建系统配置">
+    	<img title="新建系统配置" src="#springUrl('/')resources/images/create.png" class="image" alt="新建系统配置"/>新建系统配置
+	</a>
+	#end</br>
+	<font color="red">$!message</font>
+</div>

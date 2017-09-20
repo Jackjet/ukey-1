@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<meta name="apple-touch-fullscreen" content="YES" />
+<title></title>
+<link href="../css/index.css" type="text/css"  rel="stylesheet"/>
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+</head>
+<body>
+<!--header  start-->
+		<div class="navTitle">
+			i 信 认证资料上传
+		</div>
+<!--header  end-->
+
+<!--content  start-->
+		<div class="main">
+        	<ol class="tittle">北京天威诚信电子商务服务有限公司</ol>
+            <div class="paizhao">
+				
+            	<dl>
+                	 <img id ="showimg" src="../images/idcard_zheng.png" style="height:160px"/>
+                     <span id="showSpan1"></span>
+                     <dt id="SelOne"><a href="#" style=" position:relative;dislpay:block;">
+						<input id="icfile" type="file" accept="image/*;capture=camera" style="opacity:0 ;position: absolute;top:0;left:-130px;z-index: 10;width:260px;height: 160px;"/><i>上传法人证件正面照</i>
+						</a>
+					 </dt>
+					 <div id="icFile1" style="color:#fff; font-size:16px; position: absolute; z-index:9999; left:53px;  top: 70px; display:none;" id="div1">正在读取图片,请等待...</div>
+
+                </dl>
+            </div>
+            <div class="paizhao">
+            	<dl>
+                	 <img id ="showimg1" src="../images/idcard_fan.png" style="height:160px"/>
+                     <span id="showSpan2"></span>
+                     <dt id="SelTwo"><a href="#" style=" position:relative;dislpay:block;">
+						<input id="icbackfile" type="file" accept="image/*;capture=camera" style="opacity:0 ;position: absolute;top:0;left:-130px;z-index: 10;width:260px;height: 160px;"/><i>上传法人证件反面照</i>
+						</a>
+					 </dt>
+					 <div id="icFile2" style="color:#fff; font-size:16px; position: absolute; z-index:9999; left:53px;  top: 70px; display:none;" id="div1">正在读取图片,请等待...</div>
+
+                </dl>
+            </div> 
+            <ul class="footer">真实拍照的法定代表人身份证正反面、护照或其他证件原件，无反光，无水印；图片格式为jpg、jpeg或png；</ul>           
+			 <ul class="footer01" style="display:none;">
+            	<a href="#" class="border_btn" id="resubmit">重新上传</a>
+                <a href="#" id="submits">确 定</a>
+            </ul> 
+		</div>
+<!--content  end-->
+</body>
+<script>
+$(function(){
+	var ua = navigator.userAgent.toLowerCase();
+	var wechatInfo = ua.match(/MicroMessenger\/([\d\.]+)/i);
+	var cssText = "#weixin-tip{position: fixed; left:0; top:0; background: rgba(0,0,0,0.9); filter:alpha(opacity=90); width: 100%; height:100%; z-index: 100;} #weixin-tip p{text-align: center; margin-top: 0%; padding:0 5%;}";
+	if(wechatInfo&&wechatInfo[1] > "6.3"
+			&&(ua.indexOf('android') != -1 || ua.indexOf('linux') != -1)) {//微信版本6.2.5以上的Android手机
+		loadHtml();
+		loadStyleText(cssText);
+		return;
+	}
+	if(wechatInfo&&wechatInfo[1] >= "6.3.9") {//微信版本6.3.9以上的ios手机
+		loadHtml(1);
+		loadStyleText(cssText);
+		return;
+	}
+	function loadHtml(type){
+		var div = document.createElement('div');
+		div.id = 'weixin-tip';
+		if(type){
+			div.innerHTML = '<p><img src="../images/live_weixin01.png" alt="微信打开"/></p>';
+		} else {
+			div.innerHTML = '<p><img src="../images/live_weixin.png" alt="微信打开"/></p>';
+		}
+		document.body.appendChild(div);
+	}
+	function loadStyleText(cssText) {
+		var style = document.createElement('style');
+		style.rel = 'stylesheet';
+		style.type = 'text/css';
+		try {
+			style.appendChild(document.createTextNode(cssText));
+		} catch (e) {
+			style.styleSheet.cssText = cssText; //ie9以下
+		}
+		var head=document.getElementsByTagName("head")[0]; //head标签之间加上style样式
+		head.appendChild(style);
+	}
+	var icfileBase64 = "";
+	var icbackfileBase64 = "";
+	var Owidth = "";
+	var Oheight = "";
+	var Twidth = "";
+	var Theight = "";
+	var URL = window.location.href;
+	var random = "";
+	random = URL.split("?r=")[1];
+	if(random.indexOf("#")!=-1){
+		var indexNo = random.indexOf("#");
+		random = random.substring(0,indexNo);
+	}
+	if(random.indexOf("&")!=-1){
+		var indexNo = random.indexOf("&");
+		random = random.substring(0,indexNo);
+	}
+	$("#resubmit").click(function(){
+		 location.reload();
+	});
+	function GETURL(subURL,newUrl){
+		var url = window.location.href;
+		if(url != "" && url != null){
+			var info = url.split(subURL)[0];
+			info = info+ newUrl;
+			return info;
+		}
+		return "";
+	}
+	function GetName(){
+		var url = GETURL("/js/u/p","/tempPic/getName");
+		var postdataR = {
+				"random":random,
+			};
+		$.ajax({
+			type: 'POST',
+			url:  url,
+			data: postdataR,
+			success:function(data){
+				var jsondata = $.parseJSON(data);
+				if(jsondata.retCode==0){
+					$(".tittle").html(jsondata.taxName);
+				}else{
+					alert(jsondata.retMsg);
+				}
+			},error:function(){
+				alert("获取企业信息失败,请稍后上传!");
+				return;
+			}
+		});
+	}
+	GetName();
+	$("#icfile").change(function(){		
+		if(!/\.(jpg|jpeg|png)$/.test($("#icfile").val().toLowerCase())){
+			alert("请上传Jpg,Jpeg,Png格式的图片文件!");
+			return;
+		}
+		var file = this.files[0]; 
+		if(!file){
+			 return;
+		}
+		var url = webkitURL.createObjectURL(file);
+
+		var img = new Image();
+		img.onerror = function (){
+			alert('图片文件不正确，请查看后上传');
+			location.replace(window.location.href);
+		};
+		img.onload = function() {
+			var show = document.getElementById("showimg");
+			show.src = img.src;
+
+			var Ocanvas = document.createElement("canvas");
+			var Octx = Ocanvas.getContext("2d");
+
+			Owidth = img.width;
+			Oheight = img.height;
+			icfileBase64 = url;
+			if(file.size<500*1024){
+				Ocanvas.width = Owidth;
+				Ocanvas.height = Oheight;
+				Octx.clearRect(0,0,Ocanvas.width,Ocanvas.height);
+				Octx.drawImage(img,0,0,Owidth,Oheight);
+				icfileBase64 = Ocanvas.toDataURL('image/jpeg',0.6);
+			}else{
+				Ocanvas.width = Owidth;
+				Ocanvas.height = Oheight;
+				Octx.clearRect(0,0,Ocanvas.width,Ocanvas.height);
+				Octx.drawImage(img, 0, 0, Owidth, Oheight);
+				icfileBase64 =  Ocanvas.toDataURL('image/jpeg',300*1024/file.size);
+//				var rateMax = 1;var rateMin = 0; var rate = 1;
+//				for(var i=0;i<=10;i++){
+//					rate=(rateMax+rateMin)/2;
+//					Ocanvas.width = Owidth;
+//					Ocanvas.height = Oheight;
+//					Octx.clearRect(0,0,Ocanvas.width,Ocanvas.height);
+//					Octx.drawImage(img, 0, 0, Owidth, Oheight);
+//					icfileBase64 =  Ocanvas.toDataURL('image/jpeg',rate);
+//
+//					if(icfileBase64.length*0.75>500*1024){
+//						rateMax = rate;
+//						rateMin = rateMin;
+//					}else if(icfileBase64.length*0.75<300*1024){
+//						rateMax = rateMax;
+//						rateMin = rate;
+//					}else
+//						break;
+//
+//					if(i == 10 ){
+//						var rate1Max = 1;var rate1Min = 0;var rate1 = 1;
+//						for(var j = 0;j<=10;j++){
+//							rate1=(rate1Max+rate1Min)/2;
+//							Ocanvas.width = Owidth*rate1;
+//							Ocanvas.height = Oheight*rate1;
+//							Octx.clearRect(0,0,Ocanvas.width,Ocanvas.height);
+//							Octx.drawImage(img, 0, 0, Owidth, Oheight);
+//							imgfileBase64 =  Ocanvas.toDataURL('image/jpeg',rate);
+//							if(imgfileBase64.length*0.75>500*1024)
+//							{
+//								rate1Max = rate1;
+//								rate1Min = rate1Min;
+//							}else if(imgfileBase64.length*0.75<300*1024){
+//								rate1Max = rate1Max;
+//								rate1Min = rate1;
+//							}else{
+//								i = 12;
+//								break;
+//							}
+//						}
+//					}
+//				}
+			}
+			hideLoading(1);
+			if(document.getElementById("icbackfile").files[0]){
+				$(".footer01").css("display","block");
+				$(".footer").css("display","none");
+				$("#SelOne").css("display","none");
+				$("#showSpan1").css("display","none");
+				$("#showSpan2").css("display","none");
+				$("#SelTwo").css("display","none");
+			}
+		}
+		img.src = url;
+		showLoading(1);
+	});
+	$("#icbackfile").change(function(){
+		if(!/\.(jpg|jpeg|png)$/.test($("#icbackfile").val().toLowerCase())){
+			alert("请上传Jpg,Jpeg,Png格式的图片文件!");
+			return;
+		}
+		var file = this.files[0]; 
+		if(!file){
+			 return;
+		}
+		var url = webkitURL.createObjectURL(file);
+		var img = new Image();
+		img.onerror = function (){
+			alert('图片文件不正确，请查看后上传');
+			location.replace(window.location.href);
+		};
+		img.onload = function() {
+			var show = document.getElementById("showimg1");
+			show.src = img.src;
+
+			var Tcanvas = document.createElement("canvas");
+			var Tctx = Tcanvas.getContext("2d");
+
+			Owidth = img.width;
+			Oheight = img.height;
+			icbackfileBase64 = url;
+			if(file.size<500*1024){
+				Tcanvas.width = Owidth;
+				Tcanvas.height = Oheight;
+				Tctx.clearRect(0,0,Tcanvas.width,Tcanvas.height);
+				Tctx.drawImage(img,0,0,Owidth,Oheight);
+				icbackfileBase64 = Tcanvas.toDataURL('image/jpeg',0.6);
+			}else{
+				Tcanvas.width = Owidth;
+				Tcanvas.height = Oheight;
+				Tctx.clearRect(0,0,Tcanvas.width,Tcanvas.height);
+				Tctx.drawImage(img, 0, 0, Owidth, Oheight);
+				icbackfileBase64 =  Tcanvas.toDataURL('image/jpeg',300*1024/file.size);
+//				alert(icbackfileBase64.length);
+//				var rateMax = 1;var rateMin = 0; var rate = 1;
+//				for(var i=0;i<=10;i++){
+//					rate=(rateMax+rateMin)/2;
+//					Tcanvas.width = Owidth;
+//					Tcanvas.height = Oheight;
+//					Tctx.clearRect(0,0,Tcanvas.width,Tcanvas.height);
+//					Tctx.drawImage(img, 0, 0, Owidth, Oheight);
+//					icbackfileBase64 =  Tcanvas.toDataURL('image/jpeg',rate);
+//					if(icbackfileBase64.length*0.75>500*1024){
+//						rateMax = rate;
+//						rateMin = rateMin;
+//					}else if(icbackfileBase64.length*0.75<300*1024){
+//						rateMax = rateMax;
+//						rateMin = rate;
+//					}else
+//						break;
+//
+//					if(i == 10 ){
+//						var rate1Max = 1;var rate1Min = 0;var rate1 = 1;
+//						for(var j = 0;j<=10;j++){
+//							rate1=(rate1Max+rate1Min)/2;
+//							Tcanvas.width = Owidth*rate1;
+//							Tcanvas.height = Oheight*rate1;
+//							Tctx.clearRect(0,0,Tcanvas.width,Tcanvas.height);
+//							Tctx.drawImage(img, 0, 0, Owidth, Oheight);
+//							icbackfileBase64 =  Tcanvas.toDataURL('image/jpeg',rate);
+//							if(icbackfileBase64.length*0.75>500*1024)
+//							{
+//								rate1Max = rate1;
+//								rate1Min = rate1Min;
+//							}else if(icbackfileBase64.length*0.75<300*1024){
+//								rate1Max = rate1Max;
+//								rate1Min = rate1;
+//							}else{
+//								i = 12;
+//								break;
+//							}
+//						}
+//					}
+//				}
+			}
+			hideLoading(2);
+			if(document.getElementById("icfile").files[0]){
+				$(".footer01").css("display","block");
+				$(".footer").css("display","none");
+				$("#showSpan1").css("display","none");
+				$("#showSpan2").css("display","none");
+				$("#SelOne").css("display","none");
+				$("#SelTwo").css("display","none");
+			}
+		}
+		img.src = url;
+		showLoading(2);
+	});
+	
+	$("#submits").click(function(){
+		if(icfileBase64==null||icbackfileBase64==null){
+			alert("请选择上传图片！");
+			return;
+		}
+		var postdata = {
+			"random":random,
+			"imgABase64":icfileBase64.substr(23),
+			"imgBBase64":icbackfileBase64.substr(23)
+			};
+		var url = GETURL("/js/u/p","/tempPic/uploadImg");
+		$.ajax({
+			type: 'POST',
+			url:  url,
+			data: postdata,
+			success:function(data){
+				var jsondata = $.parseJSON(data);
+				if(jsondata.retCode==1){
+					window.location.href="farensuccess.html#"+random;
+				}else{
+					alert(jsondata.retMsg);
+				}
+			},error:function(){
+				alert("上传失败,请稍后重试！");
+			}
+		})
+			
+	});
+function showLoading(id){
+	if(id == 1){
+		$("#icFile1").css("display","block");
+		$("#SelOne").css("display","none");
+	}else{
+		$("#icFile2").css("display","block");
+		$("#SelTwo").css("display","none");
+	}
+	//document.all.div1.style.display='block';
+}
+function hideLoading(id){
+	if(id == 1){
+		$("#icFile1").css("display","none");
+		$("#SelOne").css("display","block");
+	}else{
+		$("#icFile2").css("display","none");
+		$("#SelTwo").css("display","block");
+	}
+	//document.all.div1.style.display='none';
+}
+});
+</script>
+</html>

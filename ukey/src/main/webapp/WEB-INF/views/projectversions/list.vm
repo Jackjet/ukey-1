@@ -1,0 +1,176 @@
+#parse("projectversions/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>软件关联</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+    <label>项目名称：</label>
+	<select id="projectcur" name="project" class="bor selwidth1">
+		#if($projects.size()>1)
+		<option value="0">所有项目</option>
+		#end
+		#foreach($projectobj in $projects)
+			<option value="${projectobj.id}"
+			#if($project == "${projectobj.id}")
+				selected="selected"
+			#end>
+			${projectobj.name}</option>
+		#end
+	</select>
+    <label>软件名称：</label>
+	<select id="productcur" name="product" class="bor selwidth1">
+		#if($products.size()>1)
+		<option value="0">所有软件</option>
+		#end
+		#foreach($productobj in $products)
+			<option value="${productobj.id}"
+			#if($product == "${productobj.id}")
+				selected="selected"
+			#end>
+			${productobj.name}</option>
+		#end
+	</select>
+   	<label>软件版本：</label>
+	<select id="versioncur" name="version" class="bor selwidth1">
+		<option value="0">所有版本</option>
+	</select>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    
+    </div>
+	<a id="addversion" href="#springUrl('/')projectversions?form=1" title="新建软件关联">
+    	<img title="新建软件关联" src="#springUrl('/')resources/images/create.png" class="image" alt="新建软件关联"/>新建软件关联
+	</a>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%">项目名称</th>
+    	 	<th class="alignTwo" width="10%" >软件名称</th>
+    	 	<th class="alignTwo" width="8%">版本号</th>
+            <th class="alignTwo" width="20%">版本文件</th>
+            <th class="alignTwo" width="11%">待升级最小版本</th>
+            <th class="alignTwo" width="11%">待升级最大版本</th>
+            <th class="alignTwo" width="12%" >关联时间</th>
+            <th class="alignTwo" width="5%" >推送</th>
+            <th class="alignTwo" width="8%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $projectversion in $projectversions )
+	     	<tr>
+                #set($proVersion = $versionmap.get(${projectversion.productVersion}))
+    			<td class="alignL" title="$projectmap.get(${projectversion.project}).name">$projectmap.get(${projectversion.project}).name</td>
+    			<td class="alignL" title="$productmap.get($versionmap.get(${projectversion.productVersion}).product).name">
+                    <a href="#springUrl('/')products/$productmap.get($versionmap.get(${projectversion.productVersion}).product).id" title="查看软件信息">
+    			$productmap.get($versionmap.get(${projectversion.productVersion}).product).name</a>
+    			</td>
+    			<td class="alignL"><a href="#springUrl('/')versions/$proVersion.id" title="查看版本信息">
+                $proVersion.productVersion</a>
+    			</td>
+                <td class="alignL" title="${proVersion.name}">文件：${proVersion.name}<br>大小：${proVersion.length}
+                </td>
+                <td class="alignL">$!{projectversion.minVersion}</td>
+                <td class="alignL">$!{projectversion.maxVersion}</td>
+    			<td class="alignL">$date.format("yyyy-MM-dd HH:mm:ss",${projectversion.createTime})</td>
+    			<td class="alignTwo">#if($projectversion.isPush) 
+    					是
+    				#else
+    					否
+    				#end
+    			</td>
+				<td class="alignThree">
+     				<form id="command" action="#springUrl("/")/projectversions/${projectversion.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除软件关联" type="image" title="删除软件关联" src="#springUrl("/")resources/images/delete.png"
+						class="image" alt="删除软件关联"/>
+					</form>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script type="text/javascript">
+<!--
+	var version = "$!version";
+	var versions = $json.writeValueAsString($versions);
+	
+	var urlbase = "#springUrl("/")projectversions";
+#[[
+	$(function(){
+		// 根据 product 更新 version 列表
+		if($("#productcur").val()!=0){
+			var product = $("#productcur").val();
+			for(var i = 0 ; i < versions.length ; i++){
+				if(versions[i].product != product){
+					continue;					
+				}
+				
+				//alert(versions[i].productVersion);
+				if(versions[i].id == version)
+					$("#versioncur").append("<option value=\""+versions[i].id+"\" selected>"+versions[i].productVersion+"</option>");
+				else
+					$("#versioncur").append("<option value=\""+versions[i].id+"\">"+versions[i].productVersion+"</option>");
+			}
+		}
+				
+		$("#addversion").click(function(event){
+			event.preventDefault();
+			
+			var url = urlbase + "?form=1";
+			var projectcur = $("#projectcur").val();
+			var productcur = $("#productcur").val();
+			var versioncur = $("#versioncur").val();
+			if(projectcur != null && projectcur != '')
+				url += "&project=" + projectcur;
+			if(productcur != null && productcur != '')
+				url += "&product=" + productcur;
+			if(versioncur != null && versioncur != '')
+				url += "&version=" + versioncur;		
+			
+			document.location = url;
+			
+			//alert("hello");
+		});
+		// 根据product事件更新version列表
+		$("#productcur").change(function(){
+			//alert(this.value);
+			$("#versioncur option").each(function(){
+				//alert($(this).val());
+				if($(this).val()!=0)
+					$(this).remove();
+			});
+			
+			for(var i = 0 ; i < versions.length ; i++){
+				if(versions[i].product != this.value){
+					continue;					
+				}
+				
+				//alert(versions[i].productVersion);
+				if(versions[i].id == version)
+					$("#versioncur").append("<option value=\""+versions[i].id+"\" selected>"+versions[i].productVersion+"</option>");
+				else
+					$("#versioncur").append("<option value=\""+versions[i].id+"\">"+versions[i].productVersion+"</option>");
+			}
+			
+		});
+	});
+]]#
+//-->
+</script>

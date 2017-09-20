@@ -1,0 +1,47 @@
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>Passcode</span>
+</div>
+<div class="mbox">	
+    <a href="#springUrl('/')passcode?form" title="上传passcode文件">
+    	<img title="上传passcode文件" src="#springUrl('/')resources/images/create.png" class="image" alt="上传passcode文件"/>上传passcode文件
+	</a><br/><br/>
+	<form id="queryform" method="GET"
+					action="#springUrl('/')passcode">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size">
+	</form>
+	#parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="25%">单位</th>
+    			<th class="alignTwo" width="25%">部门</th>
+    			<th class="alignTwo" width="20%">passcode总数量</th>
+    			<th class="alignTwo" width="20%">passcode已使用数量</th>
+    			<th class="alignTwo" width="10%">操作</th>
+            </thead>
+            <tbody>
+            	#foreach( $racaPassCode in $racaPassCodes )
+	     	<tr>
+    			<td  class="alignL" title='${racaPassCode.organization}'>${racaPassCode.organization}</td>
+    			<td  class="alignThree" title="${racaPassCode.orgUnit}">${racaPassCode.orgUnit}</td>
+    			<td  class="alignThree" title="${racaPassCode.caPasscodeNum}">${racaPassCode.caPasscodeNum}</td>
+    			<td  class="alignThree" title="${racaPassCode.usedCodeNum}">${racaPassCode.usedCodeNum}</td>
+    			<td  class="alignThree" title="删除">
+    				<form id="command" action="#springUrl("/")passcode/${racaPassCode.raAccountInfoId}" method="post">
+    					<input onclick="return confirm('确认删除【${racaPassCode.orgUnit}】中所有未使用passcode？');" value="删除" type="image" title="删除" src="#springUrl('/')resources/images/delete.png" class="image_del" alt="删除" style="margin-top:7px;" />
+    					<input type="hidden" name="_method" value="DELETE" />
+    				</form>
+    			</td>
+    		</tr>
+			#end 
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+	<font color="red">$!{request.getParameter("message")}</font>
+	<br/>
+</div>

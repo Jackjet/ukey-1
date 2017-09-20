@@ -1,0 +1,93 @@
+#parse("statis/include.vm")
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>在线记录</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="#springUrl('/')statis/online">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+    <label>在线时间：</label>
+	<input id="startDate" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+	<span>至 </span>
+	<input id="endDate" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+	&emsp;&nbsp;
+	<label>操作系统：</label>
+	<select id="osType" name="osType" class="bor selwidth1">
+		#foreach($obj in $osTypes.entrySet())
+		<option  value="${obj.key}" 
+		#if($osType == ${obj.key})
+			selected="selected"
+		#end >${obj.value}</option>
+		#end
+	</select>&emsp;&emsp;
+	<label>主程序版本：</label>
+	<input  name="ukeyVersion" type="text" value="$!ukeyVersion" size="12" class="bor txtwidth1"/>
+	<br/><br/>
+    <label>项目名称：</label>
+	<select id="projectcur" name="project" class="bor selwidth1">
+		#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+		#end
+		#foreach($projectobj in $projectmap.entrySet())
+			<option value="${projectobj.key}"
+			#if($project == "${projectobj.key}")
+				selected="selected"
+			#end>
+			${projectobj.value.name}</option>
+		#end
+	</select>
+	<label>所有者：</label>
+	<input  name="certCn" type="text" value="$!certCn" size="12" class="bor txtwidth1"/>
+	<label>序列号：</label> 
+	<input id="querykeysn" type="text" name="keySn" value="$!keySn" class="bor txtwidth1">
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+	
+    </form>
+    </div>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="20%">项目名称</th>
+    	 	<th class="alignTwo" width="20%">序列号</th>
+    	 	<th class="alignTwo" width="15%">所有者</th>
+    	 	<th class="alignTwo" width="10%">操作系统</th>
+            <th class="alignTwo" width="10%">主程序版本</th>
+            <th class="alignTwo" width="15%">上线时间</th>
+            <th class="alignTwo" width="10%">在线时长</th>
+            </thead>
+            <tbody>
+            #foreach( $activityMsg in $activityMsgs )
+	     	<tr>
+    			<!-- 项目名称 -->
+    			<td class="alignL" title="$projectmap.get(${activityMsg.project}).name">
+                    $projectmap.get(${activityMsg.project}).name</td>
+    			<td class="alignL" title="${activityMsg.keySn}">${activityMsg.keySn}</td> <!-- 序列号 -->
+    			<td class="alignL" title="${activityMsg.certCn}">${activityMsg.certCn}</td> <!-- 证书所有者 -->
+    			<td class="alignTwo">${activityMsg.osType}</td><!-- 操作系统 -->
+    			<td class="alignTwo">${activityMsg.ukeyVersion}</td> <!-- 主程序版本号 -->
+    			<!-- 上线时间 -->
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${activityMsg.onLineTime})</td> 
+    			<!-- 在线时长 -->
+    			#set($hours = $activityMsg.lifeTime/3600000)
+    			#set($minus = ($activityMsg.lifeTime%3600000+59999)/60000)
+    			<td class="alignR">#if($hours>0)$hours小时#end$minus分钟</td>
+    		</tr>
+			#end
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    <br/>
+</div>

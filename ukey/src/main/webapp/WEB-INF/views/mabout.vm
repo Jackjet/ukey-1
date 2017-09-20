@@ -1,0 +1,53 @@
+#set($layout="layouts/layout-null.vm")
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="height=device-height,width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+<title>服务支持</title>
+<style>
+body {margin:0 auto;font-size:12px;color:#5d5d5d; background:#e6e6e6;}
+#TabBox {width:94%;	margin:0 3%;float:left;	border:1px solid #e6e6e6;border-bottom:none; background:#fff;}
+#TabBox ul {
+	margin:0;
+	padding:0;
+}
+#TabBox li {
+	list-style:none;
+	float:left;
+	height:50px; line-height:50px;
+	width:100%;
+	border-bottom:1px solid #e6e6e6;
+}
+#TabBox li h1 {
+	font-size:16px;
+	width:81px;
+	margin:0 12px 0 15px;
+	float:left;
+	font-weight:normal;
+}
+#TabBox li span {
+	font-size:16px;
+	width:64%;
+	float:left;
+}
+#TabBox li span.fontEn{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+}
+</style>
+</head>
+<body>
+<div id="TabBox">
+  <ul>
+    <li>
+      <h1>服务热线</h1>
+      <span class="fontEn">400 666 3999</span></li><li>
+      <h1>服务官网</h1>
+      <span class="fontEn"><a href="http://www.itrus.com.cn">www.itrus.com.cn</a></span></li>
+      <li>
+      <h1>服务提供商</h1>
+      <span>天威诚信数字认证中心</span></li><!--最多10个字-->
+  </ul>
+</div>
+</body>
+</html>
+

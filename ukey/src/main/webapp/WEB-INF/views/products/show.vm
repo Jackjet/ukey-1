@@ -1,0 +1,61 @@
+#parse("products/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>软件管理</span>&nbsp;&gt;&nbsp;
+    <span>查看软件</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width:100%;">
+	<p>
+	<span>序号：</span><label>$!{product.id}</label>
+	<p/>
+	<p>
+	<span>优先级：</span><label>${idxmap.get("$product.idx").name}</label>
+	<p/>
+	<p>
+	<span>软件标示：</span>	<label>${product.type}</label>
+	<p/>
+	<p>
+	<span>软件名称：</span>	<label>${product.name}</label>
+	<p/>
+	<p>
+	<span>创建时间：</span>	<label>$date.format("yyyy-MM-dd HH:mm:ss",${product.createTime})</label>
+	</p>
+	<p>
+	<span>描述信息：</span>	<label>${product.info}</label>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+		   	<a href="#springUrl("/")/products" title="查看所有软件信息">
+    		<img title="查看所有软件信息" src="#springUrl("/")/resources/images/list.png" class="image" alt="查看所有软件信息"/>
+			</a>
+		</span>
+    	<span style="float:left">
+			<a href="#springUrl("/")/products?form" title="新建软件信息">
+    		<img title="新建软件信息" src="#springUrl("/")/resources/images/create.png" class="image" alt="新建软件信息"/>
+			</a>
+		</span>
+    	<span style="float:left">
+ 			<a href="#springUrl("/")/products/${product.id}?form" title="修改软件信息">
+    		<img title="修改软件信息" src="#springUrl("/")/resources/images/update.png" class="image" alt="修改软件信息"/>
+			</a>
+		</span>
+    	<span style="float:left;margin-left:10px; margin-top:5px;">
+	    <form id="command" action="#springUrl("/")/products/${product.id}" method="post">
+			<input type="hidden" name="_method" value="DELETE"/>
+			<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+				value="删除软件" type="image" title="删除软件" src="#springUrl("/")/resources/images/delete.png"
+				class="image" alt="删除软件"/>
+		</form>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,102 @@
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>报税期管理</span>&nbsp;&gt;&nbsp;
+    <span>修改报税期</span>
+</div>
+<div class="mbox">
+    <form id="projectkeyinfos" action="#springUrl('/')taxendate" method="post">
+    	<input type="hidden" name="_method" value="PUT"/>
+		<input type="hidden" name="id" value="${taxEndDate.id}"/>
+		<input type="hidden" name="retpath" value="$retpath"/>
+		<input type="hidden" name="startDay" value="1"/>
+	<input type="hidden" name="region" value="${taxEndDate.region}"/><!-- 宁波市行政区代码 -->
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+
+    
+	<div class="tabConBox_R ">
+	<p>
+	<span>报税年份</span>
+	<select id="year" name="year" class="bor selwidth1" style="margin-top:8px;">
+		 #foreach($foo in [2015..2030] ) 
+		<option value="$foo" #if(${taxEndDate.year}=="$foo") selected="selected" #end >$foo</option>
+		#end
+	</select><div style="margin-top:8px;">&nbsp;年</div>
+	<p/>
+	<p>
+		<span>报税月份</span>
+		<select id="month" name="month" class="bor selwidth1" style="margin-top:8px;">
+			#foreach($foo in [1..12] ) 
+			<option value="$foo" #if(${taxEndDate.month}=="$foo") selected="selected" #end >$foo</option>
+			#end
+		</select><div style="margin-top:8px;">&nbsp;月</div>
+	<p/>
+	<p>
+		<span>报税截止日</span>
+		<select id="endDay" name="endDay" class="bor selwidth1" style="margin-top:8px;">
+		</select><div style="margin-top:8px;">&nbsp;日</div>
+	<p/>
+	</div>
+
+    <div class="tabConBox_L">
+        <p><label><PRE>&#9;&#9;&#9;报税行政区：&#9;宁波市</PRE></label></p><br>
+        <p><label><PRE>&#9;&#9;&#9;行政区类型：&#9;市</PRE></label></p><br>
+        <p><label><PRE>&#9;&#9;&#9;行政区编码：&#9;330200</PRE></label></p>
+    </div>
+
+	</div>
+	</div>
+	<label style="color:Red;font-size:13px;margin-left:5px;padding-left:16px;">$!message</label>
+        <div class="btn_bottom">
+            <input type="submit" value="修改" class="btn_small m_r"></input>
+            <span style="float:center">
+	    		<a href="#springUrl('/')taxendate" title="返回">
+	    		<img title="返回" src="#springUrl('/')resources/images/list.png" class="image" alt="返回"/>
+	    		</a>
+    		</span>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$("#year").val("${taxEndDate.year}");
+		$("#month").val("${taxEndDate.month}");
+		var days = getDaysInMonth(${taxEndDate.year},${taxEndDate.month});
+		$("#endDay").empty();
+		for(var i = 1;i<=days;i++){
+			$("#endDay").append("<option value='"+i+"'>"+i+"</option>");
+		}
+		$("#endDay").val("${taxEndDate.endDay}");
+		//year改变事件
+		$("#year").change(function(){
+			var year = $("#year").val();
+			var month = $("#month").val();
+			var days = getDaysInMonth(year,month);
+			$("#endDay").empty();
+			for(var i = 1;i<=days;i++){
+				$("#endDay").append("<option value='"+i+"'>"+i+"</option>");
+			}
+		});
+		//month改变事件
+		$("#month").change(function(){
+			var year = $("#year").val();
+			var month = $("#month").val();
+			var days = getDaysInMonth(year,month);
+			$("#endDay").empty();
+			for(var i = 1;i<=days;i++){
+				$("#endDay").append("<option value='"+i+"'>"+i+"</option>");
+			}
+		});
+	});
+	//根据年月获取天数
+	function getDaysInMonth(year,month){ 
+		month = parseInt(month,10); //parseInt(number,type)这个函数后面如果不跟第2个参数来表示进制的话，默认是10进制。 
+		var temp = new Date(year,month,0); 
+		return temp.getDate(); 
+	}
+</script>

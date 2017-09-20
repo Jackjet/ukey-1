@@ -1,0 +1,75 @@
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+	<span>信用信息</span>&nbsp;&gt;&nbsp;
+    <span>详细信息</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">详细信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width:100%;">
+	<p>
+	<span>企业名称：</span><label title="$!{enterpriseInfo.enterpriseName}" style="width:80%;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">$!{enterpriseInfo.enterpriseName}</label>
+	<p/>
+	<p>
+	<span>注册号：</span><label>$!{enterpriseInfo.registerNo}</label>
+	<p/>
+	<p>
+	<span>类型：</span><label title="$!{enterpriseInfo.enterpriseType}" style="width:80%;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">$!{enterpriseInfo.enterpriseType}</label>
+	<p/>
+    <p>
+    <span>法定代表人：</span><label>$!{enterpriseInfo.deputy}</label>
+    <p/>
+	<p>
+	<span>注册资本：</span><label>$!{enterpriseInfo.regFund}</label>
+	<p/>
+	<p>
+	<span>成立日期：</span><label>$!{enterpriseInfo.foundTime}</label>
+	<p/>
+    <p>
+    <span>住所：</span><label title="$!{enterpriseInfo.enterprisePlace}" style="width:80%;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">$!{enterpriseInfo.enterprisePlace}</label>
+    </p>
+	<p>
+	<span>营业期限自：</span><label>$!{enterpriseInfo.startTime}</label>
+	<p/>
+	<p>
+	<span>营业期限至：</span><label>$!{enterpriseInfo.endTime}</label>
+	<p/>
+	<p>
+	<span>经营范围：</span><label title="$!{enterpriseInfo.enterpriseScope}" style="width:80%;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">$!{enterpriseInfo.enterpriseScope}</label>
+	<p/>
+	<p>
+	<span>登记机关：</span><label title="$!{enterpriseInfo.registerAuthority}" style="width:80%;display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">$!{enterpriseInfo.registerAuthority}</label>
+	<p/>
+	<p>
+	<span>核准日期：</span><label>$!{enterpriseInfo.approvalTime}</label>
+	<p/>
+	<p>
+	<span>登记状态：</span><label>$!{enterpriseInfo.registerStatus}</label>
+	<p/>
+	<p>
+	<span>经营者：</span><label>$!{enterpriseInfo.operator}</label>
+	<p/>
+	<p>
+	<span>经营场所：</span><label>$!{enterpriseInfo.operatorPlace}</label>
+	<p/>
+	<p>
+	<span>组成形式：</span><label>$!{enterpriseInfo.operatorType}</label>
+	<p/>
+	<p>
+	<span>注册日期：</span><label>$!{enterpriseInfo.registerTime}</label>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+    		<a href="#springUrl('/')enterpriseInfo" title="查看所有信用信息">
+    		<img title="查看所有用户信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有信用信息"/>
+    		</a>
+    	</span>	
+	</div>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.ProjectMapper">
+	<select id="selectNameLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct name
+		from
+		project
+		where
+		name like #{term}
+		order by
+		name
+		limit #{limtNum}
+	</select>
+</mapper>

@@ -1,0 +1,105 @@
+#parse("algstatis/include.vm")
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>算法统计</span>
+</div>
+
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+        <div class="serchFormBox">
+            <form id="queryform" method="GET" action="">
+                <input id="pagecur" type="hidden" name="page" value="1">
+                <input id="sizecur" type="hidden" name="size" value="$!size">
+                <label>项目名称：</label>
+                <select id="projectId" name="projectId" class="bor selwidth2">
+                    #if($projectmap.size()>1)
+                        <option value="0">所有项目</option>
+                    #end
+                    #foreach($proObj in $projectmap.entrySet())
+                        <option value="$proObj.key" #if($projectId== $proObj.key)
+                                selected="selected" #end>$proObj.value.name</option>
+                    #end
+                </select>
+                &emsp;&emsp;&emsp;<label>KEY序列号：</label>
+                <input id="deviceSn" type="text" name="deviceSn" value="$!{deviceSn}" class="bor txtwidth2"/>
+                <label>记录时间：</label>
+        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+        <span>至 </span>
+        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /><br/><br/>
+
+                <label>支持算法：</label>
+                <select id="algorithm" name="algorithm" class="bor selwidth2">
+                    <option value="0">全部</option>
+                    #foreach($aCode in $algorithmMap.entrySet())
+                        <option value="${aCode.key}" #if($algorithm== $aCode.key)
+                                selected="selected" #end>${aCode.value}</option>
+                    #end
+                </select>
+                &emsp;&emsp;&emsp;<label>所有者：</label>
+                <input id="certCn" type="text" name="certCn" value="$!{certCn}" class="bor txtwidth2"/>
+                 &emsp;&emsp;&emsp;<input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+            </form>
+        </div>
+    
+    </div>
+</div><br>
+	<a href="#" title="导出Excel" onclick="excelExport()">
+    	<img title="导出Excel" src="#springUrl('/')resources/images/create.png" class="image" alt="导出Excel"/>导出Excel
+	</a>
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="5%">序号</th>
+    	 	<th class="alignTwo" width="20%">记录时间</th>
+            <th class="alignTwo" width="15%">项目</th>
+            <th class="alignTwo" width="20%">证书CN</th>
+            <th class="alignTwo" width="20%">KEY序列号</th>
+            <th class="alignTwo" width="20%">支持算法</th>
+            </thead>
+            <tbody>
+            #foreach( $userDevice in $userDeviceall )
+	     	<tr>
+	     		<td class="alignL">${foreach.count}</td>
+	     		<td class="alignL" title="$date.format("yyyy-MM-dd HH:mm:ss",${userDevice.createTime})">$date.format("yyyy-MM-dd HH:mm:ss",${userDevice.createTime})</td>
+    			<td class="alignL" title="${projectmap.get($userDevice.project).name}">${projectmap.get($userDevice.project).name}</td>
+    			<td class="alignL" title="$!{userDevice.certCn}">$!{userDevice.certCn}</td>
+    			<td class="alignL" title="$!{userDevice.deviceSn}">${userDevice.deviceSn}</td>
+                <td class="alignL">#if(${algorithmMap.containsKey($userDevice.algorithm)})${algorithmMap.get($userDevice.algorithm)}#else$userDevice.algorithm#end</td><!-- 支持算法 -->
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+            <font color="red">$!errMsg</font>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript">
+
+var acUrlKeySn = "#springUrl('/algstatis/ackeysn')";
+
+  $(function(){
+	  //alert(acUrlKeySn);
+
+	  $("#keySn").autocomplete({
+		  	source:acUrlKeySn
+			,minLength: 0
+		});
+
+	});
+
+	function excelExport(){
+			var projectId=$("#projectId").val();
+			var algorithm=$("#algorithm").val();
+			var deviceSn=$("#deviceSn").val();
+			var certCn=$("#certCn").val();
+			var queryDate1 = $("#queryDate1").val();
+			var queryDate2 = $("#queryDate2").val();
+			window.open ("#springUrl('/')algstatis/excel?projectId="+projectId+"&algorithm="+algorithm+"&deviceSn="+deviceSn+"&certCn="+certCn+"&queryDate1="+queryDate1+"&queryDate2="+queryDate2) 
+	}
+</script>

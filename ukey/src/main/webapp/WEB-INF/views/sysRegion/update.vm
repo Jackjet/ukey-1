@@ -1,0 +1,103 @@
+#set($layout="layouts/layout-no-frame.vm")
+#parse("sysRegion/include.vm")
+#set($typeName = $regionTypeMap.get(${sysRegion.type}))
+#set($fTypeName = $regionTypeMap.get(${pSysRegion.type}))
+<style type="text/css">
+    label.error
+    {
+        color:Red;
+        font-size:13px;
+        margin-left:5px;
+        padding-left:16px;
+        background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat;
+    }
+</style>
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>行政区管理</span>&nbsp;&gt;&nbsp;
+    <span>修改$typeName</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">修改$typeName</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="srForm" action="#springUrl('/')sysregion" method="post">
+        <input type="hidden" name="_method" value="PUT"/>
+        <input type="hidden" name="parentId" value="${pSysRegion.id}" />
+        <input type="hidden" name="sort" value="${sysRegion.sort}"/>
+        <input type="hidden" name="id" value="${sysRegion.id}">
+	<div class="tabConBox_L">
+    #if(${sysRegion.type} > 1)
+        <p>
+            <span>所属$fTypeName：</span><label>${pSysRegion.nameCn}</label>
+        <p/>
+        <p>
+            <span>$typeName名称：</span>
+            <input id="nameCn" name="nameCn" type="text" class="bor txtth" value="$!{sysRegion.nameCn}"></input>
+        </p>
+    #else
+        <p>
+            <span>$typeName名称：</span>
+            <input id="nameCn" name="nameCn" type="text" class="bor txtth" value="$!{sysRegion.nameCn}"></input>
+        </p>
+        <p>
+            <span>$typeName行政区代码：</span>
+            <input id="code" name="code" type="text" class="bor txtth" value="$!{sysRegion.code}"></input>
+        </p>
+    #end
+	<p>
+	<span>状态：</span>
+	<select name="status" class = "bor selwidth1">
+			<option value="1" #if(1 == ${sysRegion.status})selected="selected"#end>有效</option>
+            <option value="0" #if(0 == ${sysRegion.status})selected="selected"#end>无效</option>
+	</select>
+	</p>
+	</div>
+    #if(${sysRegion.type} > 1)
+        <div class="tabConBox_R">
+            <p>
+                <span>$fTypeName行政区代码：</span><label>${pSysRegion.code}</label>
+            <p/>
+            <p>
+                <span>$typeName行政区代码：</span>
+                <input id="code" name="code" type="text" class="bor txtth" value="$!{sysRegion.code}"></input>
+            </p>
+        </div>
+    #end
+	<div class="btn_bottom">
+		<input type="submit" value="保存" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+        <font color="red">$!errMsg</font><!-- 错误信息提示 -->
+	</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    <!--
+    $().ready(function(){
+        $("#srForm").validate({
+            rules:{
+                nameCn:"required",
+                code:{
+                    required:true,
+                    number:true,
+                    minlength:6,
+                    maxlength:6
+                }
+            },
+            messages:{
+                code:{
+                    number:"行政区代码为6位数字",
+                    minlength:$.validator.format("请输入{0}位行政区代码"),
+                    maxlength:$.validator.format("请输入{0}位行政区代码")
+                }
+            }
+        });
+    });
+    //-->
+</script>

@@ -1,0 +1,40 @@
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>工单信息</span>&nbsp;&gt;&nbsp;
+    <span>上传工单信息</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">上传工单信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="admin" action="#springUrl('/')workOrder?uploadRealInfo" method="post" enctype="multipart/form-data">
+	<div class="tabConBox_L" >
+
+	<p>
+		<span>工单信息文件：</span>
+		<input type="file" name="workOrderFile" class="mt9"/>
+	</p>
+	</div>
+	<div >
+
+	<p>
+		<span>使用提示：</span>
+		<span style="width:400px;margin-left:-40px;color:red;">Excel表格，表头第一列第二列请以省份、*企业名称标示。</span>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="上传" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+	<span class="error_Info"  style="color:Red;float:left;margin-top:10px;">$!{error}</span>
+
+	#if(${errorRow})
+		<span class="error_Info"  style="color:Red;float:left;margin-top:10px;">请检查文件中第${errorRow}行格式是否正确</span>
+	#end
+	</div>
+	</div>
+</div>

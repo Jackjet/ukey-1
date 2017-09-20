@@ -1,0 +1,33 @@
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>实名信息管理</span>&nbsp;&gt;&nbsp;
+    <span>上传实名信息</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">上传实名信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="admin" action="#springUrl('/')realinfomanage?uploadRealInfo" method="post" enctype="multipart/form-data">
+	<div class="tabConBox_L" >
+
+	<p>
+		<span>实名信息文件：</span>
+		<input type="file" name="realInfoFile" class="mt9"/>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="创建" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+	<span class="error_Info"  style="color:Red;float:left;margin-top:10px;">$!{error}</span>
+
+	#if(${errorRow})
+		<span class="error_Info"  style="color:Red;float:left;margin-top:10px;">请检查文件中第${errorRow}行格式是否正确</span>
+	#end
+	</div>
+	</div>
+</div>

@@ -1,0 +1,288 @@
+#parse("apps/include.vm")
+
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>应用管理</span>&nbsp;&gt;&nbsp;
+    <span>
+    	${osname}集成设置</span>
+</div>
+<script type="text/javascript">
+function checkFile(){
+	var logos = new Array($("input[name='logo1']").val(),$("input[name='logo2']").val());
+	var extStart;
+	var logoProp;
+	
+	for(var i in logos){
+		if(logos[i]==null|| logos[i]=="")
+			continue;
+		var img=new Image(); 
+		img.src=logos[i];
+		logoProp = img.nameProp;
+		extStart=logoProp.lastIndexOf("."); 
+		var ext=logoProp.substring(extStart,logoProp.length).toUpperCase(); 
+		if(ext!=".PNG"){ 
+	 		alert("图片限于png格式"); 
+	 		return false; 
+		}
+	}
+
+	return true;        
+}
+</script>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/update.png" /><h3 class="h_nav">${osname}集成设置</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="configForm" action="#springUrl('/')apps/config/${app.id}" method="post" enctype="multipart/form-data">
+	<div class="tabConBox_L">
+	<input type="hidden" name="os" value="${os}"/>
+	<p>
+	<span>应用平台：</span><label>${app.name} - ${osname}</label>
+	<p/>
+	<p>
+	<span>应用类型：</span>
+	<select name="type" class="bor sel342">
+		#foreach($apptype in $apptypeinfos)
+		<option value="${apptype.type}" 
+			#if(${curplatform.type} == ${apptype.type})selected #end>${apptype.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+	<span>启动路径：</span>
+	<input id="startUrl" name="startUrl" type="text" class="bor txtth" value=
+	"#if($curplatform and ${curplatform.startUrl})${curplatform.startUrl}#end"></input>
+	<p/>
+#if(not ${curplatform.logo1} or not ${curplatform.logo2})
+	<p>
+		<span>应用图片：</span>
+		#if(not ${curplatform.logo1})
+		<input type="file" name="logo1" accept="image/png" class="mt9"/>
+		#end
+		#if(not ${curplatform.logo2})
+		<input type="file" name="logo2" accept="image/png" class="mt9"/>
+		#end
+	</p>
+	<p>
+		<span>&nbsp;</span><label style="line-height:25px;#if($logoError)color:#FF0000; #end">
+		请上传大小在10K以内的PNG格式图片<br/>windows图片像素为113*96<br/>android和IOS图片像素为192*192</label>
+	</p>
+#end
+	</div>
+	</form>
+	<div class="tabConBox_R">
+		<table>
+			#if(${curplatform.logo1} and ${curplatform.logo1.size()} > 0)
+			<tr>
+				<td>
+					<img src="#springUrl('/')apps/logo?platformid=${curplatform.id}&logoid=1"  title="应用图片1" />
+				</td>
+				<td>
+			  		<form id="rmlogo1" action="#springUrl('/')apps/rmlogo" method="post">
+			  		<input type="hidden" name="platformid" value="${curplatform.id}"/>
+			  		<input type="hidden" name="logoid" value="1"/>
+			  		<input onclick="return confirm('删除后需要重新上传图片，是否删除?');"
+						value="删除图片" type="image" title="删除图片" src="#springUrl('/')/resources/images/delete.png"
+						class="image" alt="删除图片"/>
+					</form>
+				</td>
+			</tr>
+			#end
+			#if(${curplatform.logo2} and ${curplatform.logo2.size()} > 0)
+			<tr>
+				<td>
+					<img src="#springUrl('/')apps/logo?platformid=${curplatform.id}&logoid=2"  title="应用图片2" />
+				</td>
+				<td>
+			  		<form id="rmlogo1" action="#springUrl('/')apps/rmlogo" method="post">
+			  		<input type="hidden" name="platformid" value="${curplatform.id}"/>
+			  		<input type="hidden" name="logoid" value="2"/>
+			  		<input onclick="return confirm('删除后需要重新上传图片，是否删除?');"
+						value="删除图片" type="image" title="删除图片" src="#springUrl('/')/resources/images/delete.png"
+						class="image" alt="删除图片"/>
+					</form>
+				</td>
+			</tr>
+			#end
+		</table>		
+	</div>
+	<div class="btn_bottom">
+## URL配置为空时，提供删除集成设置功能
+#if(
+${curplatform} and
+${curplatform_block.size()} == 0 and
+${curplatform_replace.size()} == 0 and
+${curplatform_inject.size()} == 0 
+)
+		<span style="float:left;margin-left:10px; margin-top:5px;">
+   			<form id="command" action="#springUrl('/')apps/rmos/${curplatform.id}" method="post">
+   				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+				value="删除集成设置" type="image" title="删除${osname}集成设置" src="#springUrl('/')resources/images/delete.png"
+				class="image" alt="删除集成设置"/>
+			</form>
+		</span>
+#end
+
+		<span id="message" style="float:left;margin-left:100px; margin-top:5px; color:red;">
+		#if($message)$message#end
+		</span>
+	</div>
+	<div class="btn_bottom">
+		<input id="btnmodify" type="submit" value="#if($curplatform)修改#else创建#end" class="btn_small m_r" onclick1="configForm.submit();"></input>
+		<input id="btncancel" type="button" value="取消" class="btn_small m_r" onclick="window.location = ${app.id}"></input>
+	</div>
+	</div>
+	</div>
+
+#if($os != "windows" and ${curplatform})
+	<div class="mboxR">
+	</div>
+		
+	<div class="mboxR">
+		<!--集成设置-->
+		<div class="mboxR_top mboxR_top_first">
+			<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">URL设置</h3>
+		</div>
+		<div class="mboxRbox">
+			    <a id="addurl"
+					href="#springUrl('/')/apps/addurl?platformid=${curplatform.id}&os=${os}&form=1"
+					style="margin-left: 0px"
+					title="添加URL">
+			    	<img title="添加URL" src="#springUrl('/')/resources/images/create.png" class="image" alt="添加URL"/>添加URL
+				</a>
+		<div style="border-top: 1px solid #d4d4d4">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="5%">序号</th>
+    			<th class="alignTwo" width="10%">URL类型</th>
+    			<th class="alignTwo" width="60%">URL地址</th>
+    			<th class="alignTwo" width="10%">数据文件</th>
+    			<th class="alignTwo" width="15%">操作</th>
+            </thead>
+            <tbody>
+            #set($idx = 1)
+            #foreach( $url in $curplatform_block )
+		     	<tr>
+			     	<td>${idx}</td>
+			     	#if($foreach.count==1)
+				     	<td rowspan="${curplatform_block.size()}">URL拦截</td>
+			     	#end
+		 	     	<td>$url.url</td>
+			     	<td>
+			     	#if($url.urlData and ${url.urlData.size()} > 0)
+			     		<a title="点击下载数据文件" href="#springUrl('/')/apps/downloadurl?urlid=${url.id}">${url.urlDataFile}</a>
+			     	#else
+			     		
+			     	#end
+					</td>
+		 	     	<td>
+	    				<div class="l">
+	    				<a href="#springUrl('/')apps/updateurl?urlid=${url.id}&form=1" title="修改URL设置">
+	    				<img title="修改URL设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改URL设置"/>
+						</a>
+						</div>
+						<div class="l"  style="margin-top:7px;">
+	     				<form id="command" action="#springUrl('/')apps/deleteurl?urlid=${url.id}" method="post">
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除URL设置" type="image" title="删除URL设置" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除URL设置"/>
+						</form>
+						</div>
+					</td>
+		   		</tr>
+	            #set($idx = $idx + 1)
+ 		   	#end
+            #foreach( $url in $curplatform_replace )
+		     	<tr>
+			     	<td>${idx}</td>
+			     	#if($foreach.count==1)
+				     	<td rowspan="${curplatform_replace.size()}">URL替换</td>
+			     	#end
+		 	     	<td>$url.url</td>
+			     	<td>
+			     	#if($url.urlData and ${url.urlData.size()} > 0)
+			     		<a title="点击下载数据文件" href="#springUrl('/')/apps/downloadurl?urlid=${url.id}">${url.urlDataFile}</a>
+			     	#else
+			     		
+			     	#end
+					</td>
+		 	     	<td>
+	    				<div class="l">
+	    				<a href="#springUrl('/')apps/updateurl?urlid=${url.id}&form=1" title="修改URL设置">
+	    				<img title="修改URL设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改URL设置"/>
+						</a>
+						</div>
+						<div class="l"  style="margin-top:7px;">
+	     				<form id="command" action="#springUrl('/')apps/deleteurl?urlid=${url.id}" method="post">
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除URL设置" type="image" title="删除URL设置" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除URL设置"/>
+						</form>
+						</div>
+					</td>
+		   		</tr>
+	            #set($idx = $idx + 1)
+ 		   	#end
+            #foreach( $url in $curplatform_inject )
+		     	<tr>
+			     	<td>${idx}</td>
+			     	#if($foreach.count==1)
+				     	<td rowspan="${curplatform_inject.size()}">URL注入</td>
+			     	#end
+		 	     	<td>$url.url</td>
+			     	<td>
+			     	#if($url.urlData and ${url.urlData.size()} > 0)
+			     		<a title="点击下载数据文件" href="#springUrl('/')/apps/downloadurl?urlid=${url.id}">${url.urlDataFile}</a>
+			     	#else
+			     		
+			     	#end
+					</td>
+		 	     	<td>
+	    				<div class="l">
+	    				<a href="#springUrl('/')apps/updateurl?urlid=${url.id}&form=1" title="修改URL设置">
+	    				<img title="修改URL设置" src="#springUrl('/')resources/images/update.png" class="image" alt="修改URL设置"/>
+						</a>
+						</div>
+						<div class="l"  style="margin-top:7px;">
+	     				<form id="command" action="#springUrl('/')apps/deleteurl?urlid=${url.id}" method="post">
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除URL设置" type="image" title="删除URL设置" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除URL设置"/>
+						</form>
+						</div>
+					</td>
+		   		</tr>
+	            #set($idx = $idx + 1)
+ 		   	#end
+            </tbody>
+         	</table>
+			</div>
+		</div>
+	</div>
+#end
+</div>
+
+#[[
+<script>
+$(function(){
+
+	// 提交修改
+	$("#btnmodify").click(function(){
+		$("#message").text("正在处理...");
+		if(checkFile())
+			$("#configForm").submit();
+		else
+			clear_message();
+	});
+	
+	// 清除提示信息
+	function clear_message(){
+		$("#message").text("");
+	}	
+	setTimeout(clear_message,3000);
+});
+</script>
+]]#

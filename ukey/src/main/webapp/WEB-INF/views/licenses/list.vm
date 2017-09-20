@@ -1,0 +1,109 @@
+#parse("licenses/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>License管理</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--License信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">License信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+#if( $license )
+	<p>
+		<span>Lincense状态：</span>
+		<label>
+			#foreach($statusinfo in $statusinfos)
+				#if($$license.status == "${statusinfo.type}")
+					${statusinfo.name}
+				#end
+			#end		
+		</label>
+	<p>
+	<p>
+	<span>企业代码：</span><label>${license.orgCode}</label>
+	<p>
+	<p>
+		<span>终端数量：</span>
+		<div class="bor txtth" style="border: 0px; width: 260px; height: auto">
+		<table>
+			<thead>
+				<tr>
+					<td>系统平台</td>
+					<td>授权数量</td>
+					<td>已使用量</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Windows</td>
+					<td>${licensedata.winCount}</td>
+					<td>${winCount}</td>
+				</tr>
+				<tr>
+					<td>Android</td>
+					<td>${licensedata.androidCount}</td>
+					<td>${androidCount}</td>
+				</tr>
+				<tr>
+					<td>iOS</td>
+					<td>${licensedata.iosCount}</td>
+					<td>${iosCount}</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	<p>
+	<p>
+	<span>功能授权：</span>
+		<div class="bor txtth" style="border: 0px; width: 260px; height: auto">
+		${licensedata.roleName}
+		</div>
+	<p>
+	<p>
+	<span>授权期限：</span><label>$date.format("yyyy-MM-dd HH:mm:ss",${license.endTime})</label>
+	<p>
+	<p>
+	<span>上传日期：</span><label>$date.format("yyyy-MM-dd HH:mm:ss",${license.createTime})</label>
+	<p>
+	#if($license.status == "pending")
+	<p>
+	<span>操作：</span>
+		<div class="bor txtth" style="border: 0px; width: 260px; height: auto">
+		<form id="setupForm" action="#springUrl('/')licenses/${license.id}" method="post">
+		<input type="hidden" name="setup" value="1"/>
+		<input id="btnmodify" type="submit" value="启用License" class="btn_small m_r" style="width: auto; padding: 0 10px 0 10px"></input>
+		</form>
+		</div>
+	<p/>
+	#end
+
+#end
+
+#if(! $license or $license.status == "revoke")
+	<p>
+		<span>_</span><a href="?form" title="上传License文件"><image src="#springUrl('/')resources/images/add.png"></image>上传License</a>
+	<p>
+#end
+	</div>
+#if($license and $license.status != "revoke")
+	<div class="btn_bottom">
+    				<span style="float:left;margin-left:10px; margin-top:5px;">
+	     				<form id="command" action="#springUrl('/')licenses/${license.id}" method="post">
+		    				<input type="hidden" name="_method" value="DELETE"/>
+		    				<input onclick="return confirm('吊销后将不能恢复，是否吊销?');"
+							value="吊销License" type="image" title="吊销License" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="吊销License"/>
+						</form>
+					</span>
+	</div>
+#end
+	</div>
+	</div>
+
+	<div class="mboxR">
+	</div>
+			
+</div>

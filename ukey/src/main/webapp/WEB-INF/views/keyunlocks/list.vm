@@ -1,0 +1,128 @@
+#parse("keyunlocks/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>解锁审批</span>
+</div>
+<div class="mbox">
+    <div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+    <label>项目名称：</label>
+    <select id="projectcur" name="project" class="bor selwidth1">
+        #if($projectmap.size()>1)
+            <option value="0">所有项目</option>
+        #end
+        #foreach($projectobj in $projectmap.entrySet())
+            <option value="$projectobj.key"
+                #if($project== $projectobj.key) selected="selected" #end>$projectobj.value.name</option>
+        #end
+    </select>
+    <label>解锁类型：</label>
+        <select id="unlockType" name="unlockType" class="bor selwidth1">
+            #foreach($type in $unlockTypes.entrySet())
+                <option value="$type.key"
+                    #if($unlockType== $type.key) selected="selected" #end>$type.value</option>
+            #end
+        </select>&emsp;&nbsp;&nbsp;
+    <label>申请时间：</label>
+    <input id="startDate" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+           onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2000-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+    <span>至 </span>
+    <input id="endDate" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+           onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2000-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /> <br /><br />
+	<label>状态：</label> 
+	<select id="querystatus" name="status" class="bor selwidth1">
+		<option value="">所有状态</option>
+		#foreach($unlockstatus in $statuss)
+			<option value="${unlockstatus.status}"
+			#if($status == "${unlockstatus.status}")
+				selected="selected"
+			#end>
+			${unlockstatus.name}</option>
+		#end
+	</select>
+	<label>序列号：</label>
+	<input id="querykeysn" type="text" name="keySn" value="$!keySn" class="bor txtwidth1">
+	<label>所有者：</label>
+	<input id="querycertcn" type="text" name="certCn" value="$!certCn" class="bor txtwidth1"/>
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+    
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    <table border="1" class="table1">
+    	<thead>
+    		<tr>
+                <th class="alignTwo" width="15%">项目名称</th>
+                <th class="alignTwo" width="10%">解锁类型</th>
+                <th class="alignTwo" width="10%">状态</th>
+    			<th class="alignTwo" width="15%">序列号</th>
+    			<th class="alignTwo" width="15%">所有者</th>
+    			<th class="alignTwo" width="15%">申请时间</th>
+    			<th class="alignTwo" width="10%">短信通知次数</th>
+    			<th class="alignTwo" width="10%">操作</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+			#foreach( $keyunlock in $keyunlocks )
+	     	<tr>
+                <td class="alignL" title="$projectmap.get(${keyunlock.project}).name">$projectmap.get(${keyunlock.project}).name</td>
+                <td class="alignTwo">$unlockTypes[${keyunlock.unlockType}]</td>
+                <td class="alignTwo">$statusmap.get(${keyunlock.status}).name</td>
+    			<td class="alignTwo">$esc.html(${keyunlock.keySn})</td>
+    			<td class="alignTwo" title="$esc.html($!{keyunlock.certCn})">$esc.html($!{keyunlock.certCn})</td>
+    			<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${keyunlock.createTime})</td>
+    			<td class="alignTwo" title="$!{keyunlock.smsNotice}">$!{keyunlock.smsNotice}</td>
+   				<td class="alignTwo">
+    				<a href="#springUrl("/")keyunlocks/${keyunlock.id}" title="查看解锁申请信息">
+    				<img title="查看解锁申请信息" src="#springUrl("/")/resources/images/show.png" class="image" alt="查看解锁申请信息"/>
+					</a>
+					#foreach($messageTemplate in $messageTemplatemap.entrySet())
+                		#if(${keyunlock.project}== $messageTemplate.value.project&&$messageTemplate.value.messageType=="SMS")
+                			#if($keyunlock.certCn&&""!=$keyunlock.certCn)
+                			<a href="#springUrl("/")keyunlocks/sendSms/${keyunlock.id}" title="发送短信通知">
+    							<img title="发送短信通知" src="#springUrl("/")/resources/images/update.png" class="image" alt="发送短信通知"/>
+							</a>
+							#end
+                		#end
+        			#end
+				</td>
+    		</tr>
+			#end
+    	</tbody>
+    	 #parse("pages1.vm")
+    </table>
+    </div>
+    </div>
+   
+</div>
+
+<script type="text/javascript">
+<!--
+var acUrlKeySn =  "#springUrl('/keyunlocks/ackeysn')";
+var acUrlCertCn = "#springUrl('/keyunlocks/accertcn')";
+#[[
+  $(function(){
+	  // alert(acUrl);
+	  $("#querykeysn").autocomplete({
+		  	source:acUrlKeySn
+			,minLength: 0
+		});
+
+	  $("#querycertcn").autocomplete({
+		  	source:acUrlCertCn
+			,minLength: 0
+		});
+
+	});
+]]#
+//-->
+</script>
+

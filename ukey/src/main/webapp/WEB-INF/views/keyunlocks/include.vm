@@ -1,0 +1,16 @@
+#set( $statuss = [
+	{"status":"ENROLL","name":"申请"},
+	{"status":"APPROVE","name":"已批准"},
+	{"status":"DOWNLOAD","name":"已下载"},
+	{"status":"UNLOCK","name":"已解锁"},
+	{"status":"REJECT","name":"已拒绝"},
+    {"status":"SENT","name":"已发送"}
+])
+
+#set( $unlockTypes = {0:"所有类型",1:"管理员解锁",2:"自动解锁"});
+
+#set($statusmap={})
+#foreach( $status in $statuss)
+	#set( $statusmap[$status.status] = $status)
+#end
+

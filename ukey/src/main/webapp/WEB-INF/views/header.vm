@@ -1,0 +1,16 @@
+<div id="topbox">
+	<div class="topleft"></div>
+	<div class="topmid"></div>
+	<div class="topright">
+		<div class="topright_top"> 
+			<span>$!{adminName} 欢迎您！</span>
+			<a href="#springUrl('/')" class="a1" title="首页">首页</a> <span>|</span> 
+			#if(!$SPRING_SECURITY_CONTEXT.authentication.principal)
+				<a title="登录" class="a" href="#springUrl('/login')">登录</a> 
+			#else
+				<a title="修改口令" style="display: inline;" href="#springUrl("/adminpin")">修改口令</a><span>|</span>
+				<a href="#springUrl('/j_spring_security_logout')" class="a2" title="退出">退出</a><br>
+			#end
+		</div>
+	</div>
+</div>

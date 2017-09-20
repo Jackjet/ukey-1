@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd 
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+	<!-- This will automatically locate any and all property files you have 
+		within your classpath, provided they fall under the META-INF/spring directory. 
+		The located property files are parsed and their values can then be used within 
+		application context files in the form of ${propertyKey}. -->
+	<context:property-placeholder location="classpath:config/*.properties" />
+	<util:properties id="confInfo"
+		location="classpath:config/keyInfos.properties" />
+	<!-- Turn on AspectJ @Configurable support. As a result, any time you instantiate 
+		an object, Spring will attempt to perform dependency injection on that object. 
+		This occurs for instantiation via the "new" keyword, as well as via reflection. 
+		This is possible because AspectJ is used to "weave" Roo-based applications 
+		at compile time. In effect this feature allows dependency injection of any 
+		object at all in your system, which is a very useful feature (without @Configurable 
+		you'd only be able to dependency inject objects acquired from Spring or subsequently 
+		presented to a specific Spring dependency injection method). Roo applications 
+		use this useful feature in a number of areas, such as @PersistenceContext 
+		injection into entities. -->
+	<context:spring-configured />
+
+	<!-- This declaration will cause Spring to locate every @Component, @Repository 
+		and @Service in your application. In practical terms this allows you to write 
+		a POJO and then simply annotate the new POJO as an @Service and Spring will 
+		automatically detect, instantiate and dependency inject your service at startup 
+		time. Importantly, you can then also have your new service injected into 
+		any other class that requires it simply by declaring a field for your service 
+		inside the relying class and Spring will inject it. Note that two exclude 
+		filters are declared. The first ensures that Spring doesn't spend time introspecting 
+		Roo-specific ITD aspects. The second ensures Roo doesn't instantiate your 
+		@Controller classes, as these should be instantiated by a web tier application 
+		context. Refer to web.xml for more details about the web tier application 
+		context setup services. Furthermore, this turns on @Autowired, @PostConstruct 
+		etc support. These annotations allow you to use common Spring and Java Enterprise 
+		Edition annotations in your classes without needing to do any special configuration. 
+		The most commonly used annotation is @Autowired, which instructs Spring to 
+		dependency inject an object into your class. -->
+	<context:component-scan base-package="com.itrus.ukey">
+		<context:exclude-filter expression=".*_Roo_.*"
+			type="regex" />
+		<context:exclude-filter expression="org.springframework.stereotype.Controller"
+			type="annotation" />
+	</context:component-scan>
+	<!--<tx:annotation-driven transaction-manager="transactionManager"/> -->
+	<!-- -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" />
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="classpath:/templates" />
+	</bean>
+	<!-- Resolves localized messages*.properties and application.properties 
+		files in the application to allow for internationalization. The messages*.properties 
+		files translate Roo generated messages which are part of the admin interface, 
+		the application.properties resource bundle localizes all application specific 
+		messages such as entity names and menu items. -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="WEB-INF/i18n/messages" />
+		<property name="fallbackToSystemLocale" value="false" />
+	</bean>
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" id="dataSourceSnyc">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url"
+			value="${database.url}?rewriteBatchedStatements=false&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="1800000" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="maxActive" value="64" />
+	</bean>
+	<bean class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" id="dataSource">
+		<property name="driverClassName" value="${database.driverClassName}" />
+		<property name="url"
+			value="${database.url}?rewriteBatchedStatements=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+		<property name="testOnBorrow" value="true" />
+		<property name="testOnReturn" value="true" />
+		<property name="testWhileIdle" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="1800000" />
+		<property name="numTestsPerEvictionRun" value="3" />
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="maxActive" value="64" />
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="defaultTd"
+		class="org.springframework.transaction.support.DefaultTransactionDefinition">
+		<property name="propagationBehaviorName" value="PROPAGATION_REQUIRED" />
+		<property name="isolationLevelName" value="ISOLATION_READ_COMMITTED" />
+	</bean>
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath*:com/itrus/ukey/db/*.xml</value>
+				<value>classpath*:com/itrus/ukey/sql/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+		<constructor-arg index="1" value="BATCH" />
+	</bean>
+	<bean id="trustService" class="com.itrus.ukey.service.TrustService"
+		init-method="initSignKey">
+		<property name="sqlSession" ref="sqlSession" />
+		<property name="ksFileName" value="${keyStoreFileName}" />
+		<property name="kspass" value="${keyStorePassword}" />
+		<property name="kAliase" value="${keyAliase}" />
+		<property name="kPass" value="${keyPassword}" />
+	</bean>
+	<bean id="queueThread" class="com.itrus.ukey.service.QueueThread"
+		init-method="start">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>
+	<bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+	<bean id="MD5Encoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+	<bean id="captchaEngine" class="com.itrus.ukey.util.CaptchaEngine">
+		<property name="base" value="0123456789" />
+	</bean>
+	<!-- 允许上传认证信息图片类型 忽略大小写 -->
+	<bean id="imgTypeList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list value-type="java.lang.String">
+				<value>jpg</value>
+				<value>jpeg</value>
+				<value>png</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="entityTrueService" class="com.itrus.ukey.service.EntityTrueService">
+		<!-- 限制上传图片的大小 单位：KB -->
+		<property name="imgMaxSize" value="500" />
+		<property name="imgTypes" ref="imgTypeList" />
+	</bean>
+	<!-- 特殊处理授权码 -->
+	<bean id="specAuthCode" class="java.util.ArrayList">
+		<constructor-arg>
+			<list value-type="java.lang.String">
+				<value>1234</value>
+				<value>5521</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 配置执行定时任务的类和方法 -->
+	<bean id="cacheInit"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cacheCustomer" />
+		<property name="targetMethod" value="init" />
+	</bean>
+	<bean id="terminalStatistic"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="tsService" />
+		<property name="targetMethod" value="statistic" />
+	</bean>
+	<bean id="taxReadServiceTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="taxReadService" />
+		<property name="targetMethod" value="startReadTax" />
+	</bean>
+	<bean id="taxWriteServiceTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="taxWriteService" />
+		<property name="targetMethod" value="startwriteTax" />
+	</bean>
+	<bean id="tokenServiceTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="tempTokenTask" />
+		<property name="targetMethod" value="deleteTempToken" />
+	</bean>
+	<bean id="activityServiceTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="activityMsgTempTask" />
+		<property name="targetMethod" value="syncActivityMsg" />
+	</bean>
+	<!-- 配置触发器 -->
+	<bean id="cacheInitTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<!-- see the example of method invoking job above -->
+		<property name="jobDetail" ref="cacheInit" />
+		<!-- repeat every 5 minute -->
+		<property name="repeatInterval" value="300000" />
+	</bean>
+	<bean id="statisticTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<!-- 触发器触发的 执行定时任务的bean -->
+		<property name="jobDetail" ref="terminalStatistic" />
+		<property name="cronExpression">
+			<!-- 每天凌晨30分执行 -->  <!-- 定时任务执行的间隔 -->
+			<value>0 30 0 * * ?</value>
+		</property>
+	</bean>
+	<bean id="taxReadServiceTaskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<!-- 触发器触发的 执行定时任务的bean -->
+		<property name="jobDetail" ref="taxReadServiceTask" />
+		<!--延迟10s -->
+		<property name="startDelay" value="10000" />
+		<!--每10s启动一次 -->
+		<property name="repeatInterval" value="10000" />
+	</bean>
+	<bean id="taxWriteServiceTaskTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<!--指定触发器关联的作业 -->
+		<property name="jobDetail" ref="taxWriteServiceTask" />
+		<!--延迟10s -->
+		<property name="startDelay" value="10000" />
+		<!--每60s启动一次 -->
+		<property name="repeatInterval" value="60000" />
+	</bean>
+	<bean id="tokenServiceTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<!-- 触发器触发的 执行定时任务的bean -->
+		<property name="jobDetail" ref="tokenServiceTask" />
+		<property name="cronExpression">
+			<!-- 每天凌晨10分执行 -->  <!-- 定时任务执行的间隔 -->
+			<value>0 10 0 * * ?</value>
+		</property>
+	</bean>
+	<bean id="activityServiceTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<!-- 触发器触发的 执行定时任务的bean -->
+		<property name="jobDetail" ref="activityServiceTask" />
+		<property name="cronExpression">
+			<!-- 每天凌晨10分执行 -->  <!-- 定时任务执行的间隔 -->
+			<value>0 50 0 * * ?</value>
+		</property>
+	</bean>
+	<!-- <bean id="activityServiceTaskTriggerTest" class="org.springframework.scheduling.quartz.SimpleTriggerBean"> 
+		触发器触发的 执行定时任务的bean <property name="jobDetail" ref="activityServiceTask" /> 
+		延迟10s <property name="startDelay" value="1000" /> 每60s启动一次 <property name="repeatInterval" 
+		value="1000000" /> </bean> -->
+	<bean name="quartzScheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 普通触发器 ：触发器列表 -->
+		<property name="triggers">
+			<list>
+				<ref local="cacheInitTrigger" />
+				<!-- <ref local="statisticTrigger" /> -->
+				<ref local="taxReadServiceTaskTrigger" />
+				<ref local="taxWriteServiceTaskTrigger" />
+				<ref local="tokenServiceTaskTrigger" />
+				<ref local="activityServiceTaskTrigger" />
+			</list>
+		</property>
+	</bean>
+	<!-- httpClient start -->
+	<bean id="connManager"
+		class="org.apache.http.impl.conn.PoolingClientConnectionManager">
+		<property name="maxTotal" value="400" /> <!-- 最大连接总数 -->
+		<property name="defaultMaxPerRoute" value="20" /> <!-- 每个站点最大连接数 -->
+	</bean>
+	<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+		<constructor-arg ref="connManager" />
+	</bean>
+	<bean id="httpClientFactory"
+		class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+		<constructor-arg ref="httpClient" />
+	</bean>
+	<util:list id="mdeiaTypes" list-class="java.util.ArrayList">
+		<value>application/x-www-form-urlencoded;charset=UTF-8</value>
+		<value>multipart/form-data;charset=UTF-8</value>
+		<value>text/plain</value>
+		<value>text/html;charset=UTF-8</value>
+		<value>application/xml;charset=UTF-8</value>
+	</util:list>
+	<!-- httpClient end -->
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<constructor-arg ref="httpClientFactory" />
+		<!-- for chinese garbled -->
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter">
+					<property name="supportedMediaTypes" ref="mdeiaTypes" />
+					<property name="partConverters">
+						<list>
+							<bean
+								class="org.springframework.http.converter.StringHttpMessageConverter">
+								<property name="supportedMediaTypes" ref="mdeiaTypes" />
+							</bean>
+							<bean
+								class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+							<bean
+								class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+							<bean
+								class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+							<bean
+								class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
+							<bean
+								class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+						</list>
+					</property>
+				</bean>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes" ref="mdeiaTypes" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="escapeTool" class="org.apache.velocity.tools.generic.EscapeTool" />
+	<bean id="jsonTool" class="org.codehaus.jackson.map.ObjectMapper" />
+	<jdbc:initialize-database data-source="dataSource">
+		<jdbc:script encoding="UTF-8" execution="INIT"
+			location="classpath:config/init_sys_res.sql" />
+		<jdbc:script encoding="UTF-8" execution="INIT"
+			location="classpath:config/init_app_category.sql" />
+		<jdbc:script encoding="UTF-8" execution="INIT"
+			location="classpath:config/init_sys_region.sql" />
+		<jdbc:script encoding="UTF-8" execution="INIT"
+			location="classpath:config/init_activity_msg_temp.sql" />
+	</jdbc:initialize-database>
+</beans>

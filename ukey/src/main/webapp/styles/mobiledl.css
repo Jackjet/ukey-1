@@ -1,0 +1,140 @@
+/*
+*20131225下载页面PC版
+*/
+body {text-align:center;font-family:\5FAE\8F6F\96C5\9ED1,\5b8b\4f53,Arial Narrow,arial,serif;color:#333;background:#fff;font-size:12px;}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote,table, th, td {margin:0;padding:0;}
+html{filter:expression(document.execCommand("BackgroundImageCache",false,true));}
+
+.download_m{width:998px;
+height:791px;
+margin:0 auto;
+padding:0;
+text-align:center;
+background:url(../images/download_bg.jpg) no-repeat;
+overflow:hidden;
+}
+.download_bd{width:998px;
+height:791px;
+position:relative;
+}
+.download_info{position:absolute;
+top:20px;
+left:790px;
+color:#cedfef;
+}
+.download_info a{color:#cedfef;
+margin:0 8px;
+font-size:14px;
+}
+.download_info a:hover{text-decoration:none;
+color:#FFF;
+}
+.download_copy{position:absolute;
+bottom:43px;
+left:305px;
+}
+.download_btn_1{width:228px;
+height:101px;
+position:absolute;
+left:450px;
+top:315px;
+overflow:hidden;
+}
+.download_btn_1 a{ display:block;
+width:228px;
+height:101px;
+background:url(../images/download_btn.png) 0px 0px no-repeat;
+font-size:0;
+line-height:0;
+text-indent:999999;
+overflow:hidden;
+}
+.download_btn_1 a:hover{display:block;width:228px;
+height:101px;
+background:url(../images/download_btn.png) 0px -115px no-repeat;
+font-size:0;
+line-height:0;
+text-indent:999999;
+overflow:hidden;
+}
+
+
+.download_btn_2{width:228px;
+height:101px;
+position:absolute;
+left:720px;
+top:315px;
+overflow:hidden;
+}
+.download_btn_2 a{ display:block;
+width:228px;
+height:101px;
+background:url(../images/download_btn.png) -270px 0px no-repeat;
+font-size:0;
+line-height:0;
+text-indent:999999;
+overflow:hidden;
+}
+.download_btn_2 a:hover{display:block;width:228px;
+height:101px;
+background:url(../images/download_btn.png) -270px -115px no-repeat;
+font-size:0;
+line-height:0;
+text-indent:999999;
+overflow:hidden;
+}
+
+.download_btn_3{width:228px;
+height:101px;
+position:absolute;
+left:450px;
+top:450px;
+background:url(../images/download_btn.png) 0px -228px no-repeat;
+overflow:hidden;
+}
+.download_btn_3 img{
+position:absolute;
+top:6px;
+left:8px;
+}
+
+.download_btn_4{width:228px;
+height:101px;
+position:absolute;
+left:720px;
+top:450px;
+background:url(../images/download_btn.png) -270px -228px no-repeat;
+overflow:hidden;
+}
+.download_inputtxt{width:101px;
+height:18px;
+line-height:18px;
+border:#cdcdcd 1px solid;
+}
+.download_btn_fs{width:39px;
+height:21px;
+line-height:23px;
+text-align:center;
+color:#fff;
+border:none;
+background:url(../images/download_btn_fs.png) no-repeat;
+cursor:pointer;
+}
+
+.download_ios1{
+	height: auto;
+	text-align:center;
+	magin:0 auto;
+	overflow: hidden;
+}
+.download_ios2{
+	display:block;
+	width: 228px;
+	height: 101px;
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	text-align:center;
+	magin:0 114px;
+	overflow: hidden;
+}

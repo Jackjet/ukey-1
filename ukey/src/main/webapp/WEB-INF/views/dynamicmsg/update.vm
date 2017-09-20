@@ -1,0 +1,98 @@
+#parse("dynamicmsg/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>消息发布</span>&nbsp;&gt;&nbsp;
+    <span>修改消息</span>
+</div>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<script type="text/javascript">
+<!--
+$(function () {
+	$("#msgTitle").val('$!{dynamicMsg.msgTitle}');
+});
+$().ready(function(){
+	$("#adminForm").validate({
+		rules:{
+			msgTitle:"required",
+			msgLink:{
+				required:true,
+				url:true
+			}
+		},
+		messages:{
+			msgTitle:"请输入消息标题",
+			msgLink:{
+				required:"请输入消息链接",
+				url:"请输入正确URL的消息链接"
+			}
+		}
+	});
+});
+//-->
+</script>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="adminForm" action="#springUrl('/')dynamicmsg" method="post">
+	<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${dynamicMsg.id}"/>
+	<div class="tabConBox_L" style="width:100%;">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称</span>
+	<select name="project">
+	#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" 
+			#if($projectobj.id == ${dynamicMsg.project}) 
+				selected="selected" 
+			#end>${projectobj.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+		<span>消息标题</span>
+		<input id="msgTitle" name="msgTitle" type="text" class="bor txtth" maxlength="100" size="50" value="$!{dynamicMsg.msgTitle}"></input>
+	<p/>
+	<p>
+		<span>消息链接</span>
+		<input id="msgLink" name="msgLink" type="text" class="bor txtth" maxlength="500" size="50" value="$!{dynamicMsg.msgLink}"></input>
+	<p/>
+    <p>
+        <span>发布类型：</span>
+        <select id="publishType" name="publishType" class="bor sel342">
+        #foreach($typeObj in $publishTypeMap.entrySet())
+            <option value="$typeObj.key" #if($typeObj.key == ${dynamicMsg.publishType})selected="selected"#end>$typeObj.value</option>
+        #end
+        </select>
+    </p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function checkForm(){
+		var ret = checkNull($("#msgTitle"),"消息标题不能为空",null,true);
+		
+		if(ret)
+			ret = checkNull($("#msgLink"),"消息链接不能为空",null,true);
+		return ret;
+	}
+</script>

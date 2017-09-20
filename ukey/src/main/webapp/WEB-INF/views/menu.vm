@@ -1,0 +1,22 @@
+<div id="lefter">
+	<!---------左边部分------------->
+
+	<div id="left_top">
+		<b></b><span>功能操作</span>
+	</div>
+	<ul id="side-nav">
+		#foreach($mapEntiry in $sysResMap.entrySet())
+       		<li class="active" id="top_menu_${mapEntiry.key.resNum}"><b class="b${mapEntiry.key.resNum}"></b>${mapEntiry.key.resTitle}<i class="navi"></i></li>
+       		<li class="child">
+				<ul>
+					#foreach($sysRes in $mapEntiry.value)
+					<li class="child_c_no" id="top_menu_${sysRes.resNum}"><i class="navchile_i"></i>
+						<a href="#springUrl(${sysRes.resUri})">${sysRes.resTitle}</a>
+					</li>
+					#end
+				</ul>
+			</li>
+     	#end 
+	</ul>
+</div>
+<!---------左边结束------------->

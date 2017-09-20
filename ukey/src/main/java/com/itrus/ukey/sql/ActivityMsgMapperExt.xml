@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itrus.ukey.db.ActivityMsgMapper">
+	<resultMap id="TerminalStatisMap" type="com.itrus.ukey.sql.TerminalStatis">
+		<result column="activity_num" property="activityNum" jdbcType="BIGINT" />
+		<result column="onLine_num" property="onLineNum" jdbcType="BIGINT" />
+	</resultMap>
+	<!-- 查找大于年月表中最大id的数量 -->
+	<select id="countlessMaxId" parameterType="java.lang.Long"
+		resultType="java.lang.Integer">
+		select
+		count(*)
+		from activity_msg
+		where id > #{maxId}
+	</select>
+	<!-- 统计终端总数 -->
+	<select id="countTerminalNumByExample" parameterType="com.itrus.ukey.db.ActivityMsgExample"
+		resultType="java.lang.Long">
+		select
+		count(DISTINCT(key_sn))
+		from activity_msg
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<!-- 统计时间段内的终端总数和在线次数 -->
+	<select id="countStatisByExample" parameterType="com.itrus.ukey.db.ActivityMsgExample"
+		resultMap="TerminalStatisMap">
+		select
+		count(*) as onLine_num,
+		count(DISTINCT(key_sn)) as activity_num
+		from
+		activity_msg
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<select id="selectLastByExample" resultType="java.util.Date"
+		parameterType="com.itrus.ukey.db.ActivityMsgExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		min(on_line_time)
+		from activity_msg
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<choose>
+			<when test="offset != null and offset >= 0 and limit != null">
+				limit #{offset},#{limit}
+			</when>
+			<when test="offset == null and limit != null">
+				limit #{limit}
+			</when>
+		</choose>
+	</select>
+	<insert id="insertOrUpdate" parameterType="list">
+		insert into activity_msg(thread_id, cert_cn, create_time,
+		host_id,
+		key_sn, life_time, off_line_time,
+		on_line_time, process_id,
+		ukey_version, project,os_type)
+		values
+		<foreach collection="array" item="item" separator=",">
+			(#{item.threadId,jdbcType=VARCHAR},#{item.certCn,jdbcType=VARCHAR},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.hostId,jdbcType=VARCHAR},#{item.keySn,jdbcType=VARCHAR},
+			#{item.lifeTime,jdbcType=BIGINT},
+			#{item.offLineTime,jdbcType=TIMESTAMP},#{item.onLineTime,jdbcType=TIMESTAMP},
+			#{item.processId,jdbcType=VARCHAR},
+			#{item.ukeyVersion,jdbcType=VARCHAR},
+			#{item.project,jdbcType=BIGINT}, #{item.osType,jdbcType=VARCHAR})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		life_time=VALUES(life_time),
+		off_line_time=VALUES(off_line_time)
+	</insert>
+</mapper>

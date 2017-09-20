@@ -1,0 +1,111 @@
+#set($layout="layouts/layout-null.vm")
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录</title>
+<link href="#springUrl('/resources/styles/style.css')" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="#springUrl('/')resources/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="#springUrl('/')resources/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="#springUrl('/')resources/js/myjs.js"></script>
+<style type="text/css"> 
+
+#j_username,#j_password,#j_captcha 
+{ 
+padding-left:5px; 
+} 
+</style>
+<script type="text/javascript">
+$(function () {
+	$.cookie("active_menu_id", null, {path:"/"});
+    // 如果在框架或在对话框中，则弹出提示并跳转到首页
+    if(self.frameElement && self.frameElement.tagName == "IFRAME" || $('#left').length > 0 || $('.jbox').length > 0){
+        alert('未登录或登录超时。请重新登录，谢谢！');
+        top.location = "#springUrl('/')login";
+    }
+});
+	function checkForm() {
+		var ret = true;
+		var userName = document.getElementById("j_username");
+		var userPass = document.getElementById("j_password");
+		var captcha = document.getElementById("j_captcha");
+		if (userName.value == "") {
+			alert("用户名不能为空");
+			ret = false;
+		} else if (userPass.value == "") {
+			alert("密码不能为空");
+			ret = false;
+		} else if(captcha.value==""){
+			alert("验证码不能为空");
+			ret = false;
+		}
+		return ret;
+	}
+	function refreshCaptcha() {  
+	    $('#captchaImg').hide().attr(  
+	            "src",  
+	            "#springUrl('/jcaptcha.jpg')" + '?' + Math  
+	                    .floor(Math.random() * 100)).fadeIn();  
+	} 
+	function focusBody(){
+		document.getElementById('j_username').focus(); 
+	}
+</script>
+</head>
+
+<body id="loginbox" onload="focusBody()">
+	<div id="loginsbox">
+		<div id="imgbox"></div>
+		<div id="login">
+			<div id="log_box">
+			<form name="f" action="#springUrl('/j_spring_security_check')" method="post" onsubmit="return checkForm();">
+				<div id="logTop">
+					<!-- <a href="#" class="a_menu1" id="a0"></a> 
+					<a href="#"	class="a_menu2" id="a1"></a> -->
+				</div>
+				<div id="lgbox" class="c_lgbox">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="31%" height="45" align="right"><label>用户名：</label></td>
+						<td width="2%" height="45">&nbsp;</td>
+						<td width="67%" height="45"><input id="j_username" type='text' name='j_username' class="seltxtcom"/></td>
+					  </tr>
+					  <tr>
+						<td height="45" align="right"><label>密&emsp;码：</label></td>
+						<td height="45">&nbsp;</td>
+						<td height="45"><input id="j_password" type='password' name='j_password' class="seltxtcom"/></td>
+					  </tr>
+					  <tr>
+						<td height="45" align="right"><label>验证码：</label></td>
+						<td height="45">&nbsp;</td>
+						<td height="45">
+					        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+							  <tr>
+								<td width="26%"><input id="j_captcha" type='text' name='j_captcha' class="seltxtcom0" maxlength="4"/></td>
+								<td width="30%"><img id="captchaImg" class="login_yzm" src="#springUrl('/jcaptcha.jpg')" alt="验证码"  title="更新验证码" onclick="refreshCaptcha();"/></td>
+								<td width="44%"><a title="更新验证码" onclick="refreshCaptcha();" >换一张？</a></td>
+							  </tr>
+							</table>
+						</td>
+					  </tr>
+					  <tr>
+						<td colspan="3" align="center"><font color="red"> $!{SPRING_SECURITY_LAST_EXCEPTION.message} </font></td>
+					  </tr>
+					</table>
+				</div>
+				<div class="logbtn_box">
+					<input type="submit" value="登&emsp;录" class="dquit" />
+					<input type="reset" value="重&emsp;置" class="dquit" />
+				</div>
+				<div id="logBottom"></div>
+				</form>
+			</div>
+			<p id="p_footer" style="font-size: 12px;">copyright@2001-2013&nbsp;&nbsp;&nbsp;北京天威诚信电子商务服务有限公司&nbsp;&nbsp;&nbsp;版权所有</p>
+
+		</div>
+
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.UserDeviceMapper">
+	<insert id="insertOrUpdate" parameterType="list">
+		insert into user_device (create_time, device_sn, device_type,
+		model_num, algorithm, project,cert_cn,cert_sn)
+		values
+		<foreach collection="array" item="item" separator=",">
+			(#{item.createTime,jdbcType=TIMESTAMP},#{item.deviceSn,jdbcType=VARCHAR},
+			#{item.deviceType,jdbcType=VARCHAR},#{item.modelNum,jdbcType=VARCHAR},
+			#{item.algorithm,jdbcType=INTEGER},#{item.project,jdbcType=VARCHAR},#{item.certCn,jdbcType=VARCHAR},#{item.certSn,jdbcType=VARCHAR})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		algorithm=VALUES(algorithm),project=VALUES(project),cert_cn=VALUES(cert_cn),create_time=VALUES(create_time),cert_sn=VALUES(cert_sn)
+	</insert>
+	<select id="selectKeySnLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct device_sn
+		from
+		user_device
+		where
+		device_sn like #{term}
+		order by
+		device_sn
+		limit #{limtNum}
+	</select>
+</mapper>

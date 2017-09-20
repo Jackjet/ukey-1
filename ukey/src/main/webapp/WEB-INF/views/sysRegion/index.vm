@@ -1,0 +1,76 @@
+<SCRIPT type="text/javascript">
+    <!--
+    var setting = {
+        async: {
+            enable: true,
+            dataType:"json",
+            url:"#springUrl('/')sysregion/srTree",
+            autoParam:["id", "name", "level"],
+            dataFilter: filter
+        },
+        view: {
+            selectedMulti: false
+        },
+        callback:{
+            beforeClick:zTreeBeforeClick,
+            onClick:zTreeOnClick,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+
+    function filter(treeId, parentNode, childNodes) {
+        if (!childNodes) return null;
+        for (var i=0, l=childNodes.length; i<l; i++) {
+            childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+        }
+        return childNodes;
+    }
+
+    function zTreeBeforeClick(treeId, treeNode, clickFlag){
+        //不允许点击区县（包括）以下节点
+        return (treeNode.level < 3);
+    }
+
+    function zTreeOnClick(event, treeId, treeNode){
+        //加载节点列表
+//        alert("id="+treeNode.id+",tid="+treeNode.tId+",name="+treeNode.name);
+        setFrameSrc(treeNode.id,treeNode.level+1);
+    }
+
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        //如果为根节点，则右边显示省份管理界面
+        if(treeNode==null && msg !=null && msg.length > 0 ){
+            setFrameSrc(msg[0].id,1);
+        }
+    }
+    //更新右边frame内容
+    function setFrameSrc(parentId,type){
+        $("#mainFrame").attr("src","#springUrl('/')sysregion/list?parentId="+parentId+"&type="+type);
+    }
+    //刷新指定节点
+    function reAsyncNode(nodeId){
+        var treeObj = $.fn.zTree.getZTreeObj("sideTree");
+        var node = treeObj.getNodeByParam("id",nodeId,null);
+        if(!node.isParent)
+            node.isParent = true;
+        $.fn.zTree.getZTreeObj("sideTree").reAsyncChildNodes(node,"refresh",false);
+    }
+
+    $(document).ready(function(){
+        $.fn.zTree.init($("#sideTree"), setting);
+    });
+    //-->
+</SCRIPT>
+<div id="contLeft" class="xzq_tree">
+    <!---------行政区树结构部分------------->
+
+    <div class="xzq_tree_top">
+        <b></b><span>行政区结构</span>
+    </div>
+    <ul id="sideTree" class="ztree">
+    </ul>
+</div>
+<iframe src="" id="mainFrame" name="mainFrme" width="83%" frameborder="0" scrolling="auto"
+        onload="this.height=this.contentWindow.document.documentElement.scrollHeight">
+</iframe>
+

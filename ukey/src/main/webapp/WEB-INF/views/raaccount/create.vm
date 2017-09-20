@@ -1,0 +1,74 @@
+#parse("raaccount/include.vm")
+<style>
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<script type="text/javascript">
+<!--
+$().ready(function(){
+	$("#raaccountForm").validate({
+		rules:{
+			raName:"required",
+			accountOrganization:"required",
+			accountOrgUnit:"required",
+			serviceUrl:"required"
+		}
+	});
+});
+//-->
+</script>
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>RA管理</span>&nbsp;&gt;&nbsp;
+    <span>添加RA</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">添加RA</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="raaccountForm" action="#springUrl('/')raaccount" method="post">
+	<div class="tabConBox_L">
+	<p>
+		<span>RA协议</span>
+	<select name="raProtocol" class="bor sel342">
+		#foreach($raProtocol in $raProtocols.entrySet())
+		<option value="${raProtocol.key}" >${raProtocol.value}</option>
+		#end
+	</select>
+	</p>
+	<p>
+		<span>RA名称：</span>
+		<input id="raName" name="raName" type="text" class="bor txtth"></input>
+	</p>
+	<p>
+		<span>单位：</span>
+		<input id="accountOrganization" name="accountOrganization" type="text" class="bor txtth"></input>
+	</p>
+	<p>
+		<span>部门：</span>
+		<input id="accountOrgUnit" name="accountOrgUnit" type="text" class="bor txtth"></input>
+	</p>
+	<p>
+		<span>服务地址：</span>
+		<input id="serviceUrl" name="serviceUrl" type="text" class="bor txtth"></input>
+	</p>
+	
+	</div>
+	<div class="btn_bottom">
+	<br/>
+		<input type="submit" value="创建" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

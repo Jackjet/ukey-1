@@ -1,0 +1,78 @@
+#parse("apps/include.vm")
+
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>应用管理</span>&nbsp;&gt;&nbsp;
+    <span>
+    	${osname}集成设置</span>&nbsp;&gt;&nbsp;
+    <span>添加URL设置</span>
+    
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--添加URL-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">添加URL设置</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="configForm" action="#springUrl('/')apps/addurl" method="post" enctype="multipart/form-data">
+	<div class="tabConBox_L">
+	<input type="hidden" id="urlDataFile" name="urlDataFile" value=""/>
+	<input type="hidden" name="os" value="${os}"/>
+	<input type="hidden" name="platformid" value="${curplatform.id}"/>
+<!-- 
+	<p>
+	<span>项目名称：</span><label>${project.name}</label>
+	<p/>
+ -->
+<!-- 
+	<p>
+	<span>应用简称：</span><label>${app.shortName}</label>
+	<p/>
+ -->
+	<p>
+		<span>平台类型：</span>
+		<label>
+		${osname}
+		</label>
+	<p/>
+	<p>
+	<span>应用名称：</span><label>${app.name}</label>
+	<p/>
+	<p>
+	<span>URL类型：</span>
+	<select name="type" class="bor sel342">
+		#foreach($urltypeinfo in $urltypeinfos)
+		<option value="${urltypeinfo.type}" 
+			>${urltypeinfo.name}</option>
+		#end
+	</select>
+	<p/>
+	<p>
+	<span>URL路径：</span>
+	<input id="url" name="url" type="text" class="bor txtth" value="http://"></input>
+	<p/>
+	<p>
+		<span>数据文件：</span>
+		<input type="file" id="urlData" name="urlData" accept="" class="mt9"/>
+	</p>
+	</div>
+	</form>
+	<div class="btn_bottom">
+		<input id="btnmodify" type="submit" value="添加" class="btn_small m_r" onclick="configForm.submit();"></input>
+	</div>
+	</div>
+	</div>
+</div>
+
+#[[
+<script>
+$(function(){
+	$("#urlData").blur(function(){
+		var urlDataFile = $("#urlData").val();
+		$("#urlDataFile").val(urlDataFile);
+		//alert($("#urlDataFile").val());
+	});
+});
+</script>
+]]#

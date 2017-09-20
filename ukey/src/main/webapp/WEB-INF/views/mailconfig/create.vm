@@ -1,0 +1,90 @@
+#parse("mailconfig/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>邮箱服务设置</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--邮箱配置信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">邮箱配置信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width: 100%;">
+
+	<form action="#springUrl('/')mailconfig" method="post">
+	<input type="hidden" name="id" value="$!{emailServer.id}"/>
+	
+	<p>
+		<span>服务器地址：</span>
+		<input id="serverHost" name="serverHost" type="text" class="bor txtth" value="$!{emailServer.serverHost}"/>
+	<p/>
+	<p>
+		<span>端口号：</span>
+		<input id="serverPort" name="serverPort" type="text" class="bor txtth" value="$!{emailServer.serverPort}"/>
+	<p/>
+	
+	<p>
+	<span>是否认证：</span>
+	#foreach($status in $statuss)
+			<input id="isAuth" type="radio" name="isAuth" class="radcom rad_wh" value="${status.status}"
+			#if($status.status == $emailServer.isAuth )checked #end/><label class="labelcom">${status.name}</label>
+		#end
+	</p>
+	
+	<p>
+		<span>邮箱帐号：</span>
+		<input id="accountName" name="accountName" type="text" class="bor txtth" value="$!{emailServer.accountName}"/>
+	<p/>
+	
+	<p>
+		<span>邮箱密码：</span>
+		<input id="accountPasswd" name="accountPasswd" type="password" class="bor txtth" value="$!{emailServer.accountPasswd}"/>
+	<p/>
+	
+	<p>
+		<span>有效性测试：</span>
+		<input type="button" value="测试" id="emailServerTest" class="btn_small m_r" style="width:60px;margin-top:10px;float:left;"></input>
+	</p>
+	<span class="error_Info"  style="color:Red;float:left;margin-top:10px;"></span>
+	<div class="btn_bottom">
+		<input type="submit" value="保存" class="btn_small m_r"></input>
+		<input type="reset" value="取消" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>	
+</div>
+<script>
+$('#emailServerTest').click(function(){
+	var postData = {
+		testEmailServer:1,
+		serverHost:$('#serverHost').val(),
+		serverPort:$('#serverPort').val(),
+		isAuth:$('input[name="isAuth"]:checked').val(),
+		accountName:$('#accountName').val(),
+		accountPasswd:$('#accountPasswd').val(),
+		
+		};
+	var url = "#springUrl("/")mailconfig";
+	$('.error_Info').text("测试中···");
+	$.ajax({
+			type : "post",
+			url : url,
+			data : postData,
+			success : function(data) {
+				var jsondata = eval("("+data+")");
+				if(jsondata.retCode){
+						$('.error_Info').text("成功");
+					}
+				else{
+					$('.error_Info').text("失败");
+				}
+				
+			},
+			error : function() {
+				$('.error_Info').text("失败");
+			}
+		});
+  });
+</script>

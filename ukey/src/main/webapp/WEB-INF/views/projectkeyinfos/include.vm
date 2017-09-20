@@ -1,0 +1,43 @@
+#set( $adminpintypes = [
+	{"type":"null","name":"未设置"},
+	{"type":"fix","name":"固定值"},
+	{"type":"autoht","name":"自动计算：海泰"},
+	{"type":"autoft","name":"自动计算：飞天"},
+	{"type":"autokoal","name":"自动计算：格尔(宁波CA)"}
+	])
+
+
+<script type="text/javascript">
+	function checkAdminPinInfo()
+	{
+		if($("#adminPinType").val() != "fix" )
+		{
+			$("#adminPinValue").val("");
+			return true;			
+		}
+		
+		if($("#adminPinValue").val() == "")
+		{
+			alert("请输入 '管理员PIN码' !");
+			$("#adminPinValue").focus();
+			return false;
+		}
+		
+		if($("#adminPinValue1").val() == "")
+		{
+			alert("请输入 '确认管理员PIN码' !");
+			$("#adminPinValue1").focus();
+			return false;
+		}
+		
+		if($("#adminPinValue").val() != $("#adminPinValue1").val())
+		{
+			alert("'确认管理员PIN码' 不正确，请重新输入 !");
+			//$("#adminPinValue1").val("");
+			$("#adminPinValue1").focus();
+			return false;
+		}
+		
+		return true;
+	}
+</script>

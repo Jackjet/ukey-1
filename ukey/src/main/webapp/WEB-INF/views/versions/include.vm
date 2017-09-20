@@ -1,0 +1,14 @@
+#set( $statuss = [{"status":"valid","name":"有效"},{"status":"suspend","name":"挂起"},{"status":"notfound","name":"已删除"}])
+
+#set($statusmap={})
+#foreach( $status in $statuss)
+	#set( $statusmap[$status.status] = $status)
+#end
+
+#set( $statuss0 = [{"status":"valid","name":"有效"},{"status":"suspend","name":"挂起"}])
+
+#set($statusmap0={})
+#foreach( $status in $statuss0)
+	#set( $statusmap0[$status.status] = $status)
+#end
+

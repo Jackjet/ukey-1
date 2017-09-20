@@ -1,0 +1,10 @@
+#set( $sysconfs = {"softDir":"软件存放目录","mvtu":"最小版本号",
+"isUpdate":"启动更新","isLogNoSn":"记录更新日志(无序列号)",
+"cdnUrl":"CDN地址","trustImg":"认证图片目录",
+"mdlUrl":"移动端下载地址","tsUrl":"终端后台地址",
+"esignUrl":"签名服务地址",
+"activityMsgSyncOn":"在线记录数据统计",
+"openTaxSync":"是否开启地税同步",
+"openWriteBackTax":"是否开启回写地税","operatorUrl":"运营平台地址","keySn":"key序列号","allowIP":"允许访问接口的IP"})
+#set( $confMap = {"true":"是","false":"否"})
+#set( $confKey = $confMap.keySet())

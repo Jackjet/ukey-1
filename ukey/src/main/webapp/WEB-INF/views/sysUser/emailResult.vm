@@ -1,0 +1,42 @@
+#set($layout="layouts/layout-null.vm")
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>验证结果</title>
+<link href="#springUrl('/resources/styles/style.css')" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="#springUrl('/')resources/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="#springUrl('/')resources/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="#springUrl('/')resources/js/myjs.js"></script>
+
+</head>
+<style type="text/css">
+*{margin:0; padding:0;}
+body {font-family:\5FAE\8F6F\96C5\9ED1,\5b8b\4f53,Arial Narrow,arial,serif;}
+.wrap{height:278px; width:634px; margin:70px auto 0; overflow:hidden; background-color:#f7f5f5; border:2px solid #e6e6e6; border-top:3px solid #ed5351;}
+.wrap ul{ margin:103px auto 0; padding:0 82px;}
+.wrap ul span{ display:block;  height:70px; background:url(../images/mail.jpg) no-repeat; padding:0 0 0 107px;}
+.wrap ul span.mailfail{ display:block;  height:70px; background:url(../images/mail_01.jpg) no-repeat; padding:0 0 0 107px;}
+.wrap ul span b{font-size:22px; color:#76d871; font-weight:normal; padding-top:5px;}
+.wrap ul span b.mail_fail{color:#f3540e;}
+.wrap ul span p{font-size:16px; color:#a9a9a9; margin-top:8px; line-height:24px;}
+.wrap ul span p i{ font-style:normal; color:#f3540e; margin:0 6px;}
+.wrap ul span p font{color:#666;}
+</style>
+</head>
+<body>
+    <div class="wrap">
+    	#if(${retCode})
+    		<ul>
+            	<span><b>恭喜，您的邮箱已验证成功!</b> <p>您可以使用您的<i>${uemail}</i>登录i信平台。</p></span>
+        	</ul>
+		#else
+			<ul>
+            	<span class="mailfail"><b class="mail_fail">抱歉，您的邮箱验证失败!</b> <p><font>失败理由：</font>${retMsg}</p></span>
+        	</ul>
+		#end
+    	
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+#parse("keyunlocks/include.vm")
+#parse("projectkeyinfos/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>解锁审批</span>&nbsp;&gt;&nbsp;
+    <span>申请信息</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">解锁申请信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+		<span>序列号：</span>
+		<label>$esc.html(${keyunlock.keySn})</label>
+	<p/>
+	<p>
+		<span>用户：</span>
+		<label>$esc.html(${keyunlock.certCn})</label>
+	<p/>
+	<p>
+		<span>项目名称：</span>
+		<label>${project.name}</label>
+	<p/>
+        <p>
+            <span>解锁类型：</span>
+            <label>$unlockTypes[${keyunlock.unlockType}]</label>
+        <p/>
+        <p>
+            <span>状态：</span><label>${statusmap.get(${keyunlock.status}).name}</label>
+        <p/>
+	<p>
+		<span>申请时间：</span>
+		<label>$date.format("yyyy-MM-dd HH:mm:ss",${keyunlock.createTime})</label>
+	</p>
+	#if($keyunlock.approveTime)
+	<p>
+		<span>审批时间：</span>
+		<label width="100%">$date.format("yyyy-MM-dd
+			HH:mm:ss",${keyunlock.approveTime})</label>
+	</p>
+	#end
+    #if($keyunlock.downloadTime)
+	<p>
+		<span>下载时间：</span>
+		<label width="100%">$date.format("yyyy-MM-dd
+			HH:mm:ss",${keyunlock.downloadTime})</label>
+	</p>
+	#end #if($keyunlock.unlockTime)
+	<p>
+		<span>解锁时间：</span>
+		<label width="100%">$date.format("yyyy-MM-dd
+			HH:mm:ss",${keyunlock.unlockTime})</label>
+	</p>
+	#end
+    #if($keyunlock.rejectTime)
+	<p>
+		<span>拒绝时间：</span>
+		<label width="100%">$date.format("yyyy-MM-dd
+			HH:mm:ss",${keyunlock.rejectTime})</label>
+	</p>
+    <p>
+        <span>拒绝理由：</span>
+        <label style="width: 400px;">$!{keyunlock.rejectReason}</label>
+    </p>
+	#end
+
+	</div>
+	<div class="btn_bottom">
+		<a href="#springUrl("/")/keyunlocks" title="查看所有解锁申请信息">
+    		<img title="查看所有解锁申请信息" src="#springUrl("/")resources/images/list.png" class="image" alt="查看所有解锁申请信息"/>
+		</a>
+        #if($keyunlock.status == "ENROLL")
+        <input type="button" value="拒绝解锁" onclick="ShowDIV('Reject_Dialog');" class="btn_small m_r"></input>
+        <input type="button" value="批准解锁" onclick="ShowDIV('Approve_Dialog');" class="btn_small m_r"></input>
+        #end
+        #if($keyunlock.status == "APPROVE")
+            <input type="button" value="拒绝解锁" onclick="ShowDIV('Reject_Dialog');" class="btn_small m_r"></input>
+        #end
+	</div>
+	</div>
+	</div>
+    </div>
+<div class="mbox">
+    <div class="mboxR">
+        <!--基本信息-->
+        <div class="mboxR_top mboxR_top_first">
+            <img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">证书信息</h3>
+        </div>
+        <div class="conBox">
+            <div class="tabCon">
+                    <table class="table1" cellpadding="0" cellspacing="0">
+                        <thead>
+                        <th class="alignTwo" width="20%">Key型号</th>
+                        <th class="alignTwo" width="40%">证书信息</th>
+                        <th class="alignTwo" width="40%">颁发者信息</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="alignTwo">$!{keyunlock.keyType}</td><!-- Key型号 -->
+                            <td class="alignL">主题项：$!{keyunlock.subjectDn.replace(", ","<br/>&emsp;&emsp;&emsp;&emsp;")}</td><!-- 证书信息 -->
+                            <td class="alignL">主题项：$!{keyunlock.issuerDn.replace(", ","<br/>&emsp;&emsp;&emsp;&emsp;")}</td><!-- 颁发者信息 -->
+                        </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    </div>
+<div id="BgDiv" class="Bg_shade_div"></div>
+<!--拒绝解锁弹出窗-->
+<div class="Dialog D_width1" id="Reject_Dialog" style="display: none; top:5%;left: 40%;">
+    <div class="Dialog_l D_l_width1">
+        <div class="Dia_top">
+            <div class="Dia_topbox"> <!----标题----->
+                <div class="Dia_titleL">拒绝解锁申请</div>
+                <div class="Dia_colse" onclick="closeDiv('Reject_Dialog');"></div>
+            </div>
+        </div>
+        <div class="Dia_con D_con_height3" style="height: 300px;">
+            <form id="rejectform" method="POST" action="" >
+                <input name="reject" type="hidden" value="1"/>
+                <div class="p_boxs" style="">
+                    <p><span>序&nbsp;&nbsp;列&nbsp;&nbsp;号：</span><label>$esc.html(${keyunlock.keySn})</label></p>
+                    <p><span>拒绝理由：</span><label>
+                        <textarea name="rejectReason" cols="" rows="" class="de_txtare bor"
+                                  onpropertychange="if(value.length>50) value=value.substr(0,50)"></textarea>
+                        <font color="#A8A8A8" id="mess" style="margin-top:9px;">拒绝理由不得多于50字</font></label>
+                    </p>
+                </div>
+                <div class="btn_bottom">
+                    <input type="submit" onclick="return confirm('拒绝后将不能恢复，是否拒绝?');" class="btn_small btn_height" value="确 定"/>
+                    <input type="button" onclick="closeDiv('Reject_Dialog');" class="btn_small btn_height" value="取 消"/>
+                </div>
+            </form>
+        </div>
+        <div class="Dialog_l_b D_width1">
+            <div class="Dialog_l_b_l"></div>
+            <div class="Dialog_l_b_r D_l_b_r_width1"></div>
+        </div>
+    </div>
+    <div class="Dialog_shadow" >
+        <div class="shadow_l_top36"></div>
+        <div class="shadow_l_mid D_s_l_mid_height3" style="height: 321px;"></div>
+        <div class="shadow_l_foot"></div>
+    </div>
+</div>
+<!--批准解锁弹出窗-->
+<div class="Dialog D_width1" id="Approve_Dialog" style="display: none; top:5%;left: 40%;">
+    <div class="Dialog_l D_l_width1">
+        <div class="Dia_top">
+            <div class="Dia_topbox"> <!----标题----->
+                <div class="Dia_titleL">批准解锁申请</div>
+                <div class="Dia_colse" onclick="closeDiv('Approve_Dialog');"></div>
+            </div>
+        </div>
+        <div class="Dia_con D_con_height3" style="height: 200px;">
+            <form id="approveform" method="POST" action="">
+                <input name="approve" type="hidden" value="1"/>
+                <div class="p_boxs" style="">
+                    <p><span style="width: 100px;">序&nbsp;&nbsp;&nbsp;列&nbsp;&nbsp;&nbsp;号：</span><label>$esc.html(${keyunlock.keySn})</label></p>
+                    <P><span style="width: 100px;">管理员PIN：</span><label style="width: 230px;">
+                    #if(${projectkeyinfo.adminPinType} == ""
+                    || ${projectkeyinfo.adminPinType} == "null")
+                        <input name="adminpin" type="password" size="10" class="bor" style="width: 220px;"/>
+                        <font color="#A8A8A8" id="mess" style="margin-top:9px;">请输入管理员PIN码</font></label>
+                    #else
+                        <select id="adminPinType" name="adminPinType" class="bor">
+                            <option value="preset" >使用预设管理员PIN码</option>
+                            <option value="manual" >手工输入管理员PIN码</option>
+                        </select>
+                        <input id="adminpin" name="adminpin" type="password" size="10" style="display:none"/>
+                    #end
+                    </label>
+                    </P>
+                </div>
+                <div class="btn_bottom">
+                    <input type="submit" class="btn_small btn_height" value="确 定"/>
+                    <input type="button" onclick="closeDiv('Approve_Dialog');" class="btn_small btn_height" value="取 消"/>
+                </div>
+            </form>
+        </div>
+        <div class="Dialog_l_b D_width1">
+            <div class="Dialog_l_b_l"></div>
+            <div class="Dialog_l_b_r D_l_b_r_width1"></div>
+        </div>
+    </div>
+    <div class="Dialog_shadow" >
+        <div class="shadow_l_top36"></div>
+        <div class="shadow_l_mid D_s_l_mid_height3" style="height: 221px;"></div>
+        <div class="shadow_l_foot"></div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+	$("#adminPinType").change(function(){
+		if($("#adminPinType").val() == "manual")
+			$("#adminpin").show();
+		else{
+			$("#adminpin").val("");
+			$("#adminpin").hide();
+		}
+	});
+});
+function ShowDIV(thisObjID) {
+    $("#BgDiv").css({ display: "block", height: $(document).height() });
+    var yscroll = document.documentElement.scrollTop;
+    $("#" + thisObjID ).css("top", "100px");
+    $("#" + thisObjID ).css("display", "block");
+    document.documentElement.scrollTop = 0;
+}
+function closeDiv(thisObjID) {
+    $("#BgDiv").css("display", "none");
+    $("#" + thisObjID).css("display", "none");
+}
+</script>

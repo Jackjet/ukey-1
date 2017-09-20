@@ -1,0 +1,50 @@
+/* CSS Document */
+*{padding:0;margin:0;}
+div,dl,dt,dd,form,h1,h2,h3,h4,h5,h6,img,ol,ul,li,table,th,td,p,span,a{border:0;}
+img,input{border:none;vertical-align:middle;}
+body{font-family:'Microsoft YaHei',"微软雅黑", YaHei,Arial,Helvetica,sans-serif;font-size:14px;background:#fff;color:#444;}
+body{overflow:scroll;}
+ul,ol{list-style-type:none;}
+th,td,input{font-size:14px;}
+label{ vertical-align: middle;}
+h3{font-size:14px;}
+button{border:none;cursor:pointer;font-size:14px;background-color:transparent;}
+select{border-width:1px;_zoom:1;border-style:solid;padding-top:2px;font-size:12px;}
+input, button {font-family: "微软雅黑";outline: 0;border: 0; color:#666;}
+.clear{clear:both;font-size:1px;height:0;visibility:hidden;line-height:0;}
+.clearfix:after{content:"";display:block;clear:both;}
+.clearfix{zoom:1;}
+a{text-decoration:none;}
+a:link,a:visited{text-decoration:none;color:#444;}
+a:hover,a:active{text-decoration:underline;color:#3db1fa;}
+.fl{float:left;}
+.fr{float:right;}
+
+
+/*layout*/
+.layout{width: 998px;margin:0 auto;clear:both;}
+
+/*头部*/
+.wraper{width:100%; min-width:998px; zoom:1; clear:both;}
+.header{height:94px; background:url(../images/help_header_1.png) repeat-x; border-bottom: 1px solid #e4e9ee;}
+.header_tittle{height:94px; line-height:94px; font-size:26px; display:block; background:url(../images/logo01.png) left center no-repeat; padding-left:60px;}
+
+/*操作步骤*/
+.step_info{padding-top:30px;}
+.step_info dl{ border-left: #ebebeb 1px solid;width: 870px;float: right;}
+.step_info dl dt{width:132px;height:25px;position:relative;margin:35px 0 0 -128px;float:left; background:url(../images/help_title_1.png) no-repeat;}
+.step_info dl dt.tl_1{background-position:left top;}
+.step_info dl dt.tl_2{background-position:left -40px;}
+.step_info dl dt.tl_3{background-position:left -80px;}
+.step_info dl dt.tl_4{background-position:left -120px;}
+.step_info dl dt.tl_5{background-position:left bottom;}
+
+.step_info dl dd{ float: right;width: 855px;}
+.step_tm{margin: 25px 0 0 18px; clear:both;}
+.step_tm p{ color:#444; font-size:16px; line-height:45px;}
+.step_tm img{ padding-bottom:20px;}
+.step_tm li{ float:left; padding-top:10px;}
+.step_tm li.img{ margin-left:168px;}
+.step_tm li span{ display:block; font-size:16px; padding-bottom:10px; color:#666;}
+
+.footer { text-align:center;  height:80px; line-height:80px;}

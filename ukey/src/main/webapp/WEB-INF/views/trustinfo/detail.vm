@@ -1,0 +1,55 @@
+<div class="DPosition">
+    <span>认证信息</span>&nbsp;&gt;&nbsp;
+    <span>关联用户</span>&nbsp;&gt;&nbsp;
+    <span>查看详情</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称：</span><label>${project.name}</label>
+	<p/>
+	<p>
+	<span>帐号类别：</span><label>#if(${entityTrueInfo.entityType}==0) 企业类型 #else 个人  #end</label>
+	<p/>
+	<p>
+	<span>认证实体：</span><label>$!{entityTrueInfo.name}</label>
+	<p/>
+	<p>
+	<span>用户名：</span><label>${sysUser.email}</label>
+	<p/>
+	<p>
+	<span>使用者姓名：</span><label>${sysUser.realName}</label>
+	<p/>
+    <p>
+    <span>手机号码：</span><label>${sysUser.mPhone}</label>
+    </p>
+	<p>
+	<span>固定电话：</span><label>${sysUser.telephone}</label>
+	<p/>
+	<p>
+	<span>邮政编码：</span><label>${sysUser.postalCode}</label>
+	<p/>
+	<p>
+	<span>通讯地址：</span><label>${sysUser.userAdds}</label>
+	<p/>
+	<p>
+	<span>所属行业：</span><label>${sysUser.orgIndustry}</label>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+			<a href="javascript:window.history.back();" title="查看关联用户信息">
+			<img title="查看关联用户信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看关联用户信息"/>
+			</a>
+		</span>
+	</div>
+	</div>
+	</div>
+</div>

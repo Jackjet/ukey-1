@@ -1,0 +1,11 @@
+#set($layout="layouts/layout-null.vm")
+
+[enroll]
+
+status=$status
+
+id=$!enroll_id
+
+auth=$!auth
+
+phoneNum=$!phoneNum

@@ -1,0 +1,9 @@
+#set($layout="layouts/layout-null.vm")
+<html>
+<body></body>
+<script>
+    var retJson = '${retStr}'; // 这个保存现有认证代码返回的json字符串
+    external.SetCookie("__retJson__", retJson);
+    external.infomsg(20000);
+</script>
+</html>

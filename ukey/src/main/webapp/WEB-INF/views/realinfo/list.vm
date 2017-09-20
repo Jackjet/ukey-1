@@ -1,0 +1,87 @@
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>实名信息管理</span>
+</div>
+<div class="mbox">	
+    <a href="#springUrl('/')realinfomanage?form" title="上传实名信息文件">
+    	<img title="上传实名信息文件" src="#springUrl('/')resources/images/create.png" class="image" alt="上传实名信息文件"/>上传实名信息文件
+	</a><br/><br/>
+	<div class="searBox">
+		<div class="serchForm">
+    		<div class="serchFormBox">
+				<form id="queryform" method="GET"
+					action="#springUrl('/')realinfomanage">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size">
+					<label>企业名称：</label>
+					<input id="enterpriseName" type="text" name="enterpriseName" value="$!{enterpriseName}" class="bor txtwidth2"/>
+					<label>处理时间段：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+					<input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+				</form>
+			</div>
+    </div>
+</div><button id="addToOrder" class="btn_sear" onclick="addToWorkOrder()">加入工单</button>
+	#parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 		<th class="alignTwo" width="5%">序号</th>
+    			<th class="alignTwo" width="30%">企业名称</th>
+    			<th class="alignTwo" width="10%">组织机构代码</th>
+    			<th class="alignTwo" width="15%">经办人邮箱</th>
+    			<th class="alignTwo" width="15%">企业联系地址</th>
+    			<th class="alignTwo" width="10%">处理时间</th>
+    			<th class="alignTwo" width="10%">处理次数</th>
+    			<th class="alignTwo" width="5%">操作</th>
+            </thead>
+            <tbody>
+            	#foreach( $realInfo in $realInfos )
+	     	<tr>
+    			<td  class="alignL" title='${foreach.count}'>${foreach.count}</td>
+    			<td  class="alignThree" title="$!{realInfo.enterpriseName}">$!{realInfo.enterpriseName}</td>
+    			<td  class="alignThree" title="$!{realInfo.orgCode}">$!{realInfo.orgCode}</td>
+    			<td  class="alignThree" title="$!{realInfo.operatorMail}">$!{realInfo.operatorMail}</td>
+    			<td  class="alignThree" title="$!{realInfo.enterpriseAdds}">$!{realInfo.enterpriseAdds}</td>
+    			<td  class="alignThree" title="$!{realInfo.dealTime}">#if(${realInfo.dealTime}) $date.format("yyyy-MM-dd HH:mm:ss",${realInfo.dealTime}) #end</td>
+    			<td  class="alignThree" title="$!{realInfo.dealNum}">$!{realInfo.dealNum}</td>
+    			<td class="alignL">
+    				<div class="l">
+    					<a href="#springUrl('/')realinfomanage/${realInfo.id}" title="详情">
+    					<img title="详情" src="#springUrl('/')resources/images/show.png" class="image" alt="详情"/>
+						</a>
+    				</div>
+    			</td>
+    		</tr>
+			#end 
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+	<font color="red">$!{request.getParameter("message")}</font>
+	<br/>
+</div>
+<script>
+	var acUrlEnterpriseName = "#springUrl('/realinfomanage/acEnterpriseName')";
+	$(function(){	
+		$("#enterpriseName").autocomplete({
+			  	source:acUrlEnterpriseName
+				,minLength: 0
+		});
+	});
+
+
+	function addToWorkOrder(){
+		var enterpriseName = $("#enterpriseName").val();
+		var queryDate1=$("#queryDate1").val();
+		var queryDate2=$("#queryDate2").val();
+		window.location.href="#springUrl('/')realinfomanage/addToOrder?queryDate1="+queryDate1+"&queryDate2="+queryDate2+"&enterpriseName="+enterpriseName;
+	}
+
+</script>

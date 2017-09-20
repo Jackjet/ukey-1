@@ -1,0 +1,72 @@
+#parse("three/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>修改</span>&nbsp;&gt;&nbsp;
+    <span>修改</span>
+</div>
+<div class="mboxR">
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">修改</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width: 100%;">
+
+	<form action="#springUrl('/')three" method="post">	
+		<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${three.id}"/>
+            <p>
+                <span>项目名称：</span><label>${project.name}</label>
+
+            <p/>
+            <p>
+                <span>纳税人名称：</span><label>${three.taxName}</label>
+
+            <p/>
+            <p>
+                <span>统一社会信用代码：</span><label>${three.creditCode}</label>
+
+            <p/>
+            <p>
+                <span>变更时间：</span><label>#if(${three.changeTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.changeTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>状态：</span>
+                <select id="status" name="status" class="bor selwidth2">
+	             #foreach($rep in $statusMapu.entrySet())
+	               	 <option value="$rep.key" #if($three.status== $rep.key)
+	                 selected="selected" #end>$rep.value</option>
+                 #end
+	        </select>
+
+            <p/>
+            <p>
+                <span>数据来源：</span><label>#if(${soruceMap.containsKey($three.sourceType)})${soruceMap.get($three.sourceType)}#else$three.sourceType#end</label>
+
+            <p/>
+            <p>
+                <span>是否已经回写：</span><label>#if(${syncMap.containsKey($three.syncType)})${syncMap.get($three.syncType)}#else$three.syncType#end</label>
+
+            <p/>
+            <p>
+                <span>创建时间：</span><label>#if(${three.createTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.createTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>提交时间：</span><label>#if(${three.submitTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.submitTime}) #end</label>
+
+            <p/>
+            <p>
+                <span>回写时间：</span><label>#if(${three.syncTime}) $date.format("yyyy-MM-dd HH:mm:ss",${three.syncTime}) #end</label>
+
+            <p/>
+
+	
+	<span class="message"  style="color:Red;float:left;margin-top:10px;">$!{message}</span>
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>	
+</div>

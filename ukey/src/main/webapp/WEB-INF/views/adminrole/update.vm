@@ -1,0 +1,83 @@
+<script type="text/javascript">
+#[[
+function check_all(obj,cName)
+{
+    var checkboxs = document.getElementsByName(cName);
+    for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;}
+}
+ ]]#
+</script>
+<style type="text/css"> 
+
+label.error 
+{ 
+color:Red; 
+font-size:13px; 
+margin-left:5px; 
+padding-left:16px; 
+background:url("#springUrl('/')resources/images/unchecked.gif") left no-repeat; 
+} 
+</style> 
+<script type="text/javascript">
+$().ready(function(){
+	$("#adminrole").validate({
+		rules:{
+			roleName:"required"
+		}
+	});
+});
+</script>
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>角色管理</span>&nbsp;&gt;&nbsp;
+    <span>修改角色</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">修改角色</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="adminrole" action="#springUrl('/')adminrole" method="post">
+	<input type="hidden" name="_method" value="PUT"/>
+	<input type="hidden" name="id" value="${adminRole.id}"/>
+	<div class="tabConBox_L">
+	<p>
+		<span>角色名称：</span>
+		<input id="roleName" name="roleName" type="text" class="bor txtth" value="$!adminRole.roleName"></input>
+	</p>
+	<p>
+		<span>描述信息：</span>
+		<textarea name="roleDescribe" class="bot txta600" cols="" rows="">$!adminRole.roleDescribe</textarea>
+	</p>
+	<p>
+	<span>模块权限：</span>
+		<input type="checkbox" id="checkAll" class="radcom rad_wh" onclick="check_all(this,'sysres')"/><label class="labelcom">全选</label>
+	</p>
+	<p>
+		<table style="margin-left: 80px;">
+		<tr>
+		#foreach($sysRes in $sysress)
+		<td>
+		
+		<input type="checkbox" name="sysres" class="radcom rad_wh" value="${sysRes.id}" 
+		#if($sysResList.contains($sysRes.id))checked #end/><label class="labelcom" style="margin-top: 7px;">${sysRes.resTitle}</label>
+		</td>
+		#if($foreach.count>0 && $foreach.count%4==0)
+		</tr><tr>
+		#end
+		#end
+		</tr>
+		</table>
+	</p>
+	<br/>
+	</div>
+	
+	<div class="btn_bottom">
+		<input type="submit" value="修改" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>

@@ -1,0 +1,2 @@
+#set( $certStatus = {"VALID":"有效","REVOKED":"失效","EXPIRED":"过期","NEEDRENEW":"待更新"})
+

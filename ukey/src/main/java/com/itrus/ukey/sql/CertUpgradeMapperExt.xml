@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.CertUpgradeMapper">
+    <select id="selectKeySnLikeTerm" resultType="String" parameterType="Map" >
+    select
+      distinct key_sn
+    from
+    	cert_upgrade
+    where
+    	key_sn like #{term}
+    order by 
+    	key_sn
+    limit #{limtNum}
+   </select>
+   <select id="selectOldKeySnLikeTerm" resultType="String" parameterType="Map" >
+    select
+      distinct old_key_sn
+    from
+    	cert_upgrade
+    where
+    	old_key_sn like #{term}
+    order by 
+    	old_key_sn
+    limit #{limtNum}
+   </select>
+</mapper>

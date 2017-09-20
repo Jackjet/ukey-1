@@ -1,0 +1,288 @@
+#parse("trustverify/include.vm")
+<div class="DPosition">
+    <span>业务管理</span>&nbsp;&gt;&nbsp;
+    <span>鉴证审核</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label>
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	#if($plist.size()>1)
+		<option value="" >所有项目</option> 
+	#end 
+	#foreach($obj in $plist)
+        <option value="$obj.id" #if($project == $obj.id)selected="selected"#end>$obj.name</option>
+    #end
+	</select>&nbsp;&nbsp;
+	<label>认证项：</label> 
+	<select	name="item" class="bor selwidth1">
+	#foreach($statusObj in $typeMap.entrySet())
+        <option value="$statusObj.key" #if($statusObj.key == $item)selected="selected"#end>$statusObj.value</option>
+    #end
+	</select>&nbsp;&nbsp;
+	<label>提交时间：</label>
+	<input id="startDate" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+	<span>至 </span>
+	<input id="endDate" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+		onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" /><br /><br />
+    <label>类型：</label>
+	<select id="projectcur"	name="type" class="bor selwidth1">
+        #foreach($typeObj in $types.entrySet())
+			<option value="$typeObj.key" #if($typeObj.key == $type)selected="selected"#end>$typeObj.value</option>
+		#end
+	</select>&nbsp;&nbsp;
+	<label>审批状态：</label> 
+	<select id="projectcur"	name="status" class="bor selwidth1">
+	#foreach($statusObj in $statusMap.entrySet())
+        <option value="$statusObj.key" #if($statusObj.key == $status)selected="selected"#end>$statusObj.value</option>
+    #end
+	</select>&nbsp;&nbsp;
+	<label style="width:100px">是否发送短信：</label> 
+	<select id="projectcur"	name="isSendSms" class="bor selwidth1">
+		<option value="0">所有</option>
+		<option value="1" #if($isSendSms==1) selected="selected"#end >已发送</option>
+		<option value="2" #if($isSendSms==2) selected="selected"#end >未发送</option>
+	</select><br><br>
+    <label>用户名：</label>
+    <input name="username" type="text" value="$!username" class="bor txtwidth2" />&nbsp;&nbsp;
+    <label>认证实体：</label>
+    <input name="entityname" type="text" value="$!entityname" class="bor txtwidth2" />
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    </div>
+</div>
+    <div class="tableTop">
+        <a class="a_three" style="width: 90px;" onclick="configAgreeJob();">批量批准</a>
+    </div>
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+            <th class="alignTwo" width="6%"><input type="checkbox" onclick="check_all(this,'logId');">全选</th>
+    	 	<th class="alignTwo" width="10%">项目名称</th>
+    	 	<th class="alignTwo" width="14%">认证实体</th>
+    	 	<th class="alignTwo" width="14%">用户名</th>
+			<th class="alignTwo" width="10%">类型</th>
+    	 	<th class="alignTwo" width="8%">审批状态</th>
+            <th class="alignTwo" width="10%">认证项</th>
+            <th class="alignTwo" width="13%">提交时间</th>
+            <th class="alignTwo" width="7%">短信通知</th>
+            <th class="alignTwo" width="8%">操作</th>
+            </thead>
+            <tbody>
+            #foreach($obj in $logs)
+	     	<tr>
+                <td class="alignTwo">
+                    #if($obj.approve_status == 0)##若状态为未审核
+                        <input type="checkbox" name="logId" value="${obj.id}">
+                    #end
+                </td>
+	     		<td class="alignL">${obj.pname}</td>
+    			<td class="alignL" title="${obj.entity_name}">${obj.entity_name}</td>
+    			<td class="alignL">${obj.email}</td>
+				<td class="alignTwo">$types.get(${obj.log_type})</td>
+    			<td class="alignTwo">$statusMap.get(${obj.approve_status})</td>
+    			<td class="alignL">$typeMap.get(${obj.item_type})</td>
+                <td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${obj.create_time})</td>
+                <td class="alignL">#if(!${obj.send_num})未发送 #else 已发送 #end</td>
+    			<td class="alignTwo">
+			    #if($obj.approve_status==0)
+				<a onclick="shenpi()" href="#springUrl('/')trustverify/${obj.item_type}/${obj.id}/0" title="审批操作">
+    			<img title="审批操作" src="#springUrl('/')resources/images/update.png" class="image" alt="审批操作"/></a>
+				#else
+				<a href="#springUrl('/')trustverify/${obj.item_type}/${obj.id}/0" title="查看详情">
+				<img title="查看详情" src="#springUrl('/')resources/images/show.png" class="image" alt="查看详情"/>
+				</a>
+				<a href="#" onclick="sendsms(${obj.id})" title="发送短信">
+				<img title="发送短信" src="#springUrl('/')resources/images/icon_sms.png" class="image" alt="发送短信"/>
+				</a>
+    			#end
+				</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<!-- 等待提示信息 -->
+<div id="loadDiv" class="xt_chuli" style="top: 260px;display: none;">
+    <img src="#springUrl('/')resources/images/jiazai.gif"/>
+    <p>&nbsp;&nbsp;系统正在处理中，请您耐心等待...</p>
+</div>
+<!-- 遮罩层 -->
+<div id="BgDiv" class="Bg_shade_div"></div>
+<!-- 确认提示框-->
+<div class="Dialog D_width1" id="confirm_Dialog" style="display: none; width:305px; top:260px; left: 40%;">
+    <div class="Dialog_l D_l_width1" style="width: 300px;">
+        <div class="Dia_top">
+            <div class="Dia_topbox"> <!----标题----->
+                <div class="Dia_titleL">批量审批确认</div>
+                <div class="Dia_colse" onclick="closeDiv('confirm_Dialog');"></div>
+            </div>
+        </div>
+        <div class="Dia_con D_con_height3" style="height: 110px;">
+                <input name="approve" type="hidden" value="1"/>
+                <div class="p_boxs" style="min-height: 20px;">
+                    <!-- 确认信息 -->
+                    <p id="confirm_cont" style="text-align: center;"></P>
+                </div>
+                <div class="btn_bottom">
+                    <input type="button" onclick="multAgree();" class="btn_small btn_height" value="确 定"/>
+                    <input type="button" style="margin: 0 0 0 0;" onclick="closeDiv('confirm_Dialog');" class="btn_small btn_height" value="取 消"/>
+                </div>
+        </div>
+        <div class="Dialog_l_b D_width1">
+            <div class="Dialog_l_b_l"></div>
+            <div class="Dialog_l_b_r D_l_b_r_width1"></div>
+        </div>
+    </div>
+    <div class="Dialog_shadow" >
+        <div class="shadow_l_top36"></div>
+        <div class="shadow_l_mid D_s_l_mid_height3" style="height: 121px;"></div>
+        <div class="shadow_l_foot"></div>
+    </div>
+</div>
+<!-- 确认提示框-->
+<div class="Dialog D_width1" id="ret_Dialog" style="display: none; width:305px; top:260px; left: 40%;">
+    <div class="Dialog_l D_l_width1" style="width: 300px;">
+        <div class="Dia_top">
+            <div class="Dia_topbox"> <!----标题----->
+                <div class="Dia_titleL">批量审批结果</div>
+            </div>
+        </div>
+        <div class="Dia_con D_con_height3" style="height: 110px;">
+            <input name="approve" type="hidden" value="1"/>
+            <div class="p_boxs" style="min-height: 20px;">
+                <!-- 结果信息 -->
+                <p id="ret_cont" style="text-align: center;"></P>
+            </div>
+            <div class="btn_bottom">
+                <input type="button" onclick="javaScript:$('#queryform').submit();" style="margin: 0 0 0 0;" class="btn_small btn_height" value="确 定"/>
+            </div>
+        </div>
+        <div class="Dialog_l_b D_width1">
+            <div class="Dialog_l_b_l"></div>
+            <div class="Dialog_l_b_r D_l_b_r_width1"></div>
+        </div>
+    </div>
+    <div class="Dialog_shadow" >
+        <div class="shadow_l_top36"></div>
+        <div class="shadow_l_mid D_s_l_mid_height3" style="height: 121px;"></div>
+        <div class="shadow_l_foot"></div>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		if($.cookie("gohistory")==1){
+			$.cookie("gohistory", null,{path: "/" });
+			window.location.reload();
+		}
+		
+	
+	});
+	
+	function shenpi(){
+		var url = window.location.href;
+		$.cookie("historypage", url,{path: "/" });
+	}
+	
+	function sendsms(objid){
+		var url = "#springUrl('/')trustverify/sendSmsConfim/"+objid;
+		$.ajax({
+			type:"post",
+			url : url,
+			data : "",
+			success : function(data) {
+				data = $.parseJSON(data);
+				if(0==data.retCode){
+					alert(data.retMsg);
+				}else{
+					alert("发送成功");
+					window.location.reload();
+				}
+			},
+			error:function(){alert("发送失败");}
+		})
+	}
+	
+	
+    function check_all(obj, cName) {
+        var checkboxs = document.getElementsByName(cName);
+        for (var i = 0; i < checkboxs.length; i++) {
+            checkboxs[i].checked = obj.checked;
+        }
+    }
+    //选中的数组
+    var chk_value = [];
+    function configAgreeJob(){
+        chk_value = [];
+        $("input[name='logId']:checked").each(function(){
+            chk_value.push($(this).val());
+        });
+        if(chk_value.length==0){
+            alert("您没有选中要审批的记录");
+            return;
+        }
+        $("#confirm_cont").html("将批准所勾选的【"+chk_value.length+"】条记录，是否确定？");
+        //显示确认提示
+        ShowDIV("confirm_Dialog");
+        /*if(confirm("将批准所勾选的【"+chk_value.length+"】条记录，是否确定？")){
+            ShowDIV("loadDiv");
+            multAgree();
+        }*/
+    }
+    function ShowDIV(thisObjID) {
+        $("#BgDiv").css({ display: "block", height: $(document).height() });
+        var yscroll = document.documentElement.scrollTop;
+        $("#" + thisObjID).css("top", "255px");
+        $("#" + thisObjID).css("display", "block");
+        document.documentElement.scrollTop = 0;
+    }
+    function closeDiv(thisObjID) {
+        $("#BgDiv").css("display", "none");
+        $("#" + thisObjID).css("display", "none");
+    }
+    //异步提交批量批准
+    function multAgree(){
+        //关闭提示框
+        closeDiv("confirm_Dialog");
+        //启动等待界面
+        ShowDIV("loadDiv");
+        //获得已经选中的记录
+        $.ajax("#springUrl('/')trustverify/multagree",
+                {
+                    type:"POST",
+                    traditional:true,
+                    dataType:"json",
+                    data:{"logId":chk_value},
+                    //请求成功后调用
+                    success:function(data){
+                        //关闭等待页面
+                        closeDiv("loadDiv");
+                        //关闭等待提示信息
+                        //弹出成功信息
+                        if(data.status){
+//                            alert("审批成功"+data.successNum+"条，审批失败"+data.failNum+"条");
+                            $("#ret_cont").html("审批成功"+data.successNum+"条，审批失败"+data.failNum+"条。");
+                            //展示结果信息
+                            ShowDIV("ret_Dialog");
+//                            $("#queryform").submit();
+                        } else //弹出错误提示信息
+                            alert(data.errorMsg);
+                    }
+                }
+        )
+    }
+</script>

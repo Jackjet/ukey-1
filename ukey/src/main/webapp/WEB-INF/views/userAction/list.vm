@@ -1,0 +1,96 @@
+#parse("userAction/include.vm")
+<div class="DPosition">
+    <span>日志统计</span>&nbsp;&gt;&nbsp;
+    <span>用户行为</span>
+</div>
+
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+        <div class="serchFormBox">
+            <form id="queryform" method="GET" action="">
+                <input id="pagecur" type="hidden" name="page" value="1">
+                <input id="sizecur" type="hidden" name="size" value="$!size">
+                <label>项目名称：</label>
+                <select id="projectcur" name="project" class="bor selwidth2">
+                    #if($projectmap.size()>1)
+                        <option value="0">所有项目</option>
+                    #end
+                    #foreach($proObj in $projectmap.entrySet())
+                        <option value="$proObj.key" #if($uAction.project== $proObj.key)
+                                selected="selected" #end>$proObj.value.name</option>
+                    #end
+                </select>
+                <label>操作时间：</label>
+                <input id="queryDate1" name="startDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!startDate)" class="bor txtwidth2"
+                       onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+                <span>至 </span>
+                <input id="queryDate2" name="endDate" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!endDate)" class="bor txtwidth2"
+                       onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+                &emsp;&emsp;&emsp;<label>KEY序列号：</label>
+                <input id="keySn" type="text" name="keySn" value="$!{uAction.keySn}" class="bor txtwidth2"/>
+                <br/><br/>
+
+                <label>版本号：</label>
+                <input id="verStr" type="text" name="versionStr" value="$!{uAction.versionStr}" class="bor txtwidth2"/>
+                <label>模块类型：</label>
+                <select name="modelCode" class="bor selwidth2">
+                    <option value="0">全部</option>
+                    #foreach($mCode in $modelMap.entrySet())
+                        <option value="${mCode.key}" #if($uAction.modelCode== $mCode.key)
+                                selected="selected" #end>${mCode.value}</option>
+                    #end
+                </select>
+                <label>用户编码：</label>
+                <input type="text" name="userUid" value="$!{uAction.userUid}" class="bor txtwidth2"/>
+                <br><br>
+
+                <label>本页：</label>
+                <input type="text" name="nowPage" value="$!{uAction.nowPage}" class="bor txtwidth2"/>
+                <label>页内功能：</label>
+                <input type="text" name="actionName" value="$!{uAction.actionName}" class="bor txtwidth2"/>
+                <label>上一页：</label>
+                <input id="fromPage" type="text" name="fromPage" value="$!{uAction.fromPage}" class="bor txtwidth2"/>
+                <input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+            </form>
+        </div>
+    
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%" >项目名称</th>
+            <th class="alignTwo" width="13%">操作时间</th>
+            <th class="alignTwo" width="15%">KEY序列号</th>
+            <th class="alignTwo" width="12%">用户编码</th>
+            <th class="alignTwo" width="8%" >版本号</th>
+            <th class="alignTwo" width="6%">模块类型</th>
+            <th class="alignTwo" width="11%">本页</th>
+            <th class="alignTwo" width="9%">页内功能</th>
+            <th class="alignTwo" width="11%">上一页</th>
+            </thead>
+            <tbody>
+            #foreach( $usera in $userActionList )
+	     	<tr>
+    			<td class="alignL" title="${projectmap.get($usera.project).name}">${projectmap.get($usera.project).name}</td>
+                <td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${usera.actionTime})</td>
+    			<td class="alignL" title="${usera.keySn}">${usera.keySn}</td>
+                <td class="alignL">$!{usera.userUid}</td>
+                <td class="alignTwo">$!{usera.versionStr}</td>
+                <td class="alignL">#if(${modelMap.containsKey($usera.modelCode)})${modelMap.get($usera.modelCode)}#else$usera.modelCode#end</td><!-- 模块类型 -->
+    			<td class="alignL" title="$!{usera.nowViewLabel}">$!{usera.nowViewLabel}</td>
+                <td class="alignL" title="$!{usera.actionName}">$!{usera.actionName}</td>
+                <td class="alignL" title="$!{usera.fromViewLabel}">$!{usera.fromViewLabel}</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+            <font color="red">$!errMsg</font>
+    	</div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="DPosition">
+	<span>业务管理</span>&nbsp;&gt;&nbsp; 
+	<span>主身份管理</span>
+</div>
+<div class="mbox">
+	<div class="searBox">
+		<div class="serchForm">
+			<div class="serchFormBox">
+				<form id="queryform" method="GET"
+					action="#springUrl('/')mastermanage">
+					<input id="pagecur" type="hidden" name="page" value="1"> 
+					<input id="sizecur" type="hidden" name="size" value="$!size"> 
+					<label>项目名称：</label>
+					<select id="projectcur" name="project" class="bor selwidth1">
+					#if($projectmap.size()>1)
+						<option value="" >所有项目</option> 
+					#end 
+					#foreach($projectobj in $projectmap.entrySet())
+						<option value="${projectobj.key}" 
+							#if($project=="${projectobj.key}") selected="selected" #end>
+							${projectobj.value.name}</option> 
+					#end
+					</select>
+					<label>介质序号：</label> 
+						<input name="deviceSn" type="text" value="$!deviceSn" size="12" class="bor txtwidth1" /> 
+					<label>所有者：</label> 
+						<input name="userCn" type="text" value="$!userCn" size="12" class="bor txtwidth1" />
+					<input type="submit" value="快速搜索" class="btn_sear" /> 
+				</form>
+			</div>
+		</div>
+	</div>
+
+	#parse("pages0.vm")
+	<div class="conBox">
+		<div class="tabCon">
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="20%">项目名称</th>
+					<th class="alignTwo" width="20%">所有者</th>
+					<th class="alignTwo" width="15%">认证介质</th>
+					<th class="alignTwo" width="25%">介质序号</th>
+					<th class="alignTwo" width="20%">操作</th>
+				</thead>
+				<tbody>
+					#foreach( $master in $masters )
+					<tr>
+						<td class="alignL" title="$projectmap.get(${master.project}).name">$projectmap.get(${master.project}).name</td><!-- 项目名称 -->
+						<td class="alignL" title="${master.userCn}">${master.userCn}</td><!-- 所有者  -->
+						<td class="alignL">${master.deviceType}</td><!-- 设备类型 -->
+						<td class="alignTwo" title="${master.deviceSn}">${master.deviceSn}</td><!-- 设备序号 -->
+						<td class="alignTwo">
+							<a href="#springUrl('/')mastermanage/${master.udcId}?form" title="主身份证书">
+							<img title="主身份证书" src="#springUrl('/')resources/images/show.png" class="image"
+								alt="主身份证书" />
+							</a>
+							<div class="l" style="margin-top: 7px;">
+								<form id="command" action="#springUrl('/')devicemanage" method="post">
+									<input type="hidden" name="userCn" value="$!{master.userCn}" />
+									<input onclick="return true;" value="可信设备"
+										type="image" title="可信设备"	src="#springUrl('/')/resources/images/icon_sms.png"
+										class="image" alt="可信设备" />
+								</form>
+							</div>
+						</td>
+					</tr>
+					#end
+				</tbody>
+				#parse("pages1.vm")
+			</table>
+		</div>
+	</div>
+	<font color="red">$!{request.getParameter("message")}</font>
+	<br />
+</div>

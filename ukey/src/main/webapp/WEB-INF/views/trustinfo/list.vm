@@ -1,0 +1,103 @@
+#parse("trustinfo/include.vm")
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>认证信息</span>
+</div>
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+        <form id="queryform" method="post" action="">
+            <input id="pagecur" type="hidden" name="page" value="1">
+            <input id="sizecur" type="hidden" name="size" value="$!size">
+            <label>认证实体：</label>
+            <input name="entityname" type="text" value="$!entityname" class="bor" style="width: 205px;"/>&nbsp;&nbsp;
+            <label>实体类型：</label>
+            <select name="entityType" class="bor selwidth1">
+                <option value="0">全部</option>
+                <option value="1" #if($entityType == 1)selected="selected"#end>企业</option>
+                <!-- 目前不需要显示
+				<option value="2">个人</option> -->
+                <option value="3" #if($entityType == 3)selected="selected"#end>个体工商户</option>
+            </select>
+            <label>认证项：</label>
+            <select name="type" class="bor selwidth1">
+				#foreach($statusObj in $typeMap.entrySet())
+                    <option value="$statusObj.key"
+							#if($statusObj.key == $type)selected="selected"#end>$statusObj.value</option>
+				#end
+            </select><br><br>
+            <label>实体标识：</label>
+            <input id="entityIdcode" name="entityIdcode" type="text" value="$!entityIdcode" class="bor" style="width: 205px;"/>
+            <label>创建时间：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+            <input type="submit" value="快速搜索" class="btn_sear"/>
+        </form>
+    </div>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="20%">认证实体</th>
+			<th class="alignTwo" width="15%" >实体标识</th>
+    	 	<th class="alignTwo" width="16%" >实体类别</th>
+    	 	<th class="alignTwo" width="16%">认证项</th>
+            <th class="alignTwo" width="20%">创建时间</th>
+            <th class="alignTwo" width="13%">操作</th>
+            </thead>
+            <tbody>
+            #foreach($obj in $list)
+	     	<tr>
+    			<td class="alignL" title="${obj.name}">${obj.name}</td>
+				<td class="alignTwo">${obj.idCode}</td>
+    			<td class="alignTwo">#if($obj.entityType==0)企业#elseif($obj.entityType==2)个体工商户#else个人#end</td>
+    			<td class="alignTwo">#if($obj.hasBl)营业执照#end
+						#if($obj.hasOrgCode)<br />组织机构代码#end
+						#if($obj.hasTaxCert)<br />税务登记证#end
+						#if($obj.hasIdCard)<br />法定代表人#end
+				</td>
+                <td class="alignTwo">$date.format("yyyy-MM-dd",${obj.createTime})</td>
+    			<td class="alignTwo">
+				<a href="#springUrl('/')trustinfo/${obj.id}" title="查看详情">
+    			<img title="查看详情" src="#springUrl('/')resources/images/show.png" class="image" alt="查看详情"/>
+				</a>
+				<a href="#springUrl('/')trustinfo/${obj.id}?form" title="修改">
+    				<img title="修改" src="#springUrl('/')resources/images/update.png" class="image" alt="修改"/>
+				</a>
+				<a href="#springUrl('/')trustinfo/${obj.id}?userlist" title="关联用户">
+    			<img title="关联用户" src="#springUrl('/')resources/images/show.png" class="image" alt="关联用户"/></a>
+				</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script>
+var acUrlIdCode = "#springUrl('/trustinfo/acidcode')";
+	$(function(){
+		if($.cookie("gohistorypage")==1){
+			$.cookie("gohistorypage", null,{path: "/" });
+			window.location.reload();
+		}
+		
+		$("#entityIdcode").autocomplete({
+		  	source:acUrlIdCode
+			,minLength: 0
+		});
+	
+	});
+</script>

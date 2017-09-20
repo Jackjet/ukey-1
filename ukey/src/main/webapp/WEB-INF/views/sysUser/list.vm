@@ -1,0 +1,99 @@
+#parse("admins/include.vm")
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+    <span>用户信息</span>
+</div>
+
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+        <div class="serchFormBox">
+            <form id="queryform" method="GET" action="">
+                <input id="pagecur" type="hidden" name="page" value="1">
+                <input id="sizecur" type="hidden" name="size" value="$!size">
+                <label>项目名称：</label>
+                <select id="projectcur" name="project" class="bor selwidth1">
+                    #if($projectmap.size()>1)
+                        <option value="0">所有项目</option>
+                    #end
+                    #foreach($proObj in $projectmap.entrySet())
+                        <option value="$proObj.key" #if($project== $proObj.key)
+                                selected="selected" #end>$proObj.value.name</option>
+                    #end
+                </select>&emsp;&emsp;&emsp;
+                <label>电子邮箱：</label>
+                <input id="queryaccount" type="text" name="email" value="$!email" class="bor txtwidth1"/>
+                
+                <label>用户编码：</label>
+                <input type="text" name="uniqueId" value="$!uniqueId" class="bor txtwidth2"/>
+                <label>手机验证：</label>
+                <select id="trustMPhone" name="isTrustMPhone" class="bor selwidth1">
+                	<option value="0">所有</option>
+                    <option value="1"#if(${isTrustMPhone}==1) selected="selected" #end>已验证</option>
+                    <option value="2"#if(${isTrustMPhone}==2) selected="selected" #end>未验证</option>
+                </select>
+                <br><br>
+                <label>真实姓名：</label>
+                <input type="text" name="realName" value="$!realName" class="bor txtwidth2"/>
+                
+                <label>手机号：</label>
+                <input id="queryaccount" type="text" name="mPhone" value="$!mPhone" class="bor txtwidth1"/>
+                <label>注册时间段：</label>
+			        <input id="queryDate1" name="queryDate1" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})"/>
+			        <span>至 </span>
+			        <input id="queryDate2" name="queryDate2" type="text" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" class="bor txtwidth2"
+			               onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2013-01-01 00:00:00',maxDate:'2099-12-31 11:59:59'})" />
+               <input type="submit" align="right" value="快速搜索" class="btn_sear"/>
+            </form>
+        </div>
+    
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%" >项目名称</th>
+            <th class="alignTwo" width="10%">真实姓名</th>
+            <th class="alignTwo" width="15%">用户编码</th>
+            <th class="alignTwo" width="15%">电子邮箱</th>
+            <th class="alignTwo" width="15%" >手机号</th>
+            <th class="alignTwo" width="10%" >手机验证</th>
+            <th class="alignTwo" width="20%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $sysUser in $sysUserall )
+	     	<tr>
+    			<td class="alignL" title="${projectmap.get($sysUser.project).name}">${projectmap.get($sysUser.project).name}</td>
+                <td class="alignL">$!{sysUser.realName}</td>
+                <td class="alignTwo">$!{sysUser.uniqueId}</td>
+                <td class="alignL" title="$!{sysUser.email}">$!{sysUser.email}</td>
+    			<td class="alignTwo">$!{sysUser.mPhone}</td>
+    			<td class="alignTwo">#if(${sysUser.trustMPhone}==true)已验证 #else 未验证 #end</td>
+    			<td class="alignL">
+    				<div class="l">
+    				<a href="#springUrl('/')userinfo/${sysUser.id}" title="查看详情">
+    				<img title="查看详情" src="#springUrl('/')resources/images/show.png" class="image" alt="查看详情"/>
+					</a>
+    				<a href="#springUrl('/')userinfo/${sysUser.id}?form" title="修改">
+    				<img title="修改" src="#springUrl('/')resources/images/update.png" class="image" alt="修改"/>
+					</a>
+					<a href="#springUrl('/')trustinfo?entityIdcode=${entityTrueInfos.get($sysUser.entityTrue).idCode}&queryDate1=$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate1)&queryDate2=$!date.format('yyyy-MM-dd HH:mm:ss',$!queryDate2)" title="查看实名认证">
+    				<img title="查看实名认证" src="#springUrl('/')resources/images/show.png" class="image" alt="查看实名认证"/>
+					</a>
+					</div>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>

@@ -1,0 +1,12 @@
+#set( $statuss = [{"status":"valid","name":"有效"},{"status":"suspend","name":"挂起"}])
+
+#set($statusmap={})
+#foreach( $status in $statuss)
+	#set( $statusmap[$status.status] = $status)
+#end
+
+#set( $accessTypes = [{"type":"ROLE_ADMIN","name":"所属项目"},{"type":"ROLE_SUPPER","name":"全部项目"}])
+#set($typeMap = {})
+#foreach( $accessType in $accessTypes)
+    #set( $typeMap[$accessType.type] = $accessType)
+#end

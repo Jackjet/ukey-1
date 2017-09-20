@@ -1,0 +1,79 @@
+#parse("versions/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>软件管理</span>&nbsp;&gt;&nbsp;
+    <span>查看版本</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L" style="width: 100%;">
+	<p>
+	<span>软件名称：</span>	<label>${product.name}</label>
+	<p/>
+	<p>
+	<span>软件版本：</span><label>${version.productVersion}</label>
+	<p/>
+	<p>
+	<span>文件：</span><label>
+	#if($version.status != "notfound")
+    <a href="#springUrl("/")download/${version.id}">${version.name}</a>
+    #else
+    ${version.name}
+    #end	
+	</label>
+	<p/>
+	<p>
+	<span>版本大小：</span>	<label>${version.length}</label>
+	<p/>
+	<p>
+	<span>版本状态：</span>	<label>${statusmap.get($version.status).name}</label>
+	<p/>
+	<p>
+	<span>磁盘文件：</span>	<label><a href="http://www.trustid.cn/download/${version.file}">${version.file}</a></label>
+	<p/>
+	<p>
+	<span>文件摘要：</span>	<label>${version.hash}</label>
+	<p/>
+	<p>
+	<span>文件MD5：</span><label>$!{md5hash}</label>
+	<p/>
+	<p>
+	<span>创建时间：</span>	<label>$date.format("yyyy-MM-dd HH:mm:ss",${version.createTime})</label>
+	</p>
+	<p>
+	<span>描述信息：</span>	<label>${version.info}</label>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<span style="float:left">
+		   				<a href="#springUrl('/')versions" title="查看所有软件版本信息">
+    					<img title="查看所有软件版本信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有软件版本信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+		   				<a href="#springUrl('/')versions?form" title="新建软件版本信息">
+    					<img title="新建软件版本信息" src="#springUrl('/')resources/images/create.png" class="image" alt="新建软件版本信息"/>
+						</a>
+					</span>
+    				<span style="float:left">
+ 		  				<a href="#springUrl('/')versions/${version.id}?form" title="修改软件版本信息">
+    					<img title="修改软件版本信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改软件版本信息"/>
+						</a>
+					</span>
+    				<span style="float:left;margin-left:10px; margin-top:5px;">
+	     				<form id="command" action="#springUrl('/')versions/${version.id}" method="post">
+		    				<input type="hidden" name="_method" value="DELETE"/>
+		    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+							value="删除软件版本" type="image" title="删除软件版本" src="#springUrl('/')resources/images/delete.png"
+							class="image" alt="删除软件版本"/>
+						</form>
+					</span>
+	</div>
+	</div>
+	</div>
+</div>

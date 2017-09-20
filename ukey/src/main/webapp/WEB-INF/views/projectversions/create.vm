@@ -1,0 +1,140 @@
+#parse("projectversions/include.vm")
+<div class="DPosition">
+    <span>软件发布</span>&nbsp;&gt;&nbsp;
+    <span>软件管理</span>&nbsp;&gt;&nbsp;
+    <span>添加关联</span>
+</div>
+<div class="mbox">
+    <div class="mboxR">
+        <!--基本信息-->
+        <div class="mboxR_top mboxR_top_first">
+            <img src="#springUrl('/')resources/images/icon_list.png"/>
+
+            <h3 class="h_nav">添加关联</h3>
+        </div>
+        <div class="mboxRbox">
+            <form id="projectversion" action="#springUrl('/')projectversions" method="POST"
+                  onsubmit="return checkForm()">
+                <input type="hidden" name="retpath" value="$retpath">
+
+                <div class="btn_bottom" style="text-align:left;">
+                    <label>项目名称：</label>
+                    <select id="projectcur" name="project">
+                        <option value="0">请选择项目</option>
+                        #foreach($projectobj in $projects)
+                            <option value="${projectobj.id}"
+                                #if($project == "${projectobj.id}")
+                                    selected="selected"
+                                #end>
+                                ${projectobj.name}</option>
+                        #end
+                    </select>
+                    <label>软件名称：</label>
+                    <select id="productcur" name="product">
+                        <option value="0">请选择软件</option>
+                        #foreach($productobj in $products)
+                            <option value="${productobj.id}"
+                                #if($product == "${productobj.id}")
+                                    selected="selected"
+                                #end>
+                                ${productobj.name}</option>
+                        #end
+                    </select>
+                    <label>版本号：</label>
+                    <select id="versioncur" name="productVersion">
+                        <option value="0">请选择版本</option>
+                    </select><br/><br/>
+                    <label>待升级最小版本：</label>
+                    <input type="text" name="minVersion" class="bor txtwidth1"></input>
+                    <label>待升级最大版本：</label>
+                    <input type="text" name="maxVersion" class="bor txtwidth1"></input>
+                    <label>是否推送：</label>
+                    <select id="pushcur" name="isPush">
+                        <option value=false>否</option>
+                        <option value=true>是</option>
+                    </select>
+                    <input type="submit" value="创建" class="btn_small m_r"></input>
+                </div>
+            </form>
+            <font color="red" id="errMsg">$!errMsg</font>
+
+            <div class="tabConBox_L" style="width: 100%;" id="verinfo"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+<!--
+	var version = "$!version";
+	var versions = $json.writeValueAsString($versions);
+	
+	var urlbase = "#springUrl('/')projectversions";
+#[[
+	$(function(){
+		// 根据 product 更新 version 列表
+		if($("#productcur").val()!=0){
+			var product = $("#productcur").val();
+            fillVersions(product);
+            $("#errMsg").html("");
+        }
+		
+		// 根据product事件更新version列表
+		$("#productcur").change(function(){
+			//alert(this.value);
+			$("#versioncur option").each(function(){
+				//alert($(this).val());
+				if($(this).val()!=0)
+					$(this).remove();
+			});
+            fillVersions(this.value);
+            $("#errMsg").html("");
+		});
+        // 根据versioncur事件显示version信息
+        $("#versioncur").change(function(){
+            //alert(this.value);
+            fillVersionInfo(this.value);
+            $("#errMsg").html("");
+        });
+	});
+	function checkForm(){
+		var ret = true;
+		var projectcur = $("#projectcur").val();
+		var productcur = $("#productcur").val();
+		var versioncur = $("versioncur").val();
+		if(projectcur==0||productcur==0||versioncur==0){
+			alert("请选择正确的项目名称、软件名称以及版本号后，重新创建！");
+			ret = false;
+		}
+		return ret;
+	}
+    function fillVersions(productVal){
+        for(var i = versions.length-1 ; i >=0 ; i--){
+            if(versions[i].product != productVal){
+                continue;
+            }
+
+            //alert(versions[i].productVersion);
+            if(versions[i].id == version)
+                $("#versioncur").append("<option value=\""+versions[i].id+"\" selected>"+versions[i].productVersion+" - "+ versions[i].name+"</option>");
+            else
+                $("#versioncur").append("<option value=\""+versions[i].id+"\">"+versions[i].productVersion+" - "+versions[i].name+"</option>");
+        }
+    }
+    function fillVersionInfo(verId){
+        var verSel = null;
+        for(var i = 0 ; i < versions.length ; i++){
+            if(versions[i].id == verId){
+                verSel = versions[i];
+                break;
+            }
+        }
+        var newcontent = "";
+        if(verSel != null)
+            newcontent = "<p><span>软件版本：</span><label>"+verSel.productVersion+"</label><p/>"
+                +"<p><span>版本文件：</span><label>"+verSel.name+"</label><p/>"
+                +"<p><span>版本大小：</span><label>"+verSel.length+"</label><p/>"
+                +"<p><span>描述信息：</span><label>"+verSel.info.replace(new RegExp('\r\n', 'g'),"<br/>")+"</label></p>";
+        $('#verinfo').html(newcontent);
+    }
+]]#
+//-->
+</script>

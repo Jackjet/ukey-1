@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.WorkOrderMapper">
+	<select id="selectKeySnLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct order_name
+		from
+		work_order
+		where
+		order_name
+		like #{term}
+		order by
+		order_name
+		limit #{limtNum}
+	</select>
+	<select id="selectAllotPersonLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct allot_person
+		from
+		work_order
+		where
+		allot_person
+		like #{term}
+		order by
+		allot_person
+		limit #{limtNum}
+	</select>
+	<select id="selectDealPersonLikeTerm" resultType="String"
+		parameterType="Map">
+		select
+		distinct deal_person
+		from
+		work_order
+		where
+		deal_person
+		like #{term}
+		order by
+		deal_person
+		limit #{limtNum}
+	</select>
+	<select id="selectRegisterProvinceByDistince" resultType="String"
+		parameterType="Map">
+		select
+		distinct register_province
+		from
+		work_order
+	</select>
+	<update id="updateByExampleSelectiveUseLimit" parameterType="map">
+		update work_order
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=BIGINT},
+			</if>
+			<if test="record.allotPerson != null">
+				allot_person = #{record.allotPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="record.allotTime != null">
+				allot_time = #{record.allotTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.createPerson != null">
+				create_person = #{record.createPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createTime != null">
+				create_time = #{record.createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.dealPerson != null">
+				deal_person = #{record.dealPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="record.dealTime != null">
+				deal_time = #{record.dealTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.orderName != null">
+				order_name = #{record.orderName,jdbcType=VARCHAR},
+			</if>
+			<if test="record.status != null">
+				status = #{record.status,jdbcType=INTEGER},
+			</if>
+			<if test="record.radom != null">
+				radom = #{record.radom,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value" item="listItem"
+										open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+		limit #{limit}
+	</update>
+</mapper>

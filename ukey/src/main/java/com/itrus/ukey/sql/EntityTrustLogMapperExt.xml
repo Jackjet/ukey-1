@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itrus.ukey.db.EntityTrustLogMapper">
+	<select id="selectByCondition" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select
+		l.id, approve_status, approve_time, l.create_time, item_type,
+		reject_reason, approve_admin,
+		l.entity_true, sys_user, log_type
+		,u.email,u.m_phone
+		,l.entity_name
+		,p.name pname,send_num
+		from entity_trust_log l
+		left join
+		sys_user u on l.sys_user = u.id
+		left join project p on l.project = p.id
+		where 1=1
+		<if test="status != null">
+			and approve_status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="isSendSms==1">
+			and send_num IS NOT NULL
+		</if>
+		<if test="isSendSms==2">
+			and send_num IS NULL
+		</if>
+		<if test="startDate != null">
+			and l.create_time >= #{startDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endDate != null">
+			and l.create_time &lt;= #{endDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="item != null">
+			and item_type = #{item,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			and log_type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="entityname != null">
+			and l.entity_name like #{entityname,jdbcType=VARCHAR}
+		</if>
+		<if test="username != null">
+			and u.email like #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="project != null">
+			and p.id = #{project}
+		</if>
+		<if test="id != null">
+			and l.id = #{id}
+		</if>
+		<if test="asc != null">
+			order by l.create_time asc
+		</if>
+		<if test="desc!=null">
+			order by l.create_time desc
+		</if>
+
+		<choose>
+			<when test="offset != null and offset &gt;= 0 and limit != null">
+				limit #{offset},#{limit}
+			</when>
+			<when test="offset == null and limit != null">
+				limit #{limit}
+			</when>
+		</choose>
+	</select>
+	<select id="selectCountByCondition" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(1)
+		from entity_trust_log l
+		left join sys_user u on
+		l.sys_user = u.id
+		left join project p on l.project = p.id
+		where 1=1
+		<if test="status != null">
+			and approve_status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="isSendSms==1">
+			and send_num IS NOT NULL
+		</if>
+		<if test="isSendSms==2">
+			and send_num IS NULL
+		</if>
+		<if test="startDate != null">
+			and l.create_time >= #{startDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="endDate != null">
+			and l.create_time &lt;= #{endDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="item != null">
+			and item_type = #{item,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			and log_type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="entityname != null">
+			and l.entity_name like #{entityname,jdbcType=VARCHAR}
+		</if>
+		<if test="username != null">
+			and u.email like #{username,jdbcType=VARCHAR}
+		</if>
+		<if test="project != null">
+			and p.id = #{project}
+		</if>
+	</select>
+</mapper>

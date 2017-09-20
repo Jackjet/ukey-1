@@ -1,0 +1,68 @@
+#parse("admins/include.vm")
+<div class="DPosition">
+	<span>系统管理</span>&nbsp;&gt;&nbsp; 
+	<span>信任源管理</span>&nbsp;&gt;&nbsp;
+	<span>查看信任源</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+			<div class="mboxR_top mboxR_top_first">
+				<img src="#springUrl('/')resources/images/icon_list.png" />
+				<h3 class="h_nav">基本信息</h3>
+			</div>
+			<div class="mboxRbox" id="account_chanpin">
+				<p>
+					<span>CA证书签发者：</span><label>${crlContext.issuerdn}</label>
+				</p>
+				<p>
+					<span>CA证书主题：</span><label>${crlContext.certSubject}</label>
+				</p>
+				<p>
+					<span>CA证书序列号：</span><label>${crlContext.certSn}</label>
+				</p>
+				<p>
+					<span>CA证书开始时间：</span><label>$date.format("yyyy-MM-dd HH:mm:ss",${crlContext.certStartTime})</label>
+				</p>
+				<p>
+					<span>CA证书结束时间：</span><label>$date.format("yyyy-MM-dd HH:mm:ss",${crlContext.certEndTime})</label>
+				</p>
+				<p>
+					<span>CRL有效性检查：</span><label>#if(${crlContext.checkCrl}==true)强制检查#else不检查#end</label>
+				</p>
+				<p>
+					<span>CRL颁发点：</span><label>$crlContext.crlUrl</label>
+				</p>
+				<p>
+					<span>CRL下载重试策略：</span><label>${crlContext.retryPolicy}</label>
+				</p>
+			
+		<div class="btn_bottom">
+			<span style="float: left"> 
+				<a href="#springUrl('/')/crlcontext" title="查看所有信任源"> 
+				<img title="查看所有信任源" src="#springUrl('/')/resources/images/list.png" class="image"
+					alt="查看所有信任源" />
+			</a>
+			</span> 
+			<span style="float: left"> 
+				<a href="#springUrl('/')/crlcontext?form" title="新建信任源"> 
+				<img title="新建信任源" src="#springUrl('/')/resources/images/create.png" class="image" alt="新建信任源" />
+			</a>
+			</span> 
+			<span style="float: left"> 
+			<a href="#springUrl('/')/crlcontext/${crlContext.id}?form" title="修改信任源"> 
+			<img title="修改信任源" src="#springUrl('/')/resources/images/update.png" class="image"
+					alt="修改信任源" />
+			</a>
+			</span> 
+			<span style="float: left;margin-left:10px; margin-top:5px;">
+				<form id="command" action="#springUrl('/')/crlcontext/${crlContext.id}" method="post">
+					<input type="hidden" name="_method" value="DELETE" /> 
+					<input onclick="return confirm('删除后将不能恢复，是否删除?');" value="删除信任源"
+						type="image" title="删除信任源" src="#springUrl('/')/resources/images/delete.png"
+							class="image" alt="删除信任源" />
+				</form>
+			</span>
+		</div>
+		</div>
+	</div>
+</div>

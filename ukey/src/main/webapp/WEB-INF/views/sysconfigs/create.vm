@@ -1,0 +1,83 @@
+#parse("sysconfigs/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>系统配置</span>&nbsp;&gt;&nbsp;
+    <span>添加配置</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">添加配置</h3>
+	</div>
+	<div class="mboxRbox">
+	<form id="sysconfig" action="#springUrl('/')sysconfigs" method="post" onsubmit="return checkForm();">
+	<div class="tabConBox_L" style="width:100%;">
+	<p>
+	<span>配置名称：</span>
+	<select id="sftype" name="type" class = "bor selwidth1">
+		#foreach( $sysconf in $sysconfs.entrySet())
+			#if ($!sflit&&!$sflit.contains(${sysconf.key}))
+			<option value="${sysconf.key}">${sysconf.value}</option>
+			#end
+		#end
+	</select>
+	</p>
+	<p>
+	<span>配置内容：</span>
+	<input id="confinput" name="config" type="text" class="bor txtth"></input>
+	<select id="confselect" class = "bor selwidth1">
+		#foreach( $sysconf in $confMap.entrySet())
+			<option value="${sysconf.key}" 
+			#if(${sysconf.key.equals(${sysconfig.config})})
+				selected="selected"
+			#end
+			>${sysconf.value}</option>
+		#end
+	</select>
+	</p>
+	</div>
+	<div class="btn_bottom">
+		<input type="submit" value="创建" class="btn_small m_r"></input>
+		<input type="reset" value="重置" class="btn_small m_r"></input>
+	</div>
+	</form>
+	</div>
+	</div>
+</div>
+<script type="text/javascript">
+#[[
+  $(function(){
+	  	$("#confselect").hide();
+		$("#confinput").show();
+	  	var sftype = $("#sftype").val();
+	  	if(sftype == "isUpdate"||sftype == "isLogNoSn"||sftype == "openTaxSync"||sftype =="openWriteBackTax"){
+	  		$("#confselect").show();
+  			$("#confinput").hide();
+		}
+	  	$("#sftype").change(function(){
+	  		if($("#sftype").val()=="isUpdate"||$("#sftype").val()=="isLogNoSn"||$("#sftype").val()=="openTaxSync"||$("#sftype").val()=="openWriteBackTax"){
+	  			$("#confselect").show();
+	  			$("#confinput").hide();
+	  		}else{
+	  			$("#confselect").hide();
+	  			$("#confinput").show();
+	  		}	
+	  	});
+	
+	});
+  function checkForm(){
+	  var ret = true;
+	  var cs = $("#confselect").val();
+	  var sftype = $("#sftype").val();
+	  if(sftype == "isUpdate" || sftype == "isLogNoSn" ||sftype=="openTaxSync"||sftype=="openWriteBackTax"){
+		  $("#confinput").val(cs)
+	  }else if($("#confinput").val() == ''){
+		  alert("配置内容不能为空");
+		  ret = false;
+	  }
+	  return ret;
+  }
+]]#
+//-->
+</script>

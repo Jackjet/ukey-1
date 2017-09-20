@@ -1,0 +1,190 @@
+/* CSS Document */
+*{padding:0;margin:0;}
+div,dl,dt,dd,form,h1,h2,h3,h4,h5,h6,img,ol,ul,li,table,th,td,p,span,a{border:0;}
+img,input{border:none;vertical-align:middle;}
+img{width:100%;}
+body{font-family:Microsoft YaHei,"微软雅黑";font-size:12px;background:#FFF;color:#000; min-width:320px;}
+html{overflow-y:scroll;}
+ul,ol{list-style-type:none;}
+th,td,input{font-size:12px;}
+h3{font-size:14px;}
+button{border:none;cursor:pointer;font-size:12px;background-color:transparent;}
+select{border-width:1px;_zoom:1;border-style:solid;padding-top:2px;font-size:12px;}
+.clear{clear:both;font-size:1px;height:0;visibility:hidden;line-height:0;}
+.clearfix:after{content:"";display:block;clear:both;}
+.clearfix{zoom:1;}
+a:link,a:visited{text-decoration:none;color:#333;}
+a:hover,a:active{text-decoration:none;}
+
+
+.navTitle{
+height:44px;
+width:100%;
+background-color:#00aaee;
+line-height:44px;
+text-align: center;
+color:#fff;
+position:relative;
+font-size:20px;
+overflow:hidden;
+}
+.navTitle a{
+display: block;
+width: 36px;
+height:44px;
+background: url(../images/fanhui.png) no-repeat; 
+background-size: 100% 100%;
+position:absolute;
+top:0;
+left:0;
+}
+.tittle{
+text-align: center;
+color:#333;	
+line-height:28px;
+margin-top:12px;
+font-size:16px;
+padding:0 20px;
+}
+.paizhao{
+color:#fff;
+font-size:16px;
+text-align:center;
+overflow:hidden;
+margin:12px 0 12px 0;
+}
+.paizhao dl{
+width:260px;
+margin:0 auto;	
+position:relative;
+}
+.paizhao dl.success_pic{
+margin-top:46px;
+color:#00aaee;
+font-size:16px;		
+}
+.paizhao dl.success_pic p{
+color:#00aaee;
+font-size:18px;	
+padding:21px 0 0 0;	
+}
+.paizhao dl img{
+
+}
+.paizhao dl img.yingyepic{
+width:220px;	
+}
+.paizhao dl.success_pic img{
+width:200px;	
+}
+.paizhao dl span{
+display:block;
+width:260px;
+height:161px;
+background-color:#000;
+filter:alpha(opacity=50);   
+opacity: 0.5;
+position:absolute;
+top:0;
+left:0;	
+z-index:2;
+-webkit-border-radius: 15px;
+-moz-border-radius: 15px;
+border-radius: 15px;
+}
+.paizhao dl span.yingye_opaction{
+width:220px;
+height:325px;	
+left:20px;
+}
+.paizhao dl dt{
+display:block;
+width:260px;
+height:161px;
+background: url(../images/paizhao.png) no-repeat; 
+background-size: 100% 100%;
+position:absolute;
+top:0;
+left:0;	
+z-index:4;
+}
+.paizhao dl a{
+color:#fff;
+}
+.paizhao dl dt.yingye_text{
+width:220px;
+height:325px;
+background: url(../images/paizhao_01.png) 1px 0 no-repeat; 
+background-size: 100% 100%;
+left:20px;
+}
+.paizhao dl dt i{
+display:block;
+font-style:normal;
+padding-top:110px;	
+}
+.paizhao dl dt.yingye_text i{
+padding-top:205px;	
+}
+.footer{
+width:300px;
+margin:0 auto;
+text-align:center;
+font-size:16px;
+line-height:24px;
+color:#969696;
+padding:0 0 20px 0;	
+}
+.footer01{
+padding:0 12px 20px;
+margin-top:20px;
+}
+.footer01 a{
+display:block;
+height:44px;
+text-align:center;
+font-size:17px;
+line-height:44px;
+background-color:#00aaee;
+-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;
+color:#fff;
+margin-bottom:7px;
+}
+.footer01 a.border_btn{
+height:40px;
+line-height:40px;
+background:none;
+border: 2px solid #00aaee;
+color:#00aaee;
+}
+.footer02{
+border-top:1px solid #eee;	
+margin-top:30px;
+overflow:hidden;
+clear:both;
+}
+.footer02 dl{
+padding:15px 12px 15px 12px;
+border-bottom:1px solid #e7e7e7;
+font-size:16px;	
+clear:both;
+overflow:hidden;
+color:#999;
+}
+.footer02 dl dd{
+float:left;
+width:25%;
+}
+.footer02 dl span{
+float:left;
+display:block;
+width:5%;
+}
+.footer02 dl dt{
+float:right;
+line-height:20px;
+width:70%;
+text-align:right;
+}

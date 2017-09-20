@@ -1,0 +1,187 @@
+#parse("admins/include.vm")
+<div class="DPosition">
+    <span>系统管理</span>&nbsp;&gt;&nbsp;
+    <span>管理员管理</span>
+</div>
+<!-- 
+    $SPRING_SECURITY_CONTEXT.authentication.principal
+    $SPRING_SECURITY_CONTEXT.authentication.principal.username
+    <p/>
+    $SPRING_SECURITY_CONTEXT.authentication.principal.authorities
+    <p/>
+    $rc.contextPath
+    $rc.defaultHtmlEscape
+    <br>
+    $session
+    <br>
+    $request
+    <br>
+    $request.queryString
+    <br>
+    
+    $request.setAttribute("hello","word11111")
+    
+	#set($a=$request.getAttribute("hello"))
+	
+	$a<br>
+	
+	${session.SPRING_SECURITY_CONTEXT}
+	<br>
+	$hello
+	<br>
+	-------------------------------------
+	$SPRING_SECURITY_CONTEXT
+    
+    -------------------------------------------
+    
+    #foreach( $name in $session.AttributeNames)
+    	$name<br/>
+    #end
+    #foreach( $name in $request.AttributeNames)
+    	$name<br/>
+    #end
+    
+    $json.writeValueAsString($adminmap)
+ -->
+<div class="mbox">
+<div class="searBox">
+	<div class="serchForm">
+	<div class="serchFormBox">
+    <form id="queryform" method="GET" action="">
+    <input id="pagecur" type="hidden" name="page" value="1">
+    <input id="sizecur" type="hidden" name="size" value="$!size">
+	<label>项目名称：</label> 
+	<select id="projectcur"	name="project" class="bor selwidth1">
+	#if($projectmap.size()>1)
+		<option value="0">所有项目</option>
+	#end 
+	#foreach($projectobj in $projects)
+		<option value="${projectobj.id}" 
+		#if($project== ${projectobj.id}) selected="selected" #end>
+					${projectobj.name}</option>
+	#end
+	</select>&nbsp;&nbsp;
+	<label>角色：</label>
+	<select id="typecur" name="adminRole" class="bor selwidth1">
+		<option value="0">所有角色</option>
+		#foreach($adminroleent in $adminroles.entrySet())
+			<option value="${adminroleent.value.id}"
+			#if($adminRole == "${adminroleent.value.id}")
+				selected="selected"
+			#end>
+			${adminroleent.value.roleName}</option>
+		#end
+	</select>&nbsp;&nbsp;
+	<label>状态：</label>
+	<select id="statuscur" name="status" class="bor selwidth1">
+		<option value="">所有状态</option>
+		#foreach($statusobj in $statuss)
+			<option value="${statusobj.status}"
+			#if($status == "${statusobj.status}")
+				selected="selected"
+			#end>
+			${statusobj.name}</option>
+		#end
+	</select>&nbsp;&nbsp;<br><br>
+	<label>账号：</label>
+	<input id="queryaccount" type="text" name="account" value="$!account" class="bor txtwidth1"/>
+	<label>姓名：</label>
+	<input id="queryname" type="text" name="name" value="$!name" class="bor txtwidth1"/>&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="submit" value="快速搜索" class="btn_sear"/>
+    </form>
+    </div>
+    <a id="addadmin" href="#springUrl('/')admins?form" title="新建管理员">
+    	<img title="新建管理员" src="#springUrl('/')resources/images/create.png" class="image" alt="新建管理员"/>新建管理员
+	</a><br/>
+    </div>
+</div>
+	
+    #parse("pages0.vm")
+    <div class="conBox">
+    	<div class="tabCon">
+    	 <table class="table1" cellpadding="0" cellspacing="0">
+    	 	<thead>
+    	 	<th class="alignTwo" width="15%" >项目名称</th>
+    	 	<th class="alignTwo" width="15%">角色</th>
+    	 	<th class="alignTwo" width="5%">状态</th>
+            <th class="alignTwo" width="10%">所属范围</th>
+            <th class="alignTwo" width="15%" >账号</th>
+            <th class="alignTwo" width="15%" >姓名</th>
+            <th class="alignTwo" width="15%" >联系电话</th>
+            <th class="alignTwo" width="10%">操作</th>
+            </thead>
+            <tbody>
+            #foreach( $admin in $admins )
+	     	<tr>
+    			<td class="alignL" title="${projectmap.get($admin.project).name}">${projectmap.get($admin.project).name}</td>
+    			<td class="alignTwo" title="${adminroles.get($admin.adminRole).roleName}">${adminroles.get($admin.adminRole).roleName}</td>
+    			<td class="alignTwo">${statusmap.get($admin.status).name}</td>
+                <td class="alignTwo">${typeMap.get($admin.type).name}</td>
+                <td class="alignL"><a href="#springUrl('/')adminlogs?admin=${admin.account}" title="点击查看日志">${admin.account}</a></td>
+    			<td class="alignL">$esc.html(${admin.name})</td>
+    			<td class="alignL">${admin.phone}</td>
+    			<!-- 
+    			<td>${admin.mail}<br>$date.format("yyyy/MM/dd HH:mm:ss",${admin.createTime})</td>
+    			 -->
+    			<td class="alignL">
+    				<div class="l">
+    				<a href="#springUrl('/')admins/${admin.id}" title="查看项目信息">
+    				<img title="查看管理员信息" src="#springUrl('/')resources/images/show.png" class="image" alt="查看管理员信息"/>
+					</a>
+    				<a href="#springUrl('/')admins/${admin.id}?form" title="修改管理员信息">
+    				<img title="修改管理员信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改管理员信息"/>
+					</a>
+					</div>
+					<div class="l"  style="margin-top:7px;">
+     				<form id="command" action="#springUrl('/')admins/${admin.id}" method="post">
+	    				<input type="hidden" name="_method" value="DELETE"/>
+	    				<input onclick="return confirm('删除后将不能恢复，是否删除?');"
+						value="删除管理员" type="image" title="删除管理员" src="#springUrl('/')resources/images/delete.png"
+						class="image" alt="删除管理员"/>
+					</form>
+					</div>
+    			</td>
+    		</tr>
+			#end  
+            </tbody>
+            #parse("pages1.vm")
+         </table>
+    	</div>
+    </div>
+    
+    <br/>
+	<font color="red">$!{request.getParameter("message")}</font>
+</div>
+<script type="text/javascript">
+<!--
+var urlbase = "#springUrl("/")admins";
+var acUrlAccout = "#springUrl("/adminlogs/acaccount")";
+var acUrlName = "#springUrl("/adminlogs/acname")";
+#[[
+  $(function(){
+	  
+		$("#addadmin").click(function(event){
+			event.preventDefault();
+			
+			var url = urlbase + "?form=1";
+			
+			url += "&project=" + $("#projectcur").val();	
+			
+			document.location = url;
+		});
+		
+		// alert(acUrl);
+		$("#queryaccount").autocomplete({
+		  	source:acUrlAccout,
+            minLength: 0
+		});
+		
+		$("#queryname").autocomplete({
+		  	source:acUrlName,
+            minLength: 0
+		});
+	
+	});
+]]#
+//-->
+</script>

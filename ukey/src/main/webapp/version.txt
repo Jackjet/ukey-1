@@ -1,0 +1,6 @@
+Date of last commit     = $Date: 2015-06-30 15:32:07 +0800 (周二, 30 六月 2015) $
+Revision of last commit = $Revision: 5152 $.
+Author of last commit   = $Author: liu_tong $
+
+#----------更新----------
+20150630测试

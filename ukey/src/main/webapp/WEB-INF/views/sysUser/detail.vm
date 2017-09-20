@@ -1,0 +1,197 @@
+#parse("sysUser/include.vm")
+<object width="0" height="0" id="ienroll_ie" type="application/iTrusCertEnroll.CertEnroll" classid="clsid:DD2257CE-4FEE-455A-AD8B-860BEEE25ED6">
+</object>
+<embed id="ienroll_firefox" type="application/iTrusCertEnroll.CertEnroll.Version.1" width="0" height="0" />
+
+<object width="0" height="0"  id="iTrusPTA_ie1" type="application/iTrusPTA.iTrusPTA" classid="clsid:F1F0506B-E2DC-4910-9CFC-4D7B18FEA5F9">
+</object>
+<object 
+	id='iTrusPTA_ie' 
+	codebase='../js/itruscertctl.cab#version=2,5,7,1' 
+	classid='clsid:F1F0506B-E2DC-4910-9CFC-4D7B18FEA5F9'
+	style="display:none";
+	></object>
+	
+<embed id="iTrusPTA_firefox" type="application/iTrusPTA.iTrusPTA.Version.1" width="0" height="0" />
+<div class="DPosition">
+    <span>用户中心</span>&nbsp;&gt;&nbsp;
+	#if($entityTrue)
+	<span>认证信息</span>&nbsp;&gt;&nbsp;
+    <span>关联用户</span>&nbsp;&gt;&nbsp;
+	#else
+	<span>用户信息</span>&nbsp;&gt;&nbsp;
+	#end
+    <span>用户详情</span>
+</div>
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">基本信息</h3>
+	</div>
+	<div class="mboxRbox">
+	<div class="tabConBox_L">
+	<input type="hidden" name="retpath" value="$retpath"/>
+	<p>
+	<span>项目名称：</span><label>${project.name}</label>
+	<p/>
+	<p>
+	<span>帐号类别：</span><label>#if(${entityTrueInfo.entityType}==0) 企业类型 #else 个人  #end</label>
+	<p/>
+	<p>
+	<span>认证实体：</span><label>$!{entityTrueInfo.name}</label>
+	<p/>
+    <p>
+    <span>用户编码：</span><label>${sysUser.uniqueId}</label>
+    <p/>
+	<p>
+	<span>用户名：</span><label>$!{sysUser.email}&emsp;(#if(${sysUser.trustEmail})已验证#else未验证#end)</label>
+	<p/>
+	<p>
+	<span>使用者姓名：</span><label>${sysUser.realName}</label>
+	<p/>
+    <p>
+    <span>手机号码：</span><label>${sysUser.mPhone}&emsp;(#if(${sysUser.trustMPhone})已验证#else未验证#end)</label>
+    </p>
+	<p>
+	<span>固定电话：</span><label>${sysUser.telephone}</label>
+	<p/>
+	<p>
+	<span>邮政编码：</span><label>${sysUser.postalCode}</label>
+	<p/>
+	<p>
+	<span>通讯地址：</span><label>${sysUser.userAdds}</label>
+	<p/>
+	<p>
+	<span>所属行业：</span><label>#if(${sysUser.orgIndustry})$industryMap[${sysUser.orgIndustry}]#end</label>
+	<p/>
+	</div>
+	<div class="btn_bottom">
+		#if($entityTrue)
+		<span style="float:left">
+    		<a href="#springUrl('/')trustinfo/${entityTrue}?userlist" title="查看关联用户信息">
+    		<img title="查看关联用户信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有用户信息"/>
+    		</a>
+    	</span>
+    	#else
+		<span style="float:left">
+    		<a href="#springUrl('/')userinfo" title="查看所有用户信息">
+    		<img title="查看所有用户信息" src="#springUrl('/')resources/images/list.png" class="image" alt="查看所有用户信息"/>
+    		</a>
+    	</span>
+    	
+    	<span style="float:left">
+    		<a href="#springUrl('/')userinfo/${sysUser.id}?form" title="修改用户信息">
+    		<img title="修改用户信息" src="#springUrl('/')resources/images/update.png" class="image" alt="修改用户信息"/>
+    		</a>
+    	</span>
+		#end		
+	</div>
+	</div>
+	</div>
+</div>
+
+
+#parse("devicemanage/include.vm")
+<div class="mbox">
+	<div class="mboxR">
+	<!--基本信息-->
+	<div class="mboxR_top mboxR_top_first">
+		<img src="#springUrl('/')resources/images/icon_list.png" /><h3 class="h_nav">证书信息</h3>
+	</div>
+	<div class="conBox">
+		<div class="tabCon">
+			#if($certInfo)
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="35%">证书信息</th>
+					<th class="alignTwo" width="15%">签发时间</th>
+					<th class="alignTwo" width="15%">到期时间</th>
+					<th class="alignTwo" width="10%">状态</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="alignL">序列号：${certInfo.certSn}<br/>
+						主题项：${certInfo.certDn.replace(", ","<br/>&emsp;&emsp;&emsp;&emsp;")}</td><!-- 证书信息 -->
+						<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${certInfo.certStartTime})</td><!-- 授信开始时间 -->
+						<td class="alignTwo">$date.format("yyyy-MM-dd HH:mm:ss",${certInfo.certEndTime})</td><!-- 授信截至时间 -->
+						<!-- 状态 -->
+						<td class="alignTwo">
+#if($date.getDate().after(${certInfo.certEndTime}))
+							${certStatus.get("EXPIRED")}
+						#else
+							${certStatus.get(${certInfo.certStatus})}
+						#end</td>
+					</tr>
+				</tbody>
+			</table>
+			#else
+			<!-- ie获取的证书列表 -->
+			<table class="table1" cellpadding="0" cellspacing="0">
+				<thead>
+					<th class="alignTwo" width="30%">证书信息</th>
+					<th class="alignTwo" width="15%">签发时间</th>
+					<th class="alignTwo" width="15%">到期时间</th>
+					<th class="alignTwo" width="10%">状态</th>
+					<th class="alignTwo" width="5%">绑定</th>
+				</thead>
+				<tbody id="certlist">
+					
+				</tbody>
+			</table>
+			
+			#end
+		</div>
+	</div>
+	<br />
+</div>
+<script>
+	$(function(){
+		if("ActiveXObject" in window){
+			iTrusPTA = document.getElementById("iTrusPTA_ie");
+			ienroll = document.getElementById("ienroll_ie");
+		}else{
+			iTrusPTA = document.getElementById("iTrusPTA_firefox");
+			ienroll = document.getElementById("ienroll_firefox");
+		}
+		var sysUserId = ${sysUser.id};
+		var certs = filterCerts();
+		for(i = 0;i<certs.length;i++){
+			var ret = certs[i].Verify(0);
+			var status="";
+			if(ret==0){
+				status="有效";
+			}else{
+				status="无效";
+			}
+			$("#certlist").append("<tr><td class=\"alignL\" title=\"主题项："+getCertField(certs[i],'subject')+"\">序列号："+getCertField(certs[i],'serialNumber')+"<br/>主题项："+getCertField(certs[i],'subject')+"</td><td class=\"alignTwo\">"+formdate(getCertField(certs[i],'validFrom'))+"</td><td class=\"alignTwo\">"+formdate(getCertField(certs[i],'validTo'))+"<td class=\"alignTwo\">"+status+"<td class=\"alignTwo\"><button type=\"button\" onclick=\"bindCert('"+sysUserId+"','"+certs[i].GetEncodedCert(2)+"')\">绑定</button></tr>");
+		}
+	});
+	function bindCert(sysUserId,certBase64){
+		var url ="#springUrl('/')userinfo/bindUserCert";
+		var postData={
+			sysUserId:sysUserId,
+			certBase64:certBase64
+		};
+		if(url!=""){
+			$.ajax({
+				type:"post",
+				url : url,
+				data : postData,
+				success : function(data) {location.reload()},
+				error:function(){alert("绑定证书失败！")}
+			})
+		}
+		
+	}
+	function formdate(dates){
+		var date = new Date(dates);
+		var year = date.getFullYear();
+		var month = date.getMonth()+1;
+		var day = date.getDate();
+		var hours = date.getHours();
+		var minutes = date.getMinutes();
+		var seconds = date.getSeconds();
+		return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+	}
+</script>
